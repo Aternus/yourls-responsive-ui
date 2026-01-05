@@ -72,7 +72,7 @@ a:visited {
 }
 
 a:hover {
-    color: darken($title, 20%);
+    color: color.adjust($title, $lightness: -20%, $space: hsl);
     transition: 0.4s all;
 }
 
@@ -112,10 +112,10 @@ input[type="submit"] {
 input.button:hover,
 input.submit:hover,
 input[type="submit"]:hover {
-    background: darken($accent, 15%) !important;
+    background: color.adjust($accent, $lightness: -15%, $space: hsl) !important;
 
     @if ($theme == "light") {
-        background: darken($accent, 15%) !important;
+        background: color.adjust($accent, $lightness: -15%, $space: hsl) !important;
     }
 }
 
@@ -245,7 +245,7 @@ select:hover {
     }
 
     input.button:hover {
-        background: darken($accent, 10%) !important;
+        background: color.adjust($accent, $lightness: -10%, $space: hsl) !important;
     }
 
     .error {
@@ -312,7 +312,7 @@ select:hover {
         height: 50px;
 
         @if ($theme == "light") {
-            background: darken($accent, 10%);
+            background: color.adjust($accent, $lightness: -10%, $space: hsl);
         } @else {
             background: $default;
         }
@@ -363,10 +363,10 @@ select:hover {
         }
 
         input.button:hover {
-            background: darken($accent, 10%) !important;
+            background: color.adjust($accent, $lightness: -10%, $space: hsl) !important;
 
             @if ($theme == "light") {
-                background: darken(white, 10%) !important;
+                background: color.adjust(white, $lightness: -10%, $space: hsl) !important;
             }
         }
 
@@ -386,7 +386,7 @@ select:hover {
         }
 
         small a {
-            color: darken(white, 50%);
+            color: color.adjust(white, $lightness: -50%, $space: hsl);
         }
 
         thead tr .tablesorter-header {
@@ -466,7 +466,7 @@ select:hover {
                     border-radius: 2px;
 
                     &:hover {
-                        background: darken(red, 10%)
+                        background: color.adjust(red, $lightness: -10%, $space: hsl)
                             url(../img/#{$icon}.png)
                             0px
                             center
@@ -489,7 +489,7 @@ select:hover {
                     border-radius: 2px;
 
                     &:hover {
-                        background: darken($accent, 10%)
+                        background: color.adjust($accent, $lightness: -10%, $space: hsl)
                             url(../img/#{$icon}.png)
                             0px
                             center
@@ -524,7 +524,7 @@ nav {
 
     ul#admin_menu li:hover {
         list-style-type: none;
-        color: darken($title, 20%);
+        color: color.adjust($title, $lightness: -20%, $space: hsl);
     }
 
     ul#admin_menu li {
@@ -609,7 +609,7 @@ header {
         }
 
         #historical_clicks li:hover {
-            background: darken($default, 10%) !important;
+            background: color.adjust($default, $lightness: -10%, $space: hsl) !important;
         }
 
         ul#headers li a,
@@ -622,7 +622,7 @@ header {
             padding: 10px 15px 7px 25px;
 
             &:hover {
-                background: darken($default, 10%);
+                background: color.adjust($default, $lightness: -10%, $space: hsl);
             }
 
             h2 {
@@ -635,7 +635,7 @@ header {
                 border-bottom: 2px solid $accent;
 
                 &:hover {
-                    background: darken($default, 15%);
+                    background: color.adjust($default, $lightness: -15%, $space: hsl);
                 }
             }
         }
@@ -748,7 +748,7 @@ code {
         background: #ffffff url("/images/favicon.gif") 4px center no-repeat;
         border-radius: 1px;
         padding: 7px 7px 7px 25px;
-        color: darken(white, 80%);
+        color: color.adjust(white, $lightness: -80%, $space: hsl);
 
         &:hover {
             background: #e0e0e0 url("/images/favicon.gif") 4px center no-repeat;
@@ -763,7 +763,7 @@ code {
             color: $text;
 
             &:hover {
-                color: darken($text, 30%);
+                color: color.adjust($text, $lightness: -30%, $space: hsl);
             }
         }
 
@@ -867,7 +867,7 @@ body > div > pre {
             padding: 50px;
             display: none;
             @if ($theme == "light") {
-                background: darken($accent, 10%);
+                background: color.adjust($accent, $lightness: -10%, $space: hsl);
             } @else {
                 background: $default;
             }
