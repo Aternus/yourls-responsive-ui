@@ -1,0 +1,50 @@
+name: yourls-responsive-ui
+
+services:
+    db:
+        restart: always
+        build:
+            context: .
+            dockerfile: db.Dockerfile
+        env_file:
+            - ./.development.env
+        volumes:
+            - db-data:/var/lib/mysql
+        ports:
+            - "3306:3306"
+
+    web:
+        restart: always
+        build:
+            context: .
+            dockerfile: web.Dockerfile
+        env_file:
+            - ./.development.env
+        user: "${UID:-33}:${GID:-33}"
+        volumes:
+            - ./vendor/YOURLS:/var/www/html
+            - ./.dev/yourls.config.php:/var/www/html/user/config.php
+            - .:/var/www/html/user/plugins/yourls-responsive-ui
+            - ./.dev/ssl:/var/www/ssl
+        ports:
+            - "80:80"
+            - "443:443"
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        depends_on:
+            - db
+
+    phpmyadmin:
+        image: phpmyadmin
+        environment:
+            PMA_HOST: db
+            UPLOAD_LIMIT: 256M
+        volumes:
+            - ./.dev/pma.config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+
+volumes:
+    db-data:

@@ -341,3 +341,5 @@ Temporary Items
 .apdisk
 
 # Aternus
+.dev/ssl/
+*.env
