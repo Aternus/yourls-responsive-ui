@@ -26,11 +26,6 @@ $(document).ready(function () {
         url + "/assets/img/favicon.ico",
     );
 
-    // Update meta viewport
-    $("head").append(
-        '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-    );
-
     // Detect pages
     if ($("body").hasClass("login")) {
         // Login page

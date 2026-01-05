@@ -5,8 +5,8 @@
     "description": "YOURLS Responsive UI",
     "main": "index.js",
     "scripts": {
-        "dev": "sass --watch assets/css/themes:assets/css --style=compressed",
-        "build": "sass assets/css/themes:assets/css --style=compressed"
+        "dev": "sass --watch src/css:release/css --style=compressed",
+        "build": "sass src/css:release/css --style=compressed"
     },
     "author": "Kiril Reznik",
     "license": "MIT",

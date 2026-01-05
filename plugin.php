@@ -17,28 +17,28 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
  * HTML Head
  *********************************************************/
 
-function responsive_init() {
-    echo <<<HEAD
-        <style>body {background: unset;}</style>
-        HEAD;
+function responsive_head_meta() {
+    echo <<<HEAD_META
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        HEAD_META;
 }
 
-yourls_add_action( 'html_head', 'responsive_init' );
+yourls_add_action( 'html_head_meta', 'responsive_head_meta' );
 
-function setTheme( $theme ) {
+function responsive_set_theme( $theme ) {
     $url = yourls_plugin_url( __DIR__ );
     if ( $theme == "light" ) {
         echo <<<HEAD
-            <link rel="stylesheet" href="$url/assets/css/light.css">
-            <link rel="stylesheet" href="$url/assets/css/animate.min.css">
-            <script src="$url/assets/js/theme.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+            <link rel="stylesheet" href="$url/release/css/light.css">
+            <script src="$url/release/js/theme.js"></script>
             <meta name="responsive_theme" content="light">
             HEAD;
     } elseif ( $theme == "dark" ) {
         echo <<<HEAD
-            <link rel="stylesheet" href="$url/assets/css/dark.css">
-            <link rel="stylesheet" href="$url/assets/css/animate.min.css">
-            <script src="$url/assets/js/theme.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+            <link rel="stylesheet" href="$url/release/css/dark.css">
+            <script src="$url/release/js/theme.js"></script>
             <meta name="responsive_theme" content="dark">
             HEAD;
     }
@@ -49,16 +49,16 @@ function responsive_head_scripts() {
     if ( isset( $_POST['theme_choice'] ) ) {
         // User has just changed theme
         if ( $_POST['theme_choice'] == "light" ) {
-            setTheme( "light" );
+            responsive_set_theme( "light" );
         } else {
-            setTheme( "dark" );
+            responsive_set_theme( "dark" );
         }
     } else {
         // User has not just changed theme
         if ( yourls_get_option( 'theme_choice' ) == "light" ) {
-            setTheme( "light" );
+            responsive_set_theme( "light" );
         } else {
-            setTheme( "dark" );
+            responsive_set_theme( "dark" );
         }
     }
 }
@@ -149,11 +149,6 @@ function responsive_admin_links( $admin_links ) {
             'anchor' => yourls__( 'Help' ),
         ];
     }
-
-    $admin_links['frontend'] = [
-        'url'    => yourls_site_url( false, '/' ),
-        'anchor' => '<i class="material-icons">arrow_back</i> ' . yourls__( 'Frontend Interface' ),
-    ];
 
     return $admin_links;
 }
