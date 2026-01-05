@@ -1,6 +1,6 @@
 # yourls-responsive-ui
 
-Responsive UI makes your YOURLS admin pretty ✨.
+YOURLS Responsive UI plugin that makes your admin pretty ✨.
 
 It is inspired by the [Sleeky](https://github.com/Flynntes/Sleeky) project and
 supports Mobile, Tablet and Desktop.
