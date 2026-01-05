@@ -1,0 +1,20 @@
+{
+    "name": "yourls-responsive-ui",
+    "version": "0.0.0",
+    "private": "true",
+    "description": "YOURLS Responsive UI",
+    "main": "index.js",
+    "scripts": {
+        "dev": "sass --watch assets/css/themes:assets/css --style=compressed",
+        "build": "sass assets/css/themes:assets/css --style=compressed"
+    },
+    "author": "Kiril Reznik",
+    "license": "MIT",
+    "dependencies": {
+        "sass": "^1.80.0"
+    },
+    "devDependencies": {
+        "@openai/codex": "0.77.0",
+        "prettier": "3.7.4"
+    }
+}
