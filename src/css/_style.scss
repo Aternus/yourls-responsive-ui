@@ -1,9 +1,10 @@
-@use "sass:color";
-
-@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-// Mobile mixin
+///////////////////////////////////////////////////////////
+// Mixins
+///////////////////////////////////////////////////////////
+
 @mixin for-size($range) {
     $phone-upper-boundary: 900px;
     $tablet-portrait-upper-boundary: 1100px;
@@ -33,90 +34,77 @@
     }
 }
 
-// Use it like this:
-// @include for-size(phone-only) {
-//   margin: 30px;
-// }
-
-//
+///////////////////////////////////////////////////////////
 // Globals
-//
+///////////////////////////////////////////////////////////
+
 body {
-    background-color: $darker;
-    display: inline;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    background-color: var(--color-bg);
 }
 
 div,
 p,
 td,
 input,
-p {
-    font-family: "Open Sans", sans-serif !important;
+input.text,
+select,
+textarea {
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
 }
 
 h1,
 h2 {
-    color: $title;
+    color: var(--color-title);
 }
 
 p {
-    color: $text;
+    color: var(--color-text);
 }
 
 a,
 a:link,
 a:active,
 a:visited {
-    color: #828282;
+    color: var(--color-link);
     text-decoration: none;
 }
 
 a:hover {
-    color: color.adjust($title, $lightness: -20%, $space: hsl);
+    color: var(--color-title-hover);
     transition: 0.4s all;
 }
 
 input {
     padding: 10px;
     border: none !important;
-    background: $light !important;
-    color: $text !important;
+    background: var(--color-surface-alt) !important;
+    color: var(--color-text) !important;
     font-size: 1em !important;
     outline: none;
     margin: 0px 5px !important;
-    border-radius: 0 !important;
-
-    @if ($theme == "light") {
-        border-radius: 3px !important;
-    }
+    border-radius: var(--radius-input) !important;
 }
 
 input.button,
 input.submit,
 input[type="submit"] {
-    border-left: 7px solid $accent !important;
-    background: $light !important;
-    font-weight: 600;
+    border-left: var(--button-border-left-width) solid
+        var(--button-border-left-color) !important;
+    background: var(--button-bg) !important;
+    color: var(--button-text) !important;
+    font-weight: var(--button-font-weight);
     transition: 0.3s all !important;
     cursor: pointer;
-
-    @if ($theme == "light") {
-        background: $accent !important;
-        border-left: none !important;
-        color: white !important;
-        font-weight: 700;
-    }
 }
 
 // Need to fix this, because I've had to copy this down lower to make it apply to the add URL button
 input.button:hover,
 input.submit:hover,
 input[type="submit"]:hover {
-    background: color.adjust($accent, $lightness: -15%, $space: hsl) !important;
-
-    @if ($theme == "light") {
-        background: color.adjust($accent, $lightness: -15%, $space: hsl) !important;
-    }
+    background: var(--color-accent-hover) !important;
 }
 
 input[type="button"]:disabled,
@@ -126,15 +114,13 @@ input[type="submit"]:disabled {
 
 input.text,
 input[type="text"] {
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border: 1px solid var(--color-input-border) !important;
     transition: 0.4s all;
 }
 
-@if ($theme != "light") {
-    input.text:active,
-    input.text:focus {
-        border: 1px solid $accent !important;
-    }
+input.text:active,
+input.text:focus {
+    border: 1px solid var(--color-input-border-focus) !important;
 }
 
 select {
@@ -147,9 +133,9 @@ select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    color: $text;
+    color: var(--color-text);
     background: url(data:image/png;base64,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)
-        96% / 15% no-repeat $light;
+        96% / 15% no-repeat var(--color-surface-alt);
     margin: 5px 10px;
     transition: 0.4s all;
     outline: none;
@@ -157,21 +143,19 @@ select {
 
 select:hover {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAeCAYAAADZ7LXbAAAACXBIWXMAAAsTAAALEwEAmpwYAAAKT2lDQ1BQaG90b3Nob3AgSUNDIHByb2ZpbGUAAHjanVNnVFPpFj333vRCS4iAlEtvUhUIIFJCi4AUkSYqIQkQSoghodkVUcERRUUEG8igiAOOjoCMFVEsDIoK2AfkIaKOg6OIisr74Xuja9a89+bN/rXXPues852zzwfACAyWSDNRNYAMqUIeEeCDx8TG4eQuQIEKJHAAEAizZCFz/SMBAPh+PDwrIsAHvgABeNMLCADATZvAMByH/w/qQplcAYCEAcB0kThLCIAUAEB6jkKmAEBGAYCdmCZTAKAEAGDLY2LjAFAtAGAnf+bTAICd+Jl7AQBblCEVAaCRACATZYhEAGg7AKzPVopFAFgwABRmS8Q5ANgtADBJV2ZIALC3AMDOEAuyAAgMADBRiIUpAAR7AGDIIyN4AISZABRG8lc88SuuEOcqAAB4mbI8uSQ5RYFbCC1xB1dXLh4ozkkXKxQ2YQJhmkAuwnmZGTKBNA/g88wAAKCRFRHgg/P9eM4Ors7ONo62Dl8t6r8G/yJiYuP+5c+rcEAAAOF0ftH+LC+zGoA7BoBt/qIl7gRoXgugdfeLZrIPQLUAoOnaV/Nw+H48PEWhkLnZ2eXk5NhKxEJbYcpXff5nwl/AV/1s+X48/Pf14L7iJIEyXYFHBPjgwsz0TKUcz5IJhGLc5o9H/LcL//wd0yLESWK5WCoU41EScY5EmozzMqUiiUKSKcUl0v9k4t8s+wM+3zUAsGo+AXuRLahdYwP2SycQWHTA4vcAAPK7b8HUKAgDgGiD4c93/+8//UegJQCAZkmScQAAXkQkLlTKsz/HCAAARKCBKrBBG/TBGCzABhzBBdzBC/xgNoRCJMTCQhBCCmSAHHJgKayCQiiGzbAdKmAv1EAdNMBRaIaTcA4uwlW4Dj1wD/phCJ7BKLyBCQRByAgTYSHaiAFiilgjjggXmYX4IcFIBBKLJCDJiBRRIkuRNUgxUopUIFVIHfI9cgI5h1xGupE7yAAygvyGvEcxlIGyUT3UDLVDuag3GoRGogvQZHQxmo8WoJvQcrQaPYw2oefQq2gP2o8+Q8cwwOgYBzPEbDAuxsNCsTgsCZNjy7EirAyrxhqwVqwDu4n1Y8+xdwQSgUXACTYEd0IgYR5BSFhMWE7YSKggHCQ0EdoJNwkDhFHCJyKTqEu0JroR+cQYYjIxh1hILCPWEo8TLxB7iEPENyQSiUMyJ7mQAkmxpFTSEtJG0m5SI+ksqZs0SBojk8naZGuyBzmULCAryIXkneTD5DPkG+Qh8lsKnWJAcaT4U+IoUspqShnlEOU05QZlmDJBVaOaUt2ooVQRNY9aQq2htlKvUYeoEzR1mjnNgxZJS6WtopXTGmgXaPdpr+h0uhHdlR5Ol9BX0svpR+iX6AP0dwwNhhWDx4hnKBmbGAcYZxl3GK+YTKYZ04sZx1QwNzHrmOeZD5lvVVgqtip8FZHKCpVKlSaVGyovVKmqpqreqgtV81XLVI+pXlN9rkZVM1PjqQnUlqtVqp1Q61MbU2epO6iHqmeob1Q/pH5Z/YkGWcNMw09DpFGgsV/jvMYgC2MZs3gsIWsNq4Z1gTXEJrHN2Xx2KruY/R27iz2qqaE5QzNKM1ezUvOUZj8H45hx+Jx0TgnnKKeX836K3hTvKeIpG6Y0TLkxZVxrqpaXllirSKtRq0frvTau7aedpr1Fu1n7gQ5Bx0onXCdHZ4/OBZ3nU9lT3acKpxZNPTr1ri6qa6UbobtEd79up+6Ynr5egJ5Mb6feeb3n+hx9L/1U/W36p/VHDFgGswwkBtsMzhg8xTVxbzwdL8fb8VFDXcNAQ6VhlWGX4YSRudE8o9VGjUYPjGnGXOMk423GbcajJgYmISZLTepN7ppSTbmmKaY7TDtMx83MzaLN1pk1mz0x1zLnm+eb15vft2BaeFostqi2uGVJsuRaplnutrxuhVo5WaVYVVpds0atna0l1rutu6cRp7lOk06rntZnw7Dxtsm2qbcZsOXYBtuutm22fWFnYhdnt8Wuw+6TvZN9un2N/T0HDYfZDqsdWh1+c7RyFDpWOt6azpzuP33F9JbpL2dYzxDP2DPjthPLKcRpnVOb00dnF2e5c4PziIuJS4LLLpc+Lpsbxt3IveRKdPVxXeF60vWdm7Obwu2o26/uNu5p7ofcn8w0nymeWTNz0MPIQ+BR5dE/C5+VMGvfrH5PQ0+BZ7XnIy9jL5FXrdewt6V3qvdh7xc+9j5yn+M+4zw33jLeWV/MN8C3yLfLT8Nvnl+F30N/I/9k/3r/0QCngCUBZwOJgUGBWwL7+Hp8Ib+OPzrbZfay2e1BjKC5QRVBj4KtguXBrSFoyOyQrSH355jOkc5pDoVQfujW0Adh5mGLw34MJ4WHhVeGP45wiFga0TGXNXfR3ENz30T6RJZE3ptnMU85ry1KNSo+qi5qPNo3ujS6P8YuZlnM1VidWElsSxw5LiquNm5svt/87fOH4p3iC+N7F5gvyF1weaHOwvSFpxapLhIsOpZATIhOOJTwQRAqqBaMJfITdyWOCnnCHcJnIi/RNtGI2ENcKh5O8kgqTXqS7JG8NXkkxTOlLOW5hCepkLxMDUzdmzqeFpp2IG0yPTq9MYOSkZBxQqohTZO2Z+pn5mZ2y6xlhbL+xW6Lty8elQfJa7OQrAVZLQq2QqboVFoo1yoHsmdlV2a/zYnKOZarnivN7cyzytuQN5zvn//tEsIS4ZK2pYZLVy0dWOa9rGo5sjxxedsK4xUFK4ZWBqw8uIq2Km3VT6vtV5eufr0mek1rgV7ByoLBtQFr6wtVCuWFfevc1+1dT1gvWd+1YfqGnRs+FYmKrhTbF5cVf9go3HjlG4dvyr+Z3JS0qavEuWTPZtJm6ebeLZ5bDpaql+aXDm4N2dq0Dd9WtO319kXbL5fNKNu7g7ZDuaO/PLi8ZafJzs07P1SkVPRU+lQ27tLdtWHX+G7R7ht7vPY07NXbW7z3/T7JvttVAVVN1WbVZftJ+7P3P66Jqun4lvttXa1ObXHtxwPSA/0HIw6217nU1R3SPVRSj9Yr60cOxx++/p3vdy0NNg1VjZzG4iNwRHnk6fcJ3/ceDTradox7rOEH0x92HWcdL2pCmvKaRptTmvtbYlu6T8w+0dbq3nr8R9sfD5w0PFl5SvNUyWna6YLTk2fyz4ydlZ19fi753GDborZ752PO32oPb++6EHTh0kX/i+c7vDvOXPK4dPKy2+UTV7hXmq86X23qdOo8/pPTT8e7nLuarrlca7nuer21e2b36RueN87d9L158Rb/1tWeOT3dvfN6b/fF9/XfFt1+cif9zsu72Xcn7q28T7xf9EDtQdlD3YfVP1v+3Njv3H9qwHeg89HcR/cGhYPP/pH1jw9DBY+Zj8uGDYbrnjg+OTniP3L96fynQ89kzyaeF/6i/suuFxYvfvjV69fO0ZjRoZfyl5O/bXyl/erA6xmv28bCxh6+yXgzMV70VvvtwXfcdx3vo98PT+R8IH8o/2j5sfVT0Kf7kxmTk/8EA5jz/GMzLdsAAAAgY0hSTQAAeiUAAICDAAD5/wAAgOkAAHUwAADqYAAAOpgAABdvkl/FRgAAAKRJREFUeNrs1TEKwkAQheEvIoI2nsk7qFdIq1hoJ3gCC5sUVpY23sDKXnvrYOUBbGITG0kQjQriPlgYhmF/3ryFjbIs82nVfEEBEiAB8k+Q+q1IkqSDNVq4lMy3scIkjuP0FSdbjNHMLys6OwyQVlnXEsOS2QP6OL8jkzlmd70jus86eBT8FIu8PqGXg6oFX6ARGthgX+V1ReFnDJAACZAfhFwHAJI7HF2lZGQaAAAAAElFTkSuQmCC)
-        96% / 15% no-repeat $light;
+        96% / 15% no-repeat var(--color-surface-alt);
 }
 
 #javascript_error {
-    background: red;
+    background: var(--color-danger);
     color: white;
     padding: 20px;
     margin-top: 10px;
 }
 
-// End Globals
-
-//
 // Notification Bar
-//
+/////////////////////////////////////////////////
+
 .jquery-notify-bar {
     color: #fff;
     text-shadow: none;
@@ -195,20 +179,18 @@ select:hover {
 
 .jquery-notify-bar.error,
 .jquery-notify-bar.fail {
-    background-color: #ff9800;
+    background-color: var(--color-warning);
     color: white;
 }
 
 .jquery-notify-bar.success {
     color: white;
-    background-color: #4caf50;
+    background-color: var(--color-success);
 }
 
-// End Notification Bar
-
-//
 // Login page
-//
+/////////////////////////////////////////////////
+
 .login {
     #wrap {
         margin: auto;
@@ -233,39 +215,28 @@ select:hover {
         font-weight: 600;
         padding: 10px 25px;
         margin-top: 15px !important;
-
-        @if ($theme == "light") {
-            background: $accent !important;
-        }
-
-        else {
-            background: $light !important;
-            border-left: 7px solid $accent !important;
-        }
     }
 
     input.button:hover {
-        background: color.adjust($accent, $lightness: -10%, $space: hsl) !important;
+        background: var(--color-accent-strong) !important;
     }
 
     .error {
         padding: 10px;
-        background: $accent;
+        margin: 0;
+        background: var(--color-accent);
         color: white;
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        margin: 0;
+        right: 0;
         text-align: center;
     }
 }
 
-// End login page
-
-//
 // Start Index page
-//
+/////////////////////////////////////////////////
+
 .index {
     #add-url {
         width: 200px;
@@ -279,7 +250,7 @@ select:hover {
 
     #new_url {
         border: none;
-        background: $default;
+        background: var(--color-surface);
         text-align: left;
 
         input.button {
@@ -287,14 +258,14 @@ select:hover {
         }
 
         div {
-            background: $default;
+            background: var(--color-surface);
             padding: 4px;
             padding-top: 0px;
         }
     }
 
     .create {
-        background: $accent !important;
+        background: var(--color-accent) !important;
         width: 150px;
         font-size: 1.3em !important;
         border: none !important;
@@ -311,20 +282,12 @@ select:hover {
         width: 100vw;
         height: 50px;
 
-        @if ($theme == "light") {
-            background: color.adjust($accent, $lightness: -10%, $space: hsl);
-        } @else {
-            background: $default;
-        }
+        background: var(--topbar-bg);
 
         label {
             font-size: 1em;
             font-weight: 600;
-            color: $text;
-
-            @if ($theme == "light") {
-                color: $default;
-            }
+            color: var(--topbar-text);
         }
 
         input.text {
@@ -332,12 +295,7 @@ select:hover {
             padding: 4px;
             font-weight: 200;
             font-size: 1em !important;
-
-            @if ($theme == "light") {
-                background: $default !important;
-            } @else {
-                background: $lightest !important;
-            }
+            background: var(--topbar-input-bg) !important;
         }
 
         .short {
@@ -353,21 +311,13 @@ select:hover {
             padding: 5px 10px;
             font-size: 1em !important;
             margin-left: 10px !important;
-            background: $lightest !important;
-
-            @if ($theme == "light") {
-                background: $default !important;
-                font-weight: 700;
-                color: $accent !important;
-            }
+            background: var(--topbar-button-bg) !important;
+            color: var(--topbar-button-text) !important;
+            font-weight: var(--topbar-button-font-weight);
         }
 
         input.button:hover {
-            background: color.adjust($accent, $lightness: -10%, $space: hsl) !important;
-
-            @if ($theme == "light") {
-                background: color.adjust(white, $lightness: -10%, $space: hsl) !important;
-            }
+            background: var(--topbar-button-hover-bg) !important;
         }
 
         #new_url_form {
@@ -378,15 +328,15 @@ select:hover {
 
     // Table stuff
     table.tblSorter {
-        background-color: $default;
-        color: $text;
+        background-color: var(--color-surface);
+        color: var(--color-text);
 
         a {
-            color: $text;
+            color: var(--color-text);
         }
 
         small a {
-            color: color.adjust(white, $lightness: -50%, $space: hsl);
+            color: var(--color-text-muted);
         }
 
         thead tr .tablesorter-header {
@@ -394,7 +344,7 @@ select:hover {
         }
 
         tfoot tr {
-            background-color: $default;
+            background-color: var(--color-surface);
         }
 
         thead tr th,
@@ -408,27 +358,27 @@ select:hover {
 
         thead tr .tablesorter-headerAsc,
         thead tr .tablesorter-headerDesc {
-            background-color: $lightest !important;
+            background-color: var(--color-surface-strong) !important;
         }
 
         tbody td {
-            color: $text;
+            color: var(--color-text);
             padding: 5px;
-            background-color: $light;
+            background-color: var(--color-surface-alt);
             vertical-align: middle;
             transition: 0.4s all;
         }
 
         tbody tr:hover td {
-            background-color: $lightest !important;
+            background-color: var(--color-surface-strong) !important;
         }
 
         tbody tr.normal-row td {
-            background: $light;
+            background: var(--color-surface-alt);
         }
 
         .keyword {
-            border-left: 7px solid $accent;
+            border-left: 7px solid var(--color-accent);
         }
 
         input.text {
@@ -437,16 +387,16 @@ select:hover {
         }
 
         .navigation .nav_link a {
-            background: $light;
+            background: var(--color-surface-alt);
             border: none;
 
             &:hover {
-                background: $lightest;
+                background: var(--color-surface-strong);
             }
         }
 
         tr.edit-row td {
-            background: $default !important;
+            background: var(--color-surface) !important;
         }
 
         // Icons
@@ -454,7 +404,7 @@ select:hover {
         @each $icon in $icons-list {
             @if $icon == delete {
                 td.actions .button_#{$icon} {
-                    background: red
+                    background: var(--color-danger)
                         url(../img/#{$icon}.png)
                         0px
                         center
@@ -466,7 +416,7 @@ select:hover {
                     border-radius: 2px;
 
                     &:hover {
-                        background: color.adjust(red, $lightness: -10%, $space: hsl)
+                        background: var(--color-danger-hover)
                             url(../img/#{$icon}.png)
                             0px
                             center
@@ -477,7 +427,7 @@ select:hover {
                 }
             } @else {
                 td.actions .button_#{$icon} {
-                    background: $accent
+                    background: var(--color-accent)
                         url(../img/#{$icon}.png)
                         0px
                         center
@@ -489,7 +439,7 @@ select:hover {
                     border-radius: 2px;
 
                     &:hover {
-                        background: color.adjust($accent, $lightness: -10%, $space: hsl)
+                        background: var(--color-accent-strong)
                             url(../img/#{$icon}.png)
                             0px
                             center
@@ -503,13 +453,11 @@ select:hover {
     }
 }
 
-// End index page
-
-//
 // Nav
-//
+/////////////////////////////////////////////////
+
 nav {
-    background: $default;
+    background: var(--color-surface);
     height: 100%;
     position: fixed;
     top: 0;
@@ -524,16 +472,16 @@ nav {
 
     ul#admin_menu li:hover {
         list-style-type: none;
-        color: color.adjust($title, $lightness: -20%, $space: hsl);
+        color: var(--color-title-hover);
     }
 
     ul#admin_menu li {
-        color: $title;
+        color: var(--color-title);
         padding: 5px 0;
     }
 
     #admin_menu_logout_link:hover {
-        color: $title !important;
+        color: var(--color-title) !important;
     }
 
     .admin_menu_sublevel {
@@ -557,7 +505,7 @@ img.logo {
     position: fixed;
     top: 0;
     left: 0;
-    background: $accent;
+    background: var(--color-accent);
     padding: 9px 150px 8px 20px;
     z-index: 20;
 }
@@ -582,17 +530,14 @@ header {
     display: none;
 }
 
-// End nav
-
-//
 // Information
-//
+/////////////////////////////////////////////////
 #wrap {
     #tabs {
         min-width: 580px;
 
         .tab {
-            background: $light !important;
+            background: var(--color-surface-alt) !important;
         }
 
         .wrap_unfloat {
@@ -605,11 +550,11 @@ header {
         }
 
         li {
-            color: $text;
+            color: var(--color-text);
         }
 
         #historical_clicks li:hover {
-            background: color.adjust($default, $lightness: -10%, $space: hsl) !important;
+            background: var(--color-surface-hover) !important;
         }
 
         ul#headers li a,
@@ -617,12 +562,12 @@ header {
             outline: none;
             border: none;
             border-radius: 0;
-            background: $light;
-            color: $text;
+            background: var(--color-surface-alt);
+            color: var(--color-text);
             padding: 10px 15px 7px 25px;
 
             &:hover {
-                background: color.adjust($default, $lightness: -10%, $space: hsl);
+                background: var(--color-surface-hover);
             }
 
             h2 {
@@ -631,11 +576,11 @@ header {
             }
 
             &.selected {
-                background: $lightest;
-                border-bottom: 2px solid $accent;
+                background: var(--color-surface-strong);
+                border-bottom: 2px solid var(--color-accent);
 
                 &:hover {
-                    background: color.adjust($default, $lightness: -15%, $space: hsl);
+                    background: var(--color-surface-hover-strong);
                 }
             }
         }
@@ -650,15 +595,14 @@ header {
 
         svg {
             ellipse {
-                fill: $accent;
+                fill: var(--color-accent);
             }
         }
     }
 }
 
-//
 // General Styles
-//
+/////////////////////////////////////////////////
 
 body.index #wrap {
     padding-top: 50px;
@@ -668,7 +612,7 @@ body.index #wrap {
     background: none;
     margin-left: 270px;
     border: none;
-    color: $text;
+    color: var(--color-text);
     max-width: 100%;
 }
 
@@ -677,8 +621,8 @@ body.index #wrap {
     margin: 0;
     padding: 0;
     border-radius: 0;
-    background: $accent;
-    border: 1px solid $accent;
+    background: var(--color-accent);
+    border: 1px solid var(--color-accent);
     padding: 10px;
 
     p {
@@ -696,15 +640,15 @@ body.index #wrap {
 }
 
 div.share {
-    background: $default;
+    background: var(--color-surface);
     border-radius: 0;
     border: none;
     padding: 0px 20px 10px;
     margin-top: 10px;
 
     textarea {
-        background: $light;
-        color: $text;
+        background: var(--color-surface-alt);
+        color: var(--color-text);
         border: none;
         padding: 3px;
         outline: none;
@@ -713,11 +657,11 @@ div.share {
 
     #charcount {
         padding-left: 5px;
-        color: $text;
+        color: var(--color-text);
     }
 
     #share_links a {
-        color: $text;
+        color: var(--color-text);
     }
 }
 
@@ -725,7 +669,7 @@ div.share {
 .plugins main,
 .plugin_page_responsive_settings main,
 code {
-    background: $default;
+    background: var(--color-surface);
     padding: 10px;
     padding: 5px 25px;
     max-width: 100%;
@@ -736,11 +680,7 @@ code {
 
     code,
     tt {
-        background: rgba(0, 123, 255, 0.7);
-
-        @if ($theme == "light") {
-            background: rgba(35, 185, 222, 0.5);
-        }
+        background: var(--code-bg);
     }
 
     a.bookmarklet {
@@ -748,7 +688,7 @@ code {
         background: #ffffff url("/images/favicon.gif") 4px center no-repeat;
         border-radius: 1px;
         padding: 7px 7px 7px 25px;
-        color: color.adjust(white, $lightness: -80%, $space: hsl);
+        color: var(--color-bookmarklet-text);
 
         &:hover {
             background: #e0e0e0 url("/images/favicon.gif") 4px center no-repeat;
@@ -757,13 +697,13 @@ code {
 
     // Table
     table.tblSorter {
-        background: $default;
+        background: var(--color-surface);
 
         a {
-            color: $text;
+            color: var(--color-text);
 
             &:hover {
-                color: color.adjust($text, $lightness: -30%, $space: hsl);
+                color: var(--color-text-hover);
             }
         }
 
@@ -771,13 +711,13 @@ code {
         tfoot tr th,
         th.header {
             border: none;
-            background-color: $light;
+            background-color: var(--color-surface-alt);
             padding: 10px;
         }
 
         tbody td {
-            background: $lightest;
-            color: $text;
+            background: var(--color-surface-strong);
+            color: var(--color-text);
         }
     }
 }
@@ -791,11 +731,8 @@ body > div > pre {
     padding-left: 290px;
 }
 
-// End General Styles
-
-//
 // Footer
-//
+/////////////////////////////////////////////////
 
 #footer {
     position: fixed;
@@ -814,7 +751,7 @@ body > div > pre {
         a {
             background: none;
             padding-left: 0;
-            color: $text;
+            color: var(--color-text);
 
             &:hover {
                 color: #828282;
@@ -823,7 +760,9 @@ body > div > pre {
     }
 }
 
-// End footer
+///////////////////////////////////////////////////////////
+// Mobile
+///////////////////////////////////////////////////////////
 
 // Mobile styles
 @include for-size(phone-only) {
@@ -866,11 +805,7 @@ body > div > pre {
             height: 100%;
             padding: 50px;
             display: none;
-            @if ($theme == "light") {
-                background: color.adjust($accent, $lightness: -10%, $space: hsl);
-            } @else {
-                background: $default;
-            }
+            background: var(--mobile-nav-bg);
 
             li {
                 color: white;

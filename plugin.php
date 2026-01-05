@@ -25,26 +25,18 @@ function responsive_head_meta() {
 
 yourls_add_action( 'html_head_meta', 'responsive_head_meta' );
 
-function responsive_set_theme( $theme ) {
-    $url = yourls_plugin_url( __DIR__ );
-    if ( $theme == "light" ) {
-        echo <<<HEAD
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-            <link rel="stylesheet" href="$url/release/css/light.css">
-            <script src="$url/release/js/theme.js"></script>
-            <meta name="responsive_theme" content="light">
-            HEAD;
-    } elseif ( $theme == "dark" ) {
-        echo <<<HEAD
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-            <link rel="stylesheet" href="$url/release/css/dark.css">
-            <script src="$url/release/js/theme.js"></script>
-            <meta name="responsive_theme" content="dark">
-            HEAD;
-    }
+function responsive_set_theme( $theme ): void {
+    $url   = yourls_plugin_url( __DIR__ );
+    $theme = ( $theme == "light" ) ? "light" : "dark";
+    echo <<<HEAD
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+        <link rel="stylesheet" href="$url/release/css/theme.css">
+        <meta name="responsive_theme" content="$theme">
+        <script src="$url/release/js/theme.js"></script>
+        HEAD;
 }
 
-function responsive_head_scripts() {
+function responsive_head_scripts(): void {
     // This is so the user doesn't have to reload page twice in settings screen
     if ( isset( $_POST['theme_choice'] ) ) {
         // User has just changed theme
@@ -66,7 +58,7 @@ function responsive_head_scripts() {
 yourls_add_action( 'html_head', 'responsive_head_scripts' );
 
 
-function responsive_head_plugin_url() {
+function responsive_head_plugin_url(): void {
     $url = yourls_plugin_url( __DIR__ );
     echo <<<HEAD
         <meta name="pluginURL" content="$url">
@@ -80,7 +72,7 @@ yourls_add_action( 'html_head', 'responsive_head_plugin_url' );
  * Plugins Loaded
  *********************************************************/
 
-function responsive_settings_update() {
+function responsive_settings_update(): void {
     $in = $_POST['theme_choice'];
 
     if ( $in ) {
@@ -93,7 +85,7 @@ function responsive_settings_update() {
     }
 }
 
-function responsive_settings_handler() {
+function responsive_settings_handler(): void {
     // Check if a form was submitted
     if ( isset( $_POST['theme_choice'] ) ) {
         // Check nonce
@@ -117,8 +109,8 @@ function responsive_settings_handler() {
         	<p>
         		<label>Theme</label>
         		<select name="theme_choice" size="1" id="ui_selector">
-        			<option value="dark" <?= $theme_choice === 'dark' ? 'selected' : ''; ?>>Dark</option>
-        			<option value="light" <?= $theme_choice === 'light' ? 'selected' : ''; ?>>Light</option>
+        			<option value="dark" <?php $theme_choice === 'dark' ? 'selected' : ''; ?>>Dark</option>
+        			<option value="light" <?php $theme_choice === 'light' ? 'selected' : ''; ?>>Light</option>
         		</select>
         	</p>
         	<p><input type="submit" value="Save" class="button" /></p>
@@ -127,7 +119,7 @@ function responsive_settings_handler() {
         HTML;
 }
 
-function responsive_settings() {
+function responsive_settings(): void {
     yourls_register_plugin_page( 'responsive_settings',
         'Responsive UI Settings', 'responsive_settings_handler' );
     // parameters: page slug, page title, and function that will display the page itself
@@ -161,3 +153,10 @@ function responsive_help_link( $help_link ) {
 }
 
 yourls_add_filter( 'help_link', 'responsive_help_link' );
+
+
+function responsive_hide_powered_by( $html ) {
+    return $html;
+}
+
+yourls_add_filter( 'html_footer_text', 'responsive_hide_powered_by' );

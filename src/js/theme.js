@@ -1,5 +1,14 @@
 console.log("Responsive UI");
 
+const root = document.documentElement;
+const themeMeta = document.querySelector('meta[name="responsive_theme"]');
+const theme = themeMeta ? themeMeta.getAttribute("content") : "dark";
+
+if (theme === "light" || theme === "dark") {
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+}
+
 $(document).ready(function () {
     // Get the theme URL
     let url;
@@ -8,14 +17,6 @@ $(document).ready(function () {
     } else {
         // If for some reason we can't find the URL attribute
         url = "/user/plugins/yours-responsive-ui";
-    }
-
-    // Detect theme
-    var theme;
-    if ($("meta[name=responsive_theme]").attr("content") == "light") {
-        theme = "light";
-    } else if ($("meta[name=responsive_theme]").attr("content") == "dark") {
-        theme = "dark";
     }
 
     console.log("Theme is", theme);
