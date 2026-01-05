@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN git config --global --add safe.directory /var/www/html
 
 # install PHP extensions manager
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.37/install-php-extensions /usr/local/bin/
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.9.24/install-php-extensions /usr/local/bin/
 
 # [production] PHP extensions
 RUN install-php-extensions \
