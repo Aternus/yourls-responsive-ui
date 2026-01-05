@@ -9,82 +9,67 @@ $warning: #ff9800;
 :root {
     color-scheme: light dark;
 
-    --color-bg: #{light-dark(#efefef, #1d1d1d)};
-    --color-surface: #{light-dark(#f7f7f7, #232323)};
-    --color-surface-alt: #{light-dark(#ffffff, #313131)};
-    --color-surface-strong: #{light-dark(#e8e8e8, #464646)};
-    --color-text: #{light-dark(#313131, #dcdcdc)};
-    --color-text-hover: #{light-dark(
-            color.adjust(#313131, $lightness: -30%, $space: hsl),
-            color.adjust(#dcdcdc, $lightness: -30%, $space: hsl)
-        )};
-    --color-text-muted: #{light-dark(
-            color.adjust(#ffffff, $lightness: -50%, $space: hsl),
-            color.adjust(#ffffff, $lightness: -50%, $space: hsl)
-        )};
-    --color-title: #{light-dark(#1d1d1d, #ececec)};
-    --color-title-hover: #{light-dark(
-            color.adjust(#1d1d1d, $lightness: -20%, $space: hsl),
-            color.adjust(#ececec, $lightness: -20%, $space: hsl)
-        )};
+    --color-bg: light-dark(#efefef, #1d1d1d);
+    --color-surface: light-dark(#f7f7f7, #232323);
+    --color-surface-alt: light-dark(#ffffff, #313131);
+    --color-surface-strong: light-dark(#e8e8e8, #464646);
+    --color-text: light-dark(#313131, #dcdcdc);
+    --color-text-hover: light-dark(
+        color.adjust(#313131, $lightness: -30%, $space: hsl),
+        color.adjust(#dcdcdc, $lightness: -30%, $space: hsl)
+    );
+    --color-text-muted: light-dark(
+        color.adjust(#ffffff, $lightness: -50%, $space: hsl),
+        color.adjust(#ffffff, $lightness: -50%, $space: hsl)
+    );
+    --color-title: light-dark(#1d1d1d, #ececec);
+    --color-title-hover: light-dark(
+        color.adjust(#1d1d1d, $lightness: -20%, $space: hsl),
+        color.adjust(#ececec, $lightness: -20%, $space: hsl)
+    );
     --color-link: #828282;
-    --color-accent: #{$accent};
-    --color-accent-strong: #{color.adjust(
-            $accent,
-            $lightness: -10%,
-            $space: hsl
-        )};
-    --color-accent-hover: #{color.adjust(
-            $accent,
-            $lightness: -15%,
-            $space: hsl
-        )};
-    --color-surface-hover: #{light-dark(
-            color.adjust(#f7f7f7, $lightness: -10%, $space: hsl),
-            color.adjust(#232323, $lightness: -10%, $space: hsl)
-        )};
-    --color-surface-hover-strong: #{light-dark(
-            color.adjust(#f7f7f7, $lightness: -15%, $space: hsl),
-            color.adjust(#232323, $lightness: -15%, $space: hsl)
-        )};
+    --color-accent: $accent;
+    --color-accent-strong: color.adjust($accent, $lightness: -10%, $space: hsl);
+    --color-accent-hover: color.adjust($accent, $lightness: -15%, $space: hsl);
+    --color-surface-hover: light-dark(
+        color.adjust(#f7f7f7, $lightness: -10%, $space: hsl),
+        color.adjust(#232323, $lightness: -10%, $space: hsl)
+    );
+    --color-surface-hover-strong: light-dark(
+        color.adjust(#f7f7f7, $lightness: -15%, $space: hsl),
+        color.adjust(#232323, $lightness: -15%, $space: hsl)
+    );
     --color-input-border: rgba(255, 255, 255, 0.25);
-    --color-input-border-focus: #{light-dark(
-            rgba(255, 255, 255, 0.25),
-            $accent
-        )};
-    --button-bg: #{light-dark($accent, #313131)};
-    --button-text: #{light-dark(#ffffff, #dcdcdc)};
-    --button-border-left-color: #{$accent};
-    --topbar-bg: #{light-dark(
-            color.adjust($accent, $lightness: -10%, $space: hsl),
-            #232323
-        )};
-    --topbar-text: #{light-dark(#f7f7f7, #dcdcdc)};
-    --topbar-input-bg: #{light-dark(#f7f7f7, #464646)};
-    --topbar-button-bg: #{light-dark(#f7f7f7, #464646)};
-    --topbar-button-text: #{light-dark($accent, #dcdcdc)};
-    --topbar-button-hover-bg: #{light-dark(
-            color.adjust(#ffffff, $lightness: -10%, $space: hsl),
-            color.adjust($accent, $lightness: -10%, $space: hsl)
-        )};
-    --mobile-nav-bg: #{light-dark(
-            color.adjust($accent, $lightness: -10%, $space: hsl),
-            #232323
-        )};
-    --code-bg: #{light-dark(rgba(35, 185, 222, 0.5), rgba(0, 123, 255, 0.7))};
-    --color-bookmarklet-text: #{color.adjust(
-            #ffffff,
-            $lightness: -80%,
-            $space: hsl
-        )};
-    --color-danger: #{$danger};
-    --color-danger-hover: #{color.adjust(
-            $danger,
-            $lightness: -10%,
-            $space: hsl
-        )};
-    --color-success: #{$success};
-    --color-warning: #{$warning};
+    --color-input-border-focus: light-dark(rgba(255, 255, 255, 0.25), $accent);
+    --button-bg: light-dark($accent, #313131);
+    --button-text: light-dark(#ffffff, #dcdcdc);
+    --button-border-left-color: $accent;
+    --topbar-bg: light-dark(
+        color.adjust($accent, $lightness: -10%, $space: hsl),
+        #232323
+    );
+    --topbar-text: light-dark(#f7f7f7, #dcdcdc);
+    --topbar-input-bg: light-dark(#f7f7f7, #464646);
+    --topbar-button-bg: light-dark(#f7f7f7, #464646);
+    --topbar-button-text: light-dark($accent, #dcdcdc);
+    --topbar-button-hover-bg: light-dark(
+        color.adjust(#ffffff, $lightness: -10%, $space: hsl),
+        color.adjust($accent, $lightness: -10%, $space: hsl)
+    );
+    --mobile-nav-bg: light-dark(
+        color.adjust($accent, $lightness: -10%, $space: hsl),
+        #232323
+    );
+    --code-bg: light-dark(rgba(35, 185, 222, 0.5), rgba(0, 123, 255, 0.7));
+    --color-bookmarklet-text: color.adjust(
+        #ffffff,
+        $lightness: -80%,
+        $space: hsl
+    );
+    --color-danger: $danger;
+    --color-danger-hover: color.adjust($danger, $lightness: -10%, $space: hsl);
+    --color-success: $success;
+    --color-warning: $warning;
 
     --radius-input: 2px;
     --button-font-weight: 600;
