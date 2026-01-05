@@ -1,32 +1,28 @@
 <?php
 
 function responsive_settings_update(): void {
-    $selected_color_scheme = $_POST['responsive_color_scheme'];
+    $selected = $_POST['responsive_color_scheme'] ?? '';
 
-    if ( $selected_color_scheme ) {
-        if ( $selected_color_scheme == RESPONSIVE_SCHEME_LIGHT or $selected_color_scheme == RESPONSIVE_SCHEME_DARK ) {
-            yourls_update_option( 'responsive_color_scheme',
-                $selected_color_scheme );
-        } else {
-            echo "Error";
-        }
+    if (
+        in_array(
+            $selected,
+            [ RESPONSIVE_SCHEME_LIGHT, RESPONSIVE_SCHEME_DARK ],
+            true,
+        )
+    ) {
+        yourls_update_option( 'responsive_color_scheme', $selected );
     }
 }
 
 function responsive_settings_handler(): void {
-    // Check if a form was submitted
     if ( isset( $_POST['responsive_color_scheme'] ) ) {
-        // Check nonce
         yourls_verify_nonce( 'responsive_settings' );
 
-        // Process form
         responsive_settings_update();
     }
 
-    // Get value from the database
     $responsive_color_scheme = yourls_get_option( 'responsive_color_scheme' );
 
-    // Create nonce
     $nonce = yourls_create_nonce( 'responsive_settings' );
 
     $dark  = RESPONSIVE_SCHEME_DARK;
@@ -41,8 +37,8 @@ function responsive_settings_handler(): void {
         	<form method="post">
         	<input type="hidden" name="nonce" value="$nonce" />
         	<p>
-        		<label>Theme</label>
-        		<select name="responsive_color_scheme" id="ui_selector">
+        		<label>Color Scheme</label>
+        		<select name="responsive_color_scheme">
         			<option value="$dark" $dark_selected>Dark</option>
         			<option value="$light" $light_selected>Light</option>
         		</select>

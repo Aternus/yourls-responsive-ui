@@ -6,138 +6,88 @@ $danger: #ff0000;
 $success: #4caf50;
 $warning: #ff9800;
 
-$themes: (
-    light: (
-        color-bg: #efefef,
-        color-surface: #f7f7f7,
-        color-surface-alt: #ffffff,
-        color-surface-strong: #e8e8e8,
-        color-text: #313131,
-        color-text-hover: color.adjust(#313131, $lightness: -30%, $space: hsl),
-        color-text-muted: color.adjust(#ffffff, $lightness: -50%, $space: hsl),
-        color-title: #1d1d1d,
-        color-title-hover: color.adjust(#1d1d1d, $lightness: -20%, $space: hsl),
-        color-link: #828282,
-        color-accent: $accent,
-        color-accent-strong: color.adjust(
-                $accent,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        color-accent-hover: color.adjust($accent, $lightness: -15%, $space: hsl),
-        color-surface-hover: color.adjust(
-                #f7f7f7,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        color-surface-hover-strong: color.adjust(
-                #f7f7f7,
-                $lightness: -15%,
-                $space: hsl
-            ),
-        color-input-border: rgba(255, 255, 255, 0.25),
-        color-input-border-focus: rgba(255, 255, 255, 0.25),
-        radius-input: 3px,
-        button-bg: $accent,
-        button-text: #ffffff,
-        button-font-weight: 700,
-        button-border-left-width: 0px,
-        button-border-left-color: $accent,
-        topbar-bg: color.adjust($accent, $lightness: -10%, $space: hsl),
-        topbar-text: #f7f7f7,
-        topbar-input-bg: #f7f7f7,
-        topbar-button-bg: #f7f7f7,
-        topbar-button-text: $accent,
-        topbar-button-font-weight: 700,
-        topbar-button-hover-bg: color.adjust(
-                #ffffff,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        mobile-nav-bg: color.adjust($accent, $lightness: -10%, $space: hsl),
-        code-bg: rgba(35, 185, 222, 0.5),
-        color-bookmarklet-text: color.adjust(
-                #ffffff,
-                $lightness: -80%,
-                $space: hsl
-            ),
-        color-danger: $danger,
-        color-danger-hover: color.adjust($danger, $lightness: -10%, $space: hsl),
-        color-success: $success,
-        color-warning: $warning,
-    ),
-    dark: (
-        color-bg: #1d1d1d,
-        color-surface: #232323,
-        color-surface-alt: #313131,
-        color-surface-strong: #464646,
-        color-text: #dcdcdc,
-        color-text-hover: color.adjust(#dcdcdc, $lightness: -30%, $space: hsl),
-        color-text-muted: color.adjust(#ffffff, $lightness: -50%, $space: hsl),
-        color-title: #ececec,
-        color-title-hover: color.adjust(#ececec, $lightness: -20%, $space: hsl),
-        color-link: #828282,
-        color-accent: $accent,
-        color-accent-strong: color.adjust(
-                $accent,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        color-accent-hover: color.adjust($accent, $lightness: -15%, $space: hsl),
-        color-surface-hover: color.adjust(
-                #232323,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        color-surface-hover-strong: color.adjust(
-                #232323,
-                $lightness: -15%,
-                $space: hsl
-            ),
-        color-input-border: rgba(255, 255, 255, 0.25),
-        color-input-border-focus: $accent,
-        radius-input: 0px,
-        button-bg: #313131,
-        button-text: #dcdcdc,
-        button-font-weight: 600,
-        button-border-left-width: 7px,
-        button-border-left-color: $accent,
-        topbar-bg: #232323,
-        topbar-text: #dcdcdc,
-        topbar-input-bg: #464646,
-        topbar-button-bg: #464646,
-        topbar-button-text: #dcdcdc,
-        topbar-button-font-weight: 500,
-        topbar-button-hover-bg: color.adjust(
-                $accent,
-                $lightness: -10%,
-                $space: hsl
-            ),
-        mobile-nav-bg: #232323,
-        code-bg: rgba(0, 123, 255, 0.7),
-        color-bookmarklet-text: color.adjust(
-                #ffffff,
-                $lightness: -80%,
-                $space: hsl
-            ),
-        color-danger: $danger,
-        color-danger-hover: color.adjust($danger, $lightness: -10%, $space: hsl),
-        color-success: $success,
-        color-warning: $warning,
-    ),
-);
-
-@mixin emit-theme($name) {
-    $tokens: map.get($themes, $name);
-    @each $token, $value in $tokens {
-        --#{$token}: #{$value};
-    }
-}
-
 :root {
-    @include emit-theme(light);
-}
+    color-scheme: light dark;
 
-:root[data-theme="dark"] {
-    @include emit-theme(dark);
+    --color-bg: #{light-dark(#efefef, #1d1d1d)};
+    --color-surface: #{light-dark(#f7f7f7, #232323)};
+    --color-surface-alt: #{light-dark(#ffffff, #313131)};
+    --color-surface-strong: #{light-dark(#e8e8e8, #464646)};
+    --color-text: #{light-dark(#313131, #dcdcdc)};
+    --color-text-hover: #{light-dark(
+            color.adjust(#313131, $lightness: -30%, $space: hsl),
+            color.adjust(#dcdcdc, $lightness: -30%, $space: hsl)
+        )};
+    --color-text-muted: #{light-dark(
+            color.adjust(#ffffff, $lightness: -50%, $space: hsl),
+            color.adjust(#ffffff, $lightness: -50%, $space: hsl)
+        )};
+    --color-title: #{light-dark(#1d1d1d, #ececec)};
+    --color-title-hover: #{light-dark(
+            color.adjust(#1d1d1d, $lightness: -20%, $space: hsl),
+            color.adjust(#ececec, $lightness: -20%, $space: hsl)
+        )};
+    --color-link: #828282;
+    --color-accent: #{$accent};
+    --color-accent-strong: #{color.adjust(
+            $accent,
+            $lightness: -10%,
+            $space: hsl
+        )};
+    --color-accent-hover: #{color.adjust(
+            $accent,
+            $lightness: -15%,
+            $space: hsl
+        )};
+    --color-surface-hover: #{light-dark(
+            color.adjust(#f7f7f7, $lightness: -10%, $space: hsl),
+            color.adjust(#232323, $lightness: -10%, $space: hsl)
+        )};
+    --color-surface-hover-strong: #{light-dark(
+            color.adjust(#f7f7f7, $lightness: -15%, $space: hsl),
+            color.adjust(#232323, $lightness: -15%, $space: hsl)
+        )};
+    --color-input-border: rgba(255, 255, 255, 0.25);
+    --color-input-border-focus: #{light-dark(
+            rgba(255, 255, 255, 0.25),
+            $accent
+        )};
+    --button-bg: #{light-dark($accent, #313131)};
+    --button-text: #{light-dark(#ffffff, #dcdcdc)};
+    --button-border-left-color: #{$accent};
+    --topbar-bg: #{light-dark(
+            color.adjust($accent, $lightness: -10%, $space: hsl),
+            #232323
+        )};
+    --topbar-text: #{light-dark(#f7f7f7, #dcdcdc)};
+    --topbar-input-bg: #{light-dark(#f7f7f7, #464646)};
+    --topbar-button-bg: #{light-dark(#f7f7f7, #464646)};
+    --topbar-button-text: #{light-dark($accent, #dcdcdc)};
+    --topbar-button-hover-bg: #{light-dark(
+            color.adjust(#ffffff, $lightness: -10%, $space: hsl),
+            color.adjust($accent, $lightness: -10%, $space: hsl)
+        )};
+    --mobile-nav-bg: #{light-dark(
+            color.adjust($accent, $lightness: -10%, $space: hsl),
+            #232323
+        )};
+    --code-bg: #{light-dark(rgba(35, 185, 222, 0.5), rgba(0, 123, 255, 0.7))};
+    --color-bookmarklet-text: #{color.adjust(
+            #ffffff,
+            $lightness: -80%,
+            $space: hsl
+        )};
+    --color-danger: #{$danger};
+    --color-danger-hover: #{color.adjust(
+            $danger,
+            $lightness: -10%,
+            $space: hsl
+        )};
+    --color-success: #{$success};
+    --color-warning: #{$warning};
+
+    --radius-input: 2px;
+    --button-font-weight: 600;
+    --button-border-left-width: 2px;
+    --topbar-button-font-weight: 600;
 }
