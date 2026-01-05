@@ -2,9 +2,11 @@ console.log("Responsive UI");
 
 const root = document.documentElement;
 const themeMeta = document.querySelector('meta[name="responsive_theme"]');
-const theme = themeMeta ? themeMeta.getAttribute("content") : "dark";
+const theme = themeMeta
+    ? themeMeta.getAttribute("content")
+    : RESPONSIVE_THEME_DARK;
 
-if (theme === "light" || theme === "dark") {
+if (theme === RESPONSIVE_THEME_LIGHT || theme === RESPONSIVE_THEME_DARK) {
     root.dataset.theme = theme;
     root.style.colorScheme = theme;
 }
@@ -32,11 +34,11 @@ $(document).ready(function () {
         // Login page
         console.log("Login page");
 
-        if (theme == "light") {
+        if (theme == RESPONSIVE_THEME_LIGHT) {
             $("#login").prepend(
                 `<img class="login-logo" src="${url}/assets/img/logo_black.png">`,
             );
-        } else if (theme == "dark") {
+        } else if (theme == RESPONSIVE_THEME_DARK) {
             $("#login").prepend(
                 `<img class="login-logo" src="${url}/assets/img/logo_white.png">`,
             );
