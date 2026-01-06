@@ -26,13 +26,32 @@ services:
             - ./.dev/yourls.config.php:/var/www/html/user/config.php
             - .:/var/www/html/user/plugins/yourls-responsive-ui
             - ./.dev/ssl:/var/www/ssl
-        ports:
-            - "80:80"
-            - "443:443"
         extra_hosts:
             - "host.docker.internal:host-gateway"
         depends_on:
             - db
+
+    browsersync:
+        image: node:22-alpine
+        working_dir: /yourls-responsive-ui
+        volumes:
+            - .:/yourls-responsive-ui
+        environment:
+            - CHOKIDAR_USEPOLLING=1
+        command: >
+            sh -lc "npx --yes browser-sync start
+            --proxy https://web
+            --files '/yourls-responsive-ui'
+            --host 0.0.0.0
+            --port 443
+            --https
+            --no-ui
+            --no-notify
+            --no-open"
+        ports:
+            - "443:443"
+        depends_on:
+            - web
 
     phpmyadmin:
         image: phpmyadmin
