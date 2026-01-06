@@ -1,0 +1,15 @@
+@use "../internal/shape" as *;
+
+a.bookmarklet {
+    display: inline-block;
+    border: 2px solid var(--brand-500);
+    border-radius: $shape-corner-extra-small;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    margin: 0.5rem;
+    background: var(--brand-050) url("/images/favicon.svg") no-repeat 0.25rem
+        center;
+
+    &:hover {
+        background-position: 0.5rem center;
+    }
+}

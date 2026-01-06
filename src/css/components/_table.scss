@@ -2,6 +2,7 @@ table.tblSorter {
     font-size: 1em;
     background-color: var(--brand-100);
     color: var(--brand-800);
+    border-collapse: collapse;
 
     width: 100%;
     margin: 0 0 1rem 0;
@@ -14,9 +15,14 @@ table.tblSorter {
             th,
             th.header {
                 background-color: var(--brand-200);
-                border: 1px solid var(--brand-300);
+            }
+
+            th,
+            th.header,
+            td {
                 font-size: 1em;
                 padding: 0.5em;
+                border: 1px solid var(--brand-300);
             }
         }
     }
@@ -24,7 +30,7 @@ table.tblSorter {
     tbody {
         td {
             vertical-align: top;
-            background-color: var(--brand-050);
+            background-color: inherit;
             color: var(--brand-800);
             padding: 0.5em;
         }
