@@ -1,0 +1,12 @@
+.index {
+    #wrap {
+        > p {
+            &:first-of-type {
+                margin-top: 1rem;
+            }
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

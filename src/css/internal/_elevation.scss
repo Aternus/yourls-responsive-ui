@@ -1,0 +1,71 @@
+// @see https://github.com/material-components/material-web/blob/v2.4.1/elevation/internal/_elevation.scss
+
+@use "sass:meta";
+
+// If you pass a Sass color -> we can compute rgba() at build time.
+// If you pass a runtime color (e.g. var(--shadow-color)) -> emit CSS Color 4 syntax.
+@function _md-alpha($color, $alpha) {
+    @if meta.type-of($color) == "color" {
+        @return rgba($color, $alpha);
+    }
+
+    // Runtime color (CSS variable, etc.)
+    // Produces: rgb(from var(--shadow-color) r g b / 0.3)
+    @return unquote("rgb(from #{$color} r g b / #{$alpha})");
+}
+
+// Safe subtraction for both numbers and runtime expressions.
+// If $a is a number -> do real Sass math.
+// Otherwise -> keep it as CSS math via calc().
+@function _md-sub($a, $b) {
+    @if meta.type-of($a) == "number" {
+        @return $a - $b;
+    }
+    @return calc(#{$a} - #{$b});
+}
+
+@function _md-key-shadow($level, $shadow-color, $opacity) {
+    // Matches "Key box shadow" math in Material's _elevation.scss
+    $level1-y: clamp(0, $level, 1);
+    $level4-y: clamp(0, _md-sub($level, 3), 1);
+    $level5-y: calc(2 * clamp(0, _md-sub($level, 4), 1));
+    $y: calc(1px * ($level1-y + $level4-y + $level5-y));
+
+    $level1-blur: calc(2 * clamp(0, $level, 1));
+    $level3-blur: clamp(0, _md-sub($level, 2), 1);
+    $level5-blur: clamp(0, _md-sub($level, 4), 1);
+    $blur: calc(1px * ($level1-blur + $level3-blur + $level5-blur));
+
+    @return 0px $y $blur 0px _md-alpha($shadow-color, $opacity);
+}
+
+@function _md-ambient-shadow($level, $shadow-color, $opacity) {
+    // Matches "Ambient box shadow" math in Material's _elevation.scss
+    $level1-y: clamp(0, $level, 1);
+    $level2-y: clamp(0, _md-sub($level, 1), 1);
+    $level3to5-y: calc(2 * clamp(0, _md-sub($level, 2), 3));
+    $y: calc(1px * ($level1-y + $level2-y + $level3to5-y));
+
+    $level1to2-blur: calc(3 * clamp(0, $level, 2));
+    $level3to5-blur: calc(2 * clamp(0, _md-sub($level, 2), 3));
+    $blur: calc(1px * ($level1to2-blur + $level3to5-blur));
+
+    $level1to4-spread: clamp(0, $level, 4);
+    $level5-spread: calc(2 * clamp(0, _md-sub($level, 4), 1));
+    $spread: calc(1px * ($level1to4-spread + $level5-spread));
+
+    @return 0px $y $blur $spread _md-alpha($shadow-color, $opacity);
+}
+
+// Public mixin: use anywhere.
+@mixin md-elevation(
+    $level,
+    $shadow-color: #000,
+    $key-opacity: 0.3,
+    $ambient-opacity: 0.15
+) {
+    box-shadow:
+        _md-key-shadow($level, $shadow-color, $key-opacity),
+        _md-ambient-shadow($level, $shadow-color, $ambient-opacity);
+    z-index: $level;
+}

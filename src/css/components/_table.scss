@@ -1,0 +1,35 @@
+table.tblSorter {
+    font-size: 1em;
+    background-color: var(--brand-100);
+    color: var(--brand-800);
+
+    width: 100%;
+    margin: 0 0 1rem 0;
+    text-align: left;
+
+    thead,
+    tbody,
+    tfoot {
+        tr {
+            th,
+            th.header {
+                background-color: var(--brand-200);
+                border: 1px solid var(--brand-300);
+                font-size: 1em;
+                padding: 0.5em;
+            }
+        }
+    }
+
+    tbody {
+        td {
+            vertical-align: top;
+            background-color: var(--brand-050);
+            color: var(--brand-800);
+            padding: 0.5em;
+        }
+    }
+}
+
+#main_table {
+}

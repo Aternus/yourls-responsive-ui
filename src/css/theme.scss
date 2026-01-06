@@ -1,3 +1,11 @@
 @use "palette";
 @use "style";
-@use "nav_menu";
+
+@use "components/nav_menu";
+@use "components/new_url";
+@use "components/table";
+
+@use "pages/login";
+@use "pages/index";
+@use "pages/tools";
+@use "pages/plugins";

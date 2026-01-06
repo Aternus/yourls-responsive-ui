@@ -1,17 +1,18 @@
-@use "variables" as *;
+@use "internal/variables" as *;
+@use "internal/shape" as *;
+@use "internal/elevation" as *;
+@use "internal/motion" as *;
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-:root {
-    color-scheme: light dark;
-}
-
-///////////////////////////////////////////////////////////
-// Original style.css resets
-///////////////////////////////////////////////////////////
+$normal_line_height: 1.618;
 
 * {
     box-sizing: border-box;
+}
+
+:root {
+    color-scheme: light dark;
 }
 
 body {
@@ -20,8 +21,6 @@ body {
     background: light-dark(var(--neutral-050), var(--neutral-900));
     color: light-dark(var(--neutral-950), var(--neutral-050));
 
-    padding: 0;
-    margin: 0;
     text-align: revert;
 }
 
@@ -31,9 +30,21 @@ td,
 input,
 input.text,
 select,
-textarea {
+textarea,
+table.tblSorter {
     font-family: "Open Sans", sans-serif;
     font-optical-sizing: auto;
+}
+
+body,
+p,
+table,
+input,
+select,
+textarea {
+    padding: 0;
+    margin: 0;
+    line-height: $normal_line_height;
 }
 
 #wrap {
@@ -54,26 +65,35 @@ a {
     &:link,
     &:visited {
         color: var(--brand-500);
+        text-decoration: none;
     }
 
     &:active,
     &:hover {
-        color: var(--brand-800);
+        color: var(--brand-900);
         text-decoration: none;
     }
 }
 
+tt,
+code {
+    display: inline-block;
+    background: var(--tertiary-050);
+    padding: 0.1rem 0.2rem;
+}
+
 #wrap {
     header {
+        @include md-elevation(1);
+
         position: sticky;
         top: 0;
         left: 0;
         right: 0;
 
-        padding: 1rem calc(1rem + $nav_button_size + 1rem) 1rem
+        padding: 1rem calc(1rem + $nav_menu_button_size + 1rem) 1rem
             calc(1rem + $logo_width + 1rem);
-        background: var(--neutral-100);
-        border-bottom: 1px solid var(--neutral-200);
+        background: var(--brand-100);
 
         &,
         & h1 a,
@@ -92,6 +112,7 @@ a {
                 text-decoration: none;
                 text-align: left;
                 font-size: 1rem;
+                line-height: 1.1;
 
                 &:hover {
                     span {
@@ -113,6 +134,28 @@ a {
     }
 }
 
+#wrap {
+    > h1,
+    > h2,
+    > h3,
+    > h4,
+    > h5,
+    > h6,
+    > p {
+        padding: 0 1rem;
+    }
+
+    p {
+        margin: 0 0 1rem 0;
+    }
+
+    main {
+        padding: 1rem 1.5rem 1rem 1rem;
+        text-align: revert;
+        overflow-x: scroll;
+    }
+}
+
 #footer {
     padding: 1rem 2rem;
     margin: 0;
@@ -128,6 +171,103 @@ a {
         a {
             background-color: transparent;
         }
+    }
+}
+
+///////////////////////////////////////////////////////////
+// Bookmarklet
+///////////////////////////////////////////////////////////
+
+a.bookmarklet {
+    display: inline-block;
+    border: 2px solid var(--brand-500);
+    border-radius: $shape-corner-extra-small;
+    padding: 0.5rem 1rem 0.5rem 2.5rem;
+    margin: 0.5rem;
+    background: var(--brand-100) url("/images/favicon.svg") no-repeat 0.25rem
+        center;
+
+    &:hover {
+        background-position: 0.5rem center;
+    }
+}
+
+///////////////////////////////////////////////////////////
+// Error
+///////////////////////////////////////////////////////////
+
+.error {
+    background: var(--error-500);
+    color: var(--error-050);
+    padding: 1rem;
+    border-radius: $shape-corner-extra-small;
+}
+
+///////////////////////////////////////////////////////////
+// Forms
+///////////////////////////////////////////////////////////
+
+form {
+    p {
+        margin-bottom: 1rem;
+    }
+}
+
+label {
+    display: inline-block;
+    padding: 0.5rem 0;
+}
+
+select,
+input:not([type="submit"]),
+input.text {
+    display: inline-block;
+
+    background: var(--brand-050);
+    color: var(--brand-800);
+
+    font-size: 1em;
+    line-height: 1;
+    padding: 0.5rem 0.5rem;
+    margin: 0;
+    border: 2px solid var(--tertiary-200);
+    border-radius: $shape-corner-extra-small;
+
+    transition: all $motion-duration-short4 $motion-easing-standard;
+
+    &:hover,
+    &:active,
+    &:focus {
+        margin: 0;
+        border-color: var(--tertiary-600);
+    }
+}
+
+input[type="submit"],
+input.button,
+button {
+    display: inline-block;
+
+    background: var(--brand-500);
+    color: var(--brand-050);
+
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1;
+    padding: 1em 2em;
+    margin: 0;
+    border: 0 none;
+    border-radius: $shape-corner-extra-small;
+
+    cursor: pointer;
+
+    transition: all $motion-duration-short4 $motion-easing-standard;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: var(--brand-600);
+        @include md-elevation(1);
     }
 }
 

@@ -35,6 +35,9 @@ function responsive_head(): void {
 yourls_add_action( 'html_head', 'responsive_head' );
 
 function responsive_nav_menu(): void {
+    if ( yourls_is_valid_user() !== true ) {
+        return;
+    }
     echo <<<NAV_MENU
         <input type="checkbox" id="nav_menu">
         <label for="nav_menu" class="nav_menu_button">
