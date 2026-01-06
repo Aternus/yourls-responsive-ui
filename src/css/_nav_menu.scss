@@ -1,0 +1,118 @@
+@use "variables" as *;
+
+#nav_menu {
+    display: none;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    background: var(--neutral-200);
+    border-left: 1px solid var(--neutral-400);
+
+    transition: transform 0.6s ease-in-out;
+
+    transform: translateX(100%);
+
+    #nav_menu:checked ~ & {
+        transform: translateX(0);
+    }
+}
+
+.nav_menu_button {
+    position: absolute;
+    z-index: 2;
+
+    top: 1rem;
+    right: 1rem;
+
+    height: $nav_button_size;
+    width: $nav_button_size;
+
+    cursor: pointer;
+
+    background: var(--secondary-300);
+    color: transparent;
+
+    transition: all 0.3s ease-in-out;
+
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.33rem;
+
+    #nav_menu:checked + & {
+        gap: 0;
+    }
+
+    span {
+        height: 2px;
+        background: var(--neutral-900);
+
+        transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+        & {
+            #nav_menu:checked + & {
+                display: none;
+            }
+        }
+        &:first-of-type {
+            #nav_menu:checked + & {
+                display: block;
+                transform: rotate(45deg);
+                margin-bottom: -2px;
+            }
+        }
+        &:last-of-type {
+            #nav_menu:checked + & {
+                display: block;
+                transform: rotate(-45deg);
+            }
+        }
+    }
+}
+
+nav ul#admin_menu {
+    display: block;
+    padding: 1rem 2rem 1rem 2rem;
+    margin: 0;
+    min-height: revert;
+    font-size: 1rem;
+
+    li {
+        display: block;
+        line-height: 1;
+        padding: 0;
+        margin: 1rem 0;
+
+        color: var(--neutral-800);
+
+        &:hover {
+            color: var(--neutral-800);
+        }
+
+        a {
+            display: inline-block;
+            padding: 0.75rem 1rem;
+            background: var(--secondary-300);
+            color: var(--neutral-800);
+            border-radius: 0.5rem;
+        }
+    }
+
+    ul {
+        padding: 0 0 0 2rem;
+        margin: 0;
+    }
+
+    #admin_menu_logout_link {
+        margin-top: 0.5rem;
+        margin-bottom: 3rem;
+    }
+}
