@@ -46,6 +46,7 @@ services:
             --port 443
             --https
             --no-ui
+            --no-ghost-mode
             --no-notify
             --no-open"
         ports:
