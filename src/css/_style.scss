@@ -29,6 +29,7 @@ p,
 td,
 input,
 input.text,
+input.button,
 select,
 textarea,
 table.tblSorter {
@@ -245,7 +246,6 @@ input.text {
     &:hover,
     &:active,
     &:focus {
-        margin: 0;
         border-color: var(--tertiary-600);
     }
 

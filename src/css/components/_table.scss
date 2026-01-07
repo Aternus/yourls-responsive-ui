@@ -1,6 +1,6 @@
 table.tblSorter {
     font-size: 1em;
-    background-color: var(--brand-100);
+    background-color: var(--brand-050);
     color: var(--brand-800);
     border-collapse: collapse;
 
@@ -14,7 +14,7 @@ table.tblSorter {
         tr {
             th,
             th.header {
-                background-color: var(--brand-200);
+                background-color: var(--brand-100);
             }
 
             th,
@@ -22,7 +22,7 @@ table.tblSorter {
             td {
                 font-size: 1em;
                 padding: 0.5em;
-                border: 1px solid var(--brand-300);
+                border: 1px solid var(--brand-200);
             }
         }
     }
