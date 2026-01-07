@@ -83,22 +83,28 @@ code {
 }
 
 #wrap {
+    $header_on_surface: var(--brand-500);
+    $header_height: calc(1rem + $nav_menu_button_size + 1rem);
+
+    padding-top: $header_height;
+
     header {
         @include md-elevation(1);
 
-        position: sticky;
+        position: fixed;
         top: 0;
         left: 0;
         right: 0;
 
-        padding: 1rem calc(1rem + $nav_menu_button_size + 1rem) 1rem
+        height: $header_height;
+
+        padding: 1rem calc(1rem + $nav_menu_button_size + 1rem) 0
             calc(1rem + $logo_width + 1rem);
         background: var(--brand-100);
+        color: $header_on_surface;
 
-        &,
-        & h1 a,
-        & h1 a:hover span {
-            color: var(--brand-500);
+        @media (min-width: $breakpoint-sm) {
+            padding-top: 1.75rem;
         }
 
         h1 {
@@ -112,11 +118,17 @@ code {
                 text-decoration: none;
                 text-align: left;
                 font-size: 1rem;
-                line-height: 1.1;
+                line-height: 1.2;
+                color: $header_on_surface;
 
                 &:hover {
                     span {
+                        color: $header_on_surface;
                         text-decoration: none;
+
+                        @media (min-width: $breakpoint-sm) {
+                            text-decoration: underline;
+                        }
                     }
                 }
 
@@ -135,24 +147,33 @@ code {
 }
 
 #wrap {
+    @media (min-width: $breakpoint-lg) {
+        > *:not(header) {
+            max-width: $breakpoint-lg;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+
     > h1,
     > h2,
     > h3,
     > h4,
     > h5,
     > h6,
-    > p {
+    > p,
+    > form {
         padding: 0 1rem;
     }
 
     p {
-        margin: 0 0 1rem 0;
+        margin-bottom: 1rem;
     }
 
     main {
         padding: 1rem 1.5rem 1rem 1rem;
         text-align: revert;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
 }
 
@@ -223,6 +244,10 @@ input.text {
         margin: 0;
         border-color: var(--tertiary-600);
     }
+
+    label + & {
+        margin-left: 0.5rem;
+    }
 }
 
 input[type="submit"],
@@ -250,6 +275,32 @@ button {
     &:focus {
         background: var(--brand-600);
         @include md-elevation(1);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
+}
+
+textarea {
+    display: inline-block;
+
+    background: var(--brand-050);
+    color: var(--brand-800);
+
+    font-size: 1em;
+    padding: 0.5rem 0.5rem;
+    margin: 0;
+    border: 2px solid var(--tertiary-200);
+    border-radius: $shape-corner-extra-small;
+
+    transition: all $motion-duration-short4 $motion-easing-standard;
+
+    &:hover,
+    &:active,
+    &:focus {
+        margin: 0;
+        border-color: var(--tertiary-600);
     }
 }
 

@@ -1,0 +1,71 @@
+@use "../internal/shape" as *;
+@use "../internal/elevation" as *;
+@use "../internal/motion" as *;
+
+.jquery-notify-bar {
+    @include md-elevation(4);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    background-color: var(--neutral-100);
+    color: var(--neutral-800);
+
+    font-size: 1em;
+    text-align: center;
+
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+
+    padding: 1rem;
+
+    border-bottom: 0 none;
+    border-radius: 0;
+
+    opacity: 1;
+
+    text-shadow: none;
+}
+.jquery-notify-bar.error,
+.jquery-notify-bar.fail {
+    background: var(--error-500);
+    color: var(--error-050);
+}
+.jquery-notify-bar.error span,
+.jquery-notify-bar.fail span {
+    background: none;
+    padding-left: 0;
+}
+.jquery-notify-bar.success span {
+    background: none;
+    padding-left: 0;
+}
+.jquery-notify-bar.success {
+    background: var(--success-500);
+    color: var(--success-050);
+}
+a.notify-bar-close {
+    position: revert;
+    left: revert;
+
+    display: inline-block;
+
+    font-size: 1em;
+    padding: 0.5em 1em;
+    margin: 0 0 0 1rem;
+    border-radius: $shape-corner-extra-small;
+
+    background: var(--neutral-700);
+    color: var(--neutral-050);
+
+    transition: all $motion-duration-short4 $motion-easing-standard;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: var(--neutral-800);
+        @include md-elevation(1);
+    }
+}
