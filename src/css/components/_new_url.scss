@@ -38,10 +38,12 @@
         margin: 0 auto;
 
         &.loading {
-            background: var(--secondary-100) url("/images/loading.gif") 10px
-                center no-repeat;
-            color: var(--secondary-900);
+            background: var(--brand-500) url("/images/loading.gif") 10px center
+                no-repeat;
+            color: var(--brand-050);
             padding-left: 35px;
+            border: 0 none;
+            opacity: 0.5;
         }
     }
 }

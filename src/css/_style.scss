@@ -86,22 +86,26 @@ code {
     $header_on_surface: var(--brand-500);
     $header_height: calc(1rem + $nav_menu_button_size + 1rem);
 
-    padding-top: $header_height;
+    @media (orientation: portrait) {
+        padding-top: $header_height;
+    }
 
     header {
-        @include md-elevation(1);
-
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-
         height: $header_height;
 
         padding: 1rem calc(1rem + $nav_menu_button_size + 1rem) 0
             calc(1rem + $logo_width + 1rem);
         background: var(--brand-100);
         color: $header_on_surface;
+
+        @media (orientation: portrait) {
+            @include md-elevation(1);
+
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
 
         @media (min-width: $breakpoint-sm) {
             padding-top: 1.75rem;

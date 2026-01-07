@@ -101,10 +101,13 @@ nav {
 
 nav ul#admin_menu {
     display: block;
-    padding: 1rem calc(1rem + $nav_menu_button_size) 1rem 2rem;
+    padding: 1rem calc(1rem + $nav_menu_button_size + 1rem) 1rem 2rem;
     margin: 0;
     min-height: revert;
     font-size: 1em;
+
+    max-height: 100%;
+    overflow-y: auto;
 
     li {
         display: block;
@@ -145,8 +148,6 @@ nav ul#admin_menu {
     #admin_menu_logout_link {
         margin-top: 0.5rem;
         margin-bottom: 3rem;
-
-        padding-right: 1rem;
 
         display: flex;
         flex-direction: row;
