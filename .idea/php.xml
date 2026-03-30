@@ -131,10 +131,12 @@
       <extension name="couchbase" enabled="false" />
       <extension name="cubrid" enabled="false" />
       <extension name="dba" enabled="false" />
+      <extension name="ddtrace" enabled="false" />
       <extension name="decimal" enabled="false" />
       <extension name="dio" enabled="false" />
       <extension name="elastic_apm" enabled="false" />
       <extension name="enchant" enabled="false" />
+      <extension name="excimer" enabled="false" />
       <extension name="fann" enabled="false" />
       <extension name="ffmpeg" enabled="false" />
       <extension name="frankenphp" enabled="false" />
@@ -155,7 +157,9 @@
       <extension name="ldap" enabled="false" />
       <extension name="libevent" enabled="false" />
       <extension name="libsodium" enabled="false" />
+      <extension name="litespeed" enabled="false" />
       <extension name="mailparse" enabled="false" />
+      <extension name="maxminddb" enabled="false" />
       <extension name="mcrypt" enabled="false" />
       <extension name="memcache" enabled="false" />
       <extension name="memcached" enabled="false" />
