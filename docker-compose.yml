@@ -60,7 +60,7 @@ services:
             PMA_HOST: db
             UPLOAD_LIMIT: 256M
         volumes:
-            - ./.dev/pma.config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+            - ./docker/pma.config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
         ports:
             - "8080:80"
         depends_on:

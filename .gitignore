@@ -342,4 +342,5 @@ Temporary Items
 
 # Aternus
 docker/web/ssl/
+release/
 *.env
