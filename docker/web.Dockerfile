@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 RUN git config --global --add safe.directory /var/www/html
 
 # install PHP extensions manager
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.9.24/install-php-extensions /usr/local/bin/
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.10.8/install-php-extensions /usr/local/bin/
 
 # [production] PHP extensions
 RUN install-php-extensions \
@@ -53,16 +53,16 @@ ENV PATH="$PATH:/var/www/html/tools"
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
 # custom PHP config (config files are scanned in alphabetical order)
-COPY ./php.ini /usr/local/etc/php/conf.d/z-001-php.ini
+COPY web/php.ini /usr/local/etc/php/conf.d/z-001-php.ini
 
 # XDebug config
-COPY ./.dev/xdebug.ini /usr/local/etc/php/conf.d/z-002-xdebug.ini
+COPY web/xdebug.ini /usr/local/etc/php/conf.d/z-002-xdebug.ini
 
 # apache modules
 RUN a2enmod ssl rewrite
 
 # vhost
-COPY ./.dev/vhost.conf /etc/apache2/sites-available/vhost.conf
+COPY web/vhost.conf /etc/apache2/sites-available/vhost.conf
 RUN a2ensite vhost.conf
 
 EXPOSE 80 443

@@ -4,7 +4,7 @@ services:
     db:
         restart: always
         build:
-            context: .
+            context: ./docker
             dockerfile: db.Dockerfile
         env_file:
             - ./.development.env
@@ -16,16 +16,16 @@ services:
     web:
         restart: always
         build:
-            context: .
+            context: ./docker
             dockerfile: web.Dockerfile
         env_file:
             - ./.development.env
         user: "${UID:-33}:${GID:-33}"
         volumes:
             - ./vendor/YOURLS:/var/www/html
-            - ./.dev/yourls.config.php:/var/www/html/user/config.php
+            - ./docker/web/yourls.config.php:/var/www/html/user/config.php
+            - ./docker/web/ssl:/var/www/ssl
             - .:/var/www/html/user/plugins/yourls-responsive-ui
-            - ./.dev/ssl:/var/www/ssl
         extra_hosts:
             - "host.docker.internal:host-gateway"
         depends_on:
