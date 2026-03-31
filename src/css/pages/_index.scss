@@ -1,3 +1,9 @@
+@use "../internal/variables" as *;
+
+///////////////////////////////////////////////////////////
+// Index / Dashboard Page
+///////////////////////////////////////////////////////////
+
 .index {
     #wrap {
         > p {
@@ -8,5 +14,11 @@
                 margin-bottom: 0;
             }
         }
+    }
+
+    // Stats summary
+    #overall_tracking {
+        font-size: 0.875em;
+        color: var(--brand-600);
     }
 }

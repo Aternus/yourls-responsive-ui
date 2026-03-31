@@ -1,17 +1,11 @@
 <?php
 
 function responsive_settings_update(): void {
-    $color_scheme = $_POST['responsive_color_scheme'] ?? '';
+    $color_scheme = responsive_sanitize_color_scheme(
+        $_POST['responsive_color_scheme'] ?? '',
+    );
 
-    if (
-        in_array(
-            $color_scheme,
-            [ RESPONSIVE_SCHEME_LIGHT, RESPONSIVE_SCHEME_DARK ],
-            true,
-        )
-    ) {
-        yourls_update_option( 'responsive_color_scheme', $color_scheme );
-    }
+    yourls_update_option( 'responsive_color_scheme', $color_scheme );
 }
 
 function responsive_settings_handler(): void {
@@ -21,7 +15,7 @@ function responsive_settings_handler(): void {
         responsive_settings_update();
     }
 
-    $color_scheme = yourls_get_option( 'responsive_color_scheme' );
+    $color_scheme = responsive_get_color_scheme();
 
     $nonce = yourls_create_nonce( 'responsive_settings' );
 

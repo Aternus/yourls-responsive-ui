@@ -35,7 +35,31 @@
 
     #add-button {
         display: block;
-        margin: 0 auto;
+        width: 100%;
+        margin: 0;
+        font-size: var(--button-font-size-primary);
+        font-weight: 700;
+        line-height: var(--button-line-height);
+        padding: var(--button-padding-primary);
+        min-height: var(--button-height-primary);
+        border: 1px solid var(--brand-600);
+        border-radius: $shape-corner-small;
+        background: var(--brand-600);
+        color: var(--brand-050);
+        @include md-elevation(1);
+
+        @media (min-width: $breakpoint-sm) {
+            width: 11rem;
+            margin: 0 auto;
+        }
+
+        &:hover,
+        &:active,
+        &:focus {
+            background: var(--brand-700);
+            border-color: var(--brand-700);
+            @include md-elevation(2);
+        }
 
         &.loading {
             background: var(--brand-500) url("/images/loading.gif") 10px center

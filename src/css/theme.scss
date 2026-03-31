@@ -6,8 +6,12 @@
 @use "components/table";
 @use "components/bookmarklet";
 @use "components/notify_bar";
+@use "components/dialog";
+@use "components/datepicker";
 
 @use "pages/login";
 @use "pages/index";
+@use "pages/infos";
 @use "pages/tools";
 @use "pages/plugins";
+@use "pages/responsive_settings";
