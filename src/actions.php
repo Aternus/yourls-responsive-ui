@@ -31,7 +31,7 @@ function responsive_head(): void {
             },
         }
         </script>
-        <script src="$js"></script>
+        <script type="module" src="$js"></script>
         HEAD;
 }
 
