@@ -1,3 +1,4 @@
+import { h, onBeforeUnmount, onMounted } from "vue";
 import { initDeleteConfirmDialog } from "./delete-confirm.js";
 import { initDesktopRowDrawers } from "./desktop-drawers.js";
 import { initInfosPage } from "./infos-page.js";
@@ -13,43 +14,70 @@ import {
     initRowLinkCopyButtons,
 } from "./table-enhancements.js";
 
-export function initResponsiveUI() {
-    const inits = [
-        initNavMenu,
-        initScrollTopButton,
-        initDestinationTitleExpansion,
-        initRowLinkCopyButtons,
-        initDeleteConfirmDialog,
-        initInlineCardEditing,
-        initInlineCardSharing,
-        initDesktopRowDrawers,
-        initPluginsFilterButton,
-        initPluginActionIcons,
-        initSearchFilters,
-        initInfosPage,
-    ];
+const FEATURE_INITS = [
+    initNavMenu,
+    initScrollTopButton,
+    initDestinationTitleExpansion,
+    initRowLinkCopyButtons,
+    initDeleteConfirmDialog,
+    initInlineCardEditing,
+    initInlineCardSharing,
+    initDesktopRowDrawers,
+    initPluginsFilterButton,
+    initPluginActionIcons,
+    initSearchFilters,
+    initInfosPage,
+];
 
-    inits.forEach((fn) => fn());
+export const ResponsiveUIRoot = {
+    name: "ResponsiveUIRoot",
+    setup() {
+        let pendingReinit = 0;
+        let observer = null;
 
-    let pendingReinit = 0;
-    let observer = new MutationObserver(() => {
-        if (pendingReinit) {
-            return;
-        }
+        const runFeatures = () => {
+            FEATURE_INITS.forEach((fn) => fn());
+        };
 
-        pendingReinit = window.requestAnimationFrame(() => {
-            pendingReinit = 0;
-            inits.forEach((fn) => fn());
+        const disconnectObserver = () => {
+            if (pendingReinit) {
+                window.cancelAnimationFrame(pendingReinit);
+                pendingReinit = 0;
+            }
+
+            if (observer) {
+                observer.disconnect();
+                observer = null;
+            }
+        };
+
+        const scheduleReinit = () => {
+            if (pendingReinit) {
+                return;
+            }
+
+            pendingReinit = window.requestAnimationFrame(() => {
+                pendingReinit = 0;
+                runFeatures();
+            });
+        };
+
+        onMounted(() => {
+            runFeatures();
+
+            const root = document.querySelector("#wrap") || document.body;
+            observer = new MutationObserver(scheduleReinit);
+            observer.observe(root, { childList: true, subtree: true });
+
+            window.addEventListener("pagehide", disconnectObserver, {
+                once: true,
+            });
         });
-    });
 
-    const root = document.querySelector("#wrap") || document.body;
-    observer.observe(root, { childList: true, subtree: true });
+        onBeforeUnmount(() => {
+            disconnectObserver();
+        });
 
-    window.addEventListener("pagehide", () => {
-        if (observer) {
-            observer.disconnect();
-            observer = null;
-        }
-    });
-}
+        return () => h("span", { hidden: true });
+    },
+};

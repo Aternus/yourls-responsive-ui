@@ -31,6 +31,13 @@ function responsive_head(): void {
             },
         }
         </script>
+        <script type="importmap">
+        {
+            "imports": {
+                "vue": "https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.esm-browser.prod.js"
+            }
+        }
+        </script>
         <script type="module" src="$js"></script>
         HEAD;
 }

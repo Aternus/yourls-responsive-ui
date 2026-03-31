@@ -1,17 +1,15 @@
-import { createMaterialIcon } from "./shared.js";
+import { createApp, onMounted, ref } from "vue";
 
-export function initSearchFilters() {
-    const filterForm = document.querySelector("#filter_form form");
-    const filterOptions = document.querySelector("#filter_options");
-
-    if (
-        !(filterForm instanceof HTMLFormElement) ||
-        !(filterOptions instanceof HTMLElement) ||
-        filterOptions.dataset.responsiveEnhanced === "true"
-    ) {
-        return;
+function isSelectAtDefault(selectControl) {
+    if (!(selectControl instanceof HTMLSelectElement)) {
+        return true;
     }
 
+    const defaultValue = selectControl.dataset.responsiveDefault ?? "";
+    return selectControl.value === defaultValue;
+}
+
+function getFilterControls(filterForm, filterOptions) {
     const controls = {
         search: filterForm.querySelector('input[name="search"]'),
         searchIn: filterForm.querySelector('select[name="search_in"]'),
@@ -43,151 +41,13 @@ export function initSearchFilters() {
     ];
 
     if (requiredControls.some((control) => !(control instanceof Element))) {
-        return;
+        return null;
     }
 
-    const createGroup = ({
-        title,
-        hint,
-        className = "",
-        fields = [],
-        inlineHeader = false,
-    }) => {
-        const group = document.createElement("section");
-        group.className = `responsive-filter-group ${className}`.trim();
+    return controls;
+}
 
-        const headingTag = inlineHeader ? "span" : "p";
-        const heading = document.createElement(headingTag);
-        heading.className = "responsive-filter-group-title";
-        heading.textContent = title;
-
-        if (inlineHeader && hint) {
-            const headingRow = document.createElement("p");
-            headingRow.className = "responsive-filter-group-heading-row";
-
-            const description = document.createElement("span");
-            description.className = "responsive-filter-group-hint";
-            description.textContent = hint;
-
-            headingRow.append(heading, description);
-            group.append(headingRow);
-        } else {
-            group.append(heading);
-
-            if (hint) {
-                const description = document.createElement("p");
-                description.className = "responsive-filter-group-hint";
-                description.textContent = hint;
-                group.append(description);
-            }
-        }
-
-        const controlsWrap = document.createElement("div");
-        controlsWrap.className = "responsive-filter-group-controls";
-        fields.forEach((field) => {
-            if (field instanceof Element) {
-                controlsWrap.append(field);
-            }
-        });
-        group.append(controlsWrap);
-
-        return group;
-    };
-
-    const shell = document.createElement("section");
-    shell.className = "responsive-filter-shell";
-
-    const quick = document.createElement("div");
-    quick.className = "responsive-filter-quick";
-    quick.append(
-        createGroup({
-            title: "Search",
-            hint: "Keyword, URL, title, or IP",
-            className: "is-search",
-            inlineHeader: true,
-            fields: [controls.search],
-        }),
-        createGroup({
-            title: "In field",
-            className: "is-scope",
-            fields: [controls.searchIn],
-        }),
-    );
-    shell.append(quick);
-
-    const advanced = document.createElement("details");
-    advanced.className = "responsive-filter-advanced";
-
-    const advancedSummary = document.createElement("summary");
-    advancedSummary.className = "responsive-filter-advanced-summary";
-    advancedSummary.append(
-        createMaterialIcon("tune"),
-        Object.assign(document.createElement("span"), {
-            textContent: "Advanced filters",
-        }),
-    );
-    advanced.append(advancedSummary);
-
-    const advancedBody = document.createElement("div");
-    advancedBody.className = "responsive-filter-advanced-body";
-    advancedBody.append(
-        createGroup({
-            title: "Sort",
-            className: "is-sort",
-            fields: [controls.sortBy, controls.sortOrder],
-        }),
-        createGroup({
-            title: "Rows",
-            hint: "Results per page",
-            className: "is-perpage",
-            fields: [controls.perpage],
-        }),
-        createGroup({
-            title: "Clicks",
-            hint: "Show links with more or less clicks",
-            className: "is-clicks",
-            fields: [controls.clickFilter, controls.clickLimit],
-        }),
-        createGroup({
-            title: "Date",
-            hint: "Filter by creation date",
-            className: "is-date",
-            fields: [
-                controls.dateFilter,
-                controls.dateFirst,
-                controls.dateAnd,
-                controls.dateSecond,
-            ],
-        }),
-    );
-
-    advanced.append(advancedBody);
-    shell.append(advanced);
-
-    const actionButtons = Array.from(
-        controls.buttons.querySelectorAll("input"),
-    );
-    controls.buttons.replaceChildren(...actionButtons);
-    controls.buttons.classList.add("responsive-filter-buttons");
-    actionButtons.forEach((button) => {
-        if (button instanceof HTMLInputElement) {
-            button.classList.add("responsive-filter-button");
-        }
-    });
-    controls.buttons
-        .querySelector("#submit-clear-filter")
-        ?.classList.add("is-tonal");
-    shell.append(controls.buttons);
-
-    const isSelectAtDefault = (selectControl) => {
-        if (!(selectControl instanceof HTMLSelectElement)) {
-            return true;
-        }
-
-        const defaultValue = selectControl.dataset.responsiveDefault ?? "";
-        return selectControl.value === defaultValue;
-    };
-
+function resolveFilterState(controls) {
     const hasAdvancedValues =
         controls.perpage instanceof HTMLInputElement &&
         controls.sortBy instanceof HTMLSelectElement &&
@@ -212,30 +72,176 @@ export function initSearchFilters() {
         (controls.search.value.trim() !== "" ||
             !isSelectAtDefault(controls.searchIn));
 
-    const hasFiltersApplied = hasQuickValues || hasAdvancedValues;
+    return {
+        hasAdvancedValues,
+        hasFiltersApplied: hasQuickValues || hasAdvancedValues,
+    };
+}
 
-    if (hasAdvancedValues) {
-        advanced.open = true;
+const ResponsiveSearchFilters = {
+    name: "ResponsiveSearchFilters",
+    props: {
+        controls: { type: Object, required: true },
+        hasAdvancedValues: { type: Boolean, required: true },
+        hasFiltersApplied: { type: Boolean, required: true },
+    },
+    setup(props) {
+        const searchSlot = ref(null);
+        const scopeSlot = ref(null);
+        const sortSlot = ref(null);
+        const rowsSlot = ref(null);
+        const clicksSlot = ref(null);
+        const dateSlot = ref(null);
+        const buttonsSlot = ref(null);
+
+        const advancedOpen = ref(props.hasAdvancedValues);
+        const disclosureOpen = ref(props.hasFiltersApplied);
+
+        const mountField = (slotRef, control) => {
+            const slot = slotRef.value;
+            if (
+                !(slot instanceof HTMLElement) ||
+                !(control instanceof Element)
+            ) {
+                return;
+            }
+
+            slot.append(control);
+        };
+
+        onMounted(() => {
+            const controls = props.controls;
+
+            mountField(searchSlot, controls.search);
+            mountField(scopeSlot, controls.searchIn);
+
+            mountField(sortSlot, controls.sortBy);
+            mountField(sortSlot, controls.sortOrder);
+
+            mountField(rowsSlot, controls.perpage);
+
+            mountField(clicksSlot, controls.clickFilter);
+            mountField(clicksSlot, controls.clickLimit);
+
+            mountField(dateSlot, controls.dateFilter);
+            mountField(dateSlot, controls.dateFirst);
+            mountField(dateSlot, controls.dateAnd);
+            mountField(dateSlot, controls.dateSecond);
+
+            if (buttonsSlot.value instanceof HTMLElement) {
+                const actionButtons = Array.from(
+                    controls.buttons.querySelectorAll("input"),
+                );
+                controls.buttons.replaceChildren(...actionButtons);
+                controls.buttons.classList.add("responsive-filter-buttons");
+
+                actionButtons.forEach((button) => {
+                    if (button instanceof HTMLInputElement) {
+                        button.classList.add("responsive-filter-button");
+                    }
+                });
+
+                controls.buttons
+                    .querySelector("#submit-clear-filter")
+                    ?.classList.add("is-tonal");
+                buttonsSlot.value.append(controls.buttons);
+            }
+        });
+
+        return {
+            advancedOpen,
+            disclosureOpen,
+            searchSlot,
+            scopeSlot,
+            sortSlot,
+            rowsSlot,
+            clicksSlot,
+            dateSlot,
+            buttonsSlot,
+        };
+    },
+    template: `
+        <details class="responsive-filter-disclosure" :open="disclosureOpen">
+            <summary class="responsive-filter-disclosure-summary">
+                <span class="material-icons" aria-hidden="true">filter_alt</span>
+                <span class="responsive-filter-disclosure-text">Filters</span>
+            </summary>
+            <section class="responsive-filter-shell">
+                <div class="responsive-filter-quick">
+                    <section class="responsive-filter-group is-search">
+                        <p class="responsive-filter-group-heading-row">
+                            <span class="responsive-filter-group-title">Search</span>
+                            <span class="responsive-filter-group-hint">Keyword, URL, title, or IP</span>
+                        </p>
+                        <div ref="searchSlot" class="responsive-filter-group-controls"></div>
+                    </section>
+                    <section class="responsive-filter-group is-scope">
+                        <p class="responsive-filter-group-title">In field</p>
+                        <div ref="scopeSlot" class="responsive-filter-group-controls"></div>
+                    </section>
+                </div>
+                <details class="responsive-filter-advanced" :open="advancedOpen">
+                    <summary class="responsive-filter-advanced-summary">
+                        <span class="material-icons" aria-hidden="true">tune</span>
+                        <span>Advanced filters</span>
+                    </summary>
+                    <div class="responsive-filter-advanced-body">
+                        <section class="responsive-filter-group is-sort">
+                            <p class="responsive-filter-group-title">Sort</p>
+                            <div ref="sortSlot" class="responsive-filter-group-controls"></div>
+                        </section>
+                        <section class="responsive-filter-group is-perpage">
+                            <p class="responsive-filter-group-title">Rows</p>
+                            <p class="responsive-filter-group-hint">Results per page</p>
+                            <div ref="rowsSlot" class="responsive-filter-group-controls"></div>
+                        </section>
+                        <section class="responsive-filter-group is-clicks">
+                            <p class="responsive-filter-group-title">Clicks</p>
+                            <p class="responsive-filter-group-hint">Show links with more or less clicks</p>
+                            <div ref="clicksSlot" class="responsive-filter-group-controls"></div>
+                        </section>
+                        <section class="responsive-filter-group is-date">
+                            <p class="responsive-filter-group-title">Date</p>
+                            <p class="responsive-filter-group-hint">Filter by creation date</p>
+                            <div ref="dateSlot" class="responsive-filter-group-controls"></div>
+                        </section>
+                    </div>
+                </details>
+                <div ref="buttonsSlot"></div>
+            </section>
+        </details>
+    `,
+};
+
+export function initSearchFilters() {
+    const filterForm = document.querySelector("#filter_form form");
+    const filterOptions = document.querySelector("#filter_options");
+
+    if (
+        !(filterForm instanceof HTMLFormElement) ||
+        !(filterOptions instanceof HTMLElement) ||
+        filterOptions.dataset.responsiveEnhanced === "true"
+    ) {
+        return;
     }
 
-    const disclosure = document.createElement("details");
-    disclosure.className = "responsive-filter-disclosure";
+    const controls = getFilterControls(filterForm, filterOptions);
+    if (!controls) {
+        return;
+    }
 
-    const disclosureSummary = document.createElement("summary");
-    disclosureSummary.className = "responsive-filter-disclosure-summary";
-    disclosureSummary.append(
-        createMaterialIcon("filter_alt"),
-        Object.assign(document.createElement("span"), {
-            className: "responsive-filter-disclosure-text",
-            textContent: "Filters",
-        }),
-    );
+    const { hasAdvancedValues, hasFiltersApplied } =
+        resolveFilterState(controls);
 
-    const shouldOpenByDefault = hasFiltersApplied;
-    disclosure.open = shouldOpenByDefault;
+    const mountPoint = document.createElement("div");
+    mountPoint.className = "responsive-filter-vue-root";
+    filterOptions.replaceChildren(mountPoint);
 
-    disclosure.append(disclosureSummary, shell);
+    createApp(ResponsiveSearchFilters, {
+        controls,
+        hasAdvancedValues,
+        hasFiltersApplied,
+    }).mount(mountPoint);
 
-    filterOptions.replaceChildren(disclosure);
     filterOptions.dataset.responsiveEnhanced = "true";
 }
