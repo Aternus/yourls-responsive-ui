@@ -1,10 +1,44 @@
-import {
-    ResponsiveActionButton,
-    ResponsiveBrandIcon,
-    ResponsiveField,
-    ResponsiveMaterialIcon,
-    renderVueElement,
-} from "./shared-vue.js";
+import { h, render } from "vue";
+import { ResponsiveActionButton } from "./components/ResponsiveActionButton.js";
+import { ResponsiveBrandIcon } from "./components/ResponsiveBrandIcon.js";
+import { ResponsiveField } from "./components/ResponsiveField.js";
+import { ResponsiveMaterialIcon } from "./components/ResponsiveMaterialIcon.js";
+
+function renderVueElement(component, props = {}) {
+    const mountPoint = document.createElement("div");
+    render(h(component, props), mountPoint);
+
+    const element = mountPoint.firstElementChild;
+    if (!(element instanceof HTMLElement)) {
+        return null;
+    }
+
+    element.remove();
+    return element;
+}
+
+export function openShareWindow(
+    destination,
+    shareText,
+    shortUrl,
+    destinationUrl,
+) {
+    const text = encodeURIComponent(shareText || shortUrl);
+    const encodedShortUrl = encodeURIComponent(shortUrl);
+    const encodedDestinationUrl = encodeURIComponent(destinationUrl || "");
+
+    if (destination === "tw") {
+        const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
+        window.open(twitterUrl, "tw", "toolbar=no,width=800,height=550");
+        return;
+    }
+
+    if (destination === "fb") {
+        const targetUrl = encodedDestinationUrl || encodedShortUrl;
+        const facebookUrl = `https://www.facebook.com/share.php?u=${targetUrl}`;
+        window.open(facebookUrl, "fb", "toolbar=no,width=1000,height=550");
+    }
+}
 
 //=== Shared Utilities ===//
 

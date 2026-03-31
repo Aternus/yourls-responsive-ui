@@ -3,7 +3,7 @@
 ///////////////////////////////////////////////////////////
 
 import { createApp } from "vue";
-import { ResponsiveUIRoot } from "./lib/init.js";
+import { ResponsiveUIRoot } from "./lib/components/ResponsiveUIRoot.js";
 
 let app = null;
 

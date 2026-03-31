@@ -1,21 +1,19 @@
 import { defineComponent, onBeforeUnmount, onMounted } from "vue";
-import { initDeleteConfirmDialog } from "./delete-confirm.js";
-import { initDesktopRowDrawers } from "./desktop-drawers.js";
-import { initInfosPage } from "./infos-page.js";
+import { initDeleteConfirmDialog } from "../delete-confirm.js";
+import { initDesktopRowDrawers } from "../desktop-drawers.js";
+import { initInfosPage } from "../infos-page.js";
 import {
     initInlineCardEditing,
     initInlineCardSharing,
-} from "./inline-mobile.js";
-import {
-    ResponsiveNavControls,
-    ResponsiveScrollTopControl,
-} from "./navigation.js";
-import { initPluginActionIcons, initPluginsFilterButton } from "./plugins.js";
-import { initSearchFilters } from "./search-filters.js";
+} from "../inline-mobile.js";
+import { initPluginActionIcons, initPluginsFilterButton } from "../plugins.js";
+import { initSearchFilters } from "../search-filters.js";
 import {
     initDestinationTitleExpansion,
     initRowLinkCopyButtons,
-} from "./table-enhancements.js";
+} from "../table-enhancements.js";
+import { ResponsiveNavControls } from "./ResponsiveNavControls.js";
+import { ResponsiveScrollTopControl } from "./ResponsiveScrollTopControl.js";
 
 const FEATURE_INITS = [
     initDestinationTitleExpansion,
