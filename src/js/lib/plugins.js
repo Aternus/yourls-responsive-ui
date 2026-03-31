@@ -1,36 +1,67 @@
 import { createMaterialIcon } from "./shared.js";
+import { mountVueFeature } from "./vue-feature.js";
 
 export function initPluginsFilterButton() {
     const toggle = document.querySelector("#toggle_plugins");
 
-    if (!toggle || toggle.querySelector(".material-icons")) {
+    if (
+        !(toggle instanceof HTMLElement) ||
+        toggle.querySelector(".material-icons")
+    ) {
         return;
     }
 
-    toggle.textContent = "";
-    toggle.setAttribute("aria-label", "Toggle active and inactive plugins");
+    mountVueFeature(
+        toggle,
+        "ResponsivePluginsFilterButtonFeature",
+        "responsivePluginsFilterButton",
+        () => {
+            toggle.textContent = "";
+            toggle.setAttribute(
+                "aria-label",
+                "Toggle active and inactive plugins",
+            );
 
-    toggle.append(createMaterialIcon("filter_alt"));
+            toggle.append(createMaterialIcon("filter_alt"));
+        },
+    );
 }
 
 export function initPluginActionIcons() {
-    const pluginButtons = document.querySelectorAll(".plugin_actions a");
+    const pluginActions = document.querySelector(".plugin_actions");
 
-    pluginButtons.forEach((button) => {
-        if (
-            !(button instanceof HTMLElement) ||
-            button.querySelector(".responsive-action-icon")
-        ) {
-            return;
-        }
+    if (!(pluginActions instanceof HTMLElement)) {
+        return;
+    }
 
-        const text = button.textContent?.trim().toLowerCase() ?? "";
-        let iconName = "settings";
+    mountVueFeature(
+        pluginActions,
+        "ResponsivePluginActionIconsFeature",
+        "responsivePluginActionIcons",
+        () => {
+            const pluginButtons = pluginActions.querySelectorAll("a");
 
-        if (text.includes("activate")) {
-            iconName = text.includes("deactivate") ? "power_off" : "power";
-        }
+            pluginButtons.forEach((button) => {
+                if (
+                    !(button instanceof HTMLElement) ||
+                    button.querySelector(".responsive-action-icon")
+                ) {
+                    return;
+                }
 
-        button.prepend(createMaterialIcon(iconName, "responsive-action-icon"));
-    });
+                const text = button.textContent?.trim().toLowerCase() ?? "";
+                let iconName = "settings";
+
+                if (text.includes("activate")) {
+                    iconName = text.includes("deactivate")
+                        ? "power_off"
+                        : "power";
+                }
+
+                button.prepend(
+                    createMaterialIcon(iconName, "responsive-action-icon"),
+                );
+            });
+        },
+    );
 }

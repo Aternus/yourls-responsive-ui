@@ -1,14 +1,41 @@
+import {
+    ResponsiveActionButton,
+    ResponsiveBrandIcon,
+    ResponsiveField,
+    ResponsiveMaterialIcon,
+    renderVueElement,
+} from "./shared-vue.js";
+
 //=== Shared Utilities ===//
 
 export const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
 export const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
 
+function requireElement(element, label) {
+    if (element instanceof HTMLElement) {
+        return element;
+    }
+
+    throw new Error(`${label} must render a single HTMLElement root`);
+}
+
+function requireButton(element, label) {
+    const resolved = requireElement(element, label);
+    if (resolved instanceof HTMLButtonElement) {
+        return resolved;
+    }
+
+    throw new Error(`${label} must render a HTMLButtonElement root`);
+}
+
 export function createMaterialIcon(iconName, extraClass = "") {
-    const icon = document.createElement("span");
-    icon.className = `material-icons${extraClass ? ` ${extraClass}` : ""}`;
-    icon.setAttribute("aria-hidden", "true");
-    icon.textContent = iconName;
-    return icon;
+    return requireElement(
+        renderVueElement(ResponsiveMaterialIcon, {
+            iconName,
+            extraClass,
+        }),
+        "ResponsiveMaterialIcon",
+    );
 }
 
 export function setMaterialIcon(icon, iconName, extraClass = "") {
@@ -22,10 +49,13 @@ export function setMaterialIcon(icon, iconName, extraClass = "") {
 }
 
 export function createBrandIcon(iconClass, extraClass = "") {
-    const icon = document.createElement("span");
-    icon.className = `fa-brands ${iconClass}${extraClass ? ` ${extraClass}` : ""}`;
-    icon.setAttribute("aria-hidden", "true");
-    return icon;
+    return requireElement(
+        renderVueElement(ResponsiveBrandIcon, {
+            iconClass,
+            extraClass,
+        }),
+        "ResponsiveBrandIcon",
+    );
 }
 
 function fallbackCopyText(value) {
@@ -90,17 +120,21 @@ export function replaceRowFromHtml(id, rowHtml) {
 }
 
 export function makeField(className, labelText, control) {
-    const field = document.createElement("div");
-    field.className = className;
-
-    const label = document.createElement("label");
-    label.className = className.includes("share")
+    const labelClass = className.includes("share")
         ? "responsive-inline-share-label"
         : "responsive-inline-editor-label";
-    label.setAttribute("for", control.id);
-    label.textContent = labelText;
 
-    field.append(label, control);
+    const field = requireElement(
+        renderVueElement(ResponsiveField, {
+            className,
+            labelText,
+            labelClass,
+            controlId: control.id,
+        }),
+        "ResponsiveField",
+    );
+
+    field.append(control);
     return field;
 }
 
@@ -114,34 +148,22 @@ export function createActionButton({
     source,
     onClick,
 }) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = `button ${className} ${variantClass}`;
-    button.setAttribute("aria-label", label);
-    button.setAttribute("title", label);
-
-    if (id !== undefined) {
-        button.dataset.id = String(id);
-    }
-
-    if (source) {
-        button.id = source.id;
-    }
-
-    if (iconLibrary === "brand") {
-        button.append(createBrandIcon(iconName, "responsive-brand-icon"));
-    } else {
-        button.append(createMaterialIcon(iconName));
-    }
-
-    button.addEventListener("click", (event) => {
-        event.preventDefault();
-        onClick(button);
-    });
+    const button = requireButton(
+        renderVueElement(ResponsiveActionButton, {
+            dataId: id !== undefined ? String(id) : "",
+            elementId: source?.id ?? "",
+            iconName,
+            iconLibrary,
+            label,
+            variantClass,
+            className,
+            onPress: (targetButton) => onClick(targetButton),
+        }),
+        "ResponsiveActionButton",
+    );
 
     if (source) {
         source.remove();
     }
-
     return button;
 }
