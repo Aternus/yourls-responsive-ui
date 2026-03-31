@@ -1,124 +1,239 @@
-import { mountVueFeature } from "./vue-feature.js";
+import {
+    computed,
+    defineComponent,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from "vue";
+import { ResponsiveMaterialIcon } from "./shared-vue.js";
 
-export function initNavMenu() {
-    const checkbox = document.querySelector("#nav_menu");
-    const button = document.querySelector(".nav_menu_button");
-    const nav = document.querySelector('nav[role="navigation"]');
+function useMediaQuery(query) {
+    const matches = ref(false);
+    let mediaQuery = null;
 
-    if (!checkbox || !button || !nav) {
-        return;
-    }
+    const syncMatches = () => {
+        matches.value = Boolean(mediaQuery?.matches);
+    };
 
-    mountVueFeature(
-        document.body,
-        "ResponsiveNavMenuFeature",
-        "responsiveNavMenu",
-        () => {
-            const syncState = () => {
-                const expanded = checkbox.checked;
+    onMounted(() => {
+        mediaQuery = window.matchMedia(query);
+        syncMatches();
 
-                button.setAttribute(
-                    "aria-expanded",
-                    expanded ? "true" : "false",
-                );
-                document.body.classList.toggle("responsive-nav-open", expanded);
-            };
+        if (typeof mediaQuery.addEventListener === "function") {
+            mediaQuery.addEventListener("change", syncMatches);
+            return;
+        }
 
-            checkbox.addEventListener("change", syncState);
+        if (typeof mediaQuery.addListener === "function") {
+            mediaQuery.addListener(syncMatches);
+        }
+    });
 
-            button.addEventListener("keydown", (event) => {
-                if (event.key !== "Enter" && event.key !== " ") {
-                    return;
-                }
+    onBeforeUnmount(() => {
+        if (!mediaQuery) {
+            return;
+        }
 
-                event.preventDefault();
-                checkbox.checked = !checkbox.checked;
-                checkbox.dispatchEvent(new Event("change", { bubbles: true }));
-            });
+        if (typeof mediaQuery.removeEventListener === "function") {
+            mediaQuery.removeEventListener("change", syncMatches);
+            return;
+        }
 
-            document.addEventListener("keydown", (event) => {
-                if (event.key === "Escape" && checkbox.checked) {
-                    checkbox.checked = false;
-                    checkbox.dispatchEvent(
-                        new Event("change", { bubbles: true }),
-                    );
-                }
-            });
+        if (typeof mediaQuery.removeListener === "function") {
+            mediaQuery.removeListener(syncMatches);
+        }
+    });
 
-            nav.addEventListener("click", (event) => {
-                if (
-                    event.target instanceof Element &&
-                    event.target.closest("a")
-                ) {
-                    checkbox.checked = false;
-                    checkbox.dispatchEvent(
-                        new Event("change", { bubbles: true }),
-                    );
-                }
-            });
-
-            syncState();
-        },
-    );
+    return matches;
 }
 
-// Scroll to Top
-/////////////////////////////////////////////////
+function useRafScheduler(run) {
+    let rafId = 0;
 
-export function initScrollTopButton() {
-    const button = document.querySelector(".responsive-scroll-top-button");
+    const schedule = () => {
+        if (rafId) {
+            return;
+        }
 
-    if (!(button instanceof HTMLButtonElement)) {
-        return;
-    }
+        rafId = window.requestAnimationFrame(() => {
+            rafId = 0;
+            run();
+        });
+    };
 
-    mountVueFeature(
-        button,
-        "ResponsiveScrollTopFeature",
-        "responsiveScrollTop",
-        () => {
-            const mobileQuery = window.matchMedia("(max-width: 767px)");
-            let rafId = 0;
+    onBeforeUnmount(() => {
+        if (rafId) {
+            window.cancelAnimationFrame(rafId);
+            rafId = 0;
+        }
+    });
 
-            const setVisible = (visible) => {
-                button.classList.toggle("is-visible", visible);
-                button.hidden = !visible;
-            };
+    return schedule;
+}
 
-            const syncVisibility = () => {
-                const visible = mobileQuery.matches && window.scrollY > 220;
-                setVisible(visible);
-            };
+export const ResponsiveNavControls = defineComponent({
+    name: "ResponsiveNavControls",
+    components: {
+        ResponsiveMaterialIcon,
+    },
+    setup() {
+        const isMounted = ref(false);
+        const navElement = ref(null);
+        const isOpen = ref(false);
 
-            const scheduleSync = () => {
-                if (rafId) {
-                    return;
-                }
+        const closeMenu = () => {
+            isOpen.value = false;
+        };
 
-                rafId = window.requestAnimationFrame(() => {
-                    rafId = 0;
-                    syncVisibility();
-                });
-            };
+        const toggleMenu = () => {
+            isOpen.value = !isOpen.value;
+        };
 
-            button.addEventListener("click", (event) => {
-                event.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                });
-            });
+        const handleDocumentKeydown = (event) => {
+            if (event.key === "Escape") {
+                closeMenu();
+            }
+        };
 
-            window.addEventListener("scroll", scheduleSync, { passive: true });
-            window.addEventListener("resize", scheduleSync, { passive: true });
+        const handleNavClick = (event) => {
+            if (event.target instanceof Element && event.target.closest("a")) {
+                closeMenu();
+            }
+        };
 
-            if (typeof mobileQuery.addEventListener === "function") {
-                mobileQuery.addEventListener("change", scheduleSync);
-            } else if (typeof mobileQuery.addListener === "function") {
-                mobileQuery.addListener(scheduleSync);
+        watch(
+            isOpen,
+            (open) => {
+                document.body.classList.toggle("responsive-nav-open", open);
+            },
+            { immediate: true },
+        );
+
+        onMounted(() => {
+            isMounted.value = true;
+            navElement.value = document.querySelector('nav[role="navigation"]');
+
+            if (!(navElement.value instanceof HTMLElement)) {
+                return;
             }
 
-            syncVisibility();
-        },
-    );
-}
+            document.addEventListener("keydown", handleDocumentKeydown);
+            navElement.value.addEventListener("click", handleNavClick);
+        });
+
+        onBeforeUnmount(() => {
+            document.body.classList.remove("responsive-nav-open");
+            document.removeEventListener("keydown", handleDocumentKeydown);
+
+            if (navElement.value instanceof HTMLElement) {
+                navElement.value.removeEventListener("click", handleNavClick);
+            }
+        });
+
+        const hasNavigation = computed(
+            () => navElement.value instanceof HTMLElement,
+        );
+
+        return {
+            isMounted,
+            hasNavigation,
+            isOpen,
+            toggleMenu,
+            closeMenu,
+        };
+    },
+    template: `
+        <teleport v-if="isMounted && hasNavigation" to="#wrap">
+            <button
+                type="button"
+                class="nav_menu_button"
+                aria-controls="admin_menu"
+                :aria-expanded="isOpen ? 'true' : 'false'"
+                aria-label="Toggle navigation menu"
+                @click="toggleMenu"
+            >
+                <responsive-material-icon
+                    icon-name="menu"
+                    extra-class="nav_menu_icon nav_menu_icon_open"
+                />
+                <responsive-material-icon
+                    icon-name="close"
+                    extra-class="nav_menu_icon nav_menu_icon_close"
+                />
+            </button>
+            <button
+                type="button"
+                class="nav_menu_overlay"
+                aria-hidden="true"
+                tabindex="-1"
+                @click="closeMenu"
+            ></button>
+        </teleport>
+    `,
+});
+
+export const ResponsiveScrollTopControl = defineComponent({
+    name: "ResponsiveScrollTopControl",
+    components: {
+        ResponsiveMaterialIcon,
+    },
+    setup() {
+        const isMounted = ref(false);
+        const scrollY = ref(0);
+        const isMobile = useMediaQuery("(max-width: 767px)");
+
+        const syncScrollPosition = () => {
+            scrollY.value = window.scrollY || window.pageYOffset || 0;
+        };
+
+        const scheduleSync = useRafScheduler(syncScrollPosition);
+
+        const scrollToTop = (event) => {
+            event.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        };
+
+        onMounted(() => {
+            isMounted.value = true;
+            syncScrollPosition();
+            window.addEventListener("scroll", scheduleSync, { passive: true });
+            window.addEventListener("resize", scheduleSync, { passive: true });
+        });
+
+        onBeforeUnmount(() => {
+            window.removeEventListener("scroll", scheduleSync);
+            window.removeEventListener("resize", scheduleSync);
+        });
+
+        const isVisible = computed(
+            () => isMobile.value === true && scrollY.value > 220,
+        );
+
+        return {
+            isMounted,
+            isVisible,
+            scrollToTop,
+        };
+    },
+    template: `
+        <teleport v-if="isMounted" to="#wrap">
+            <button
+                type="button"
+                :class="{
+                    'responsive-scroll-top-button': true,
+                    'is-visible': isVisible,
+                }"
+                :hidden="!isVisible"
+                aria-label="Scroll to top"
+                title="Scroll to top"
+                @click="scrollToTop"
+            >
+                <responsive-material-icon icon-name="arrow_upward" />
+            </button>
+        </teleport>
+    `,
+});

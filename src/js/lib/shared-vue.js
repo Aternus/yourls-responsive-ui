@@ -1,26 +1,14 @@
 import { defineComponent, h, render } from "vue";
 
-function withClasses(...classNames) {
-    return classNames.filter(Boolean).join(" ");
-}
-
 export const ResponsiveMaterialIcon = defineComponent({
     name: "ResponsiveMaterialIcon",
     props: {
         iconName: { type: String, required: true },
         extraClass: { type: String, default: "" },
     },
-    setup(props) {
-        return () =>
-            h(
-                "span",
-                {
-                    class: withClasses("material-icons", props.extraClass),
-                    "aria-hidden": "true",
-                },
-                props.iconName,
-            );
-    },
+    template: `
+        <span :class="['material-icons', extraClass]" aria-hidden="true">{{ iconName }}</span>
+    `,
 });
 
 export const ResponsiveBrandIcon = defineComponent({
@@ -29,17 +17,9 @@ export const ResponsiveBrandIcon = defineComponent({
         iconClass: { type: String, required: true },
         extraClass: { type: String, default: "" },
     },
-    setup(props) {
-        return () =>
-            h("span", {
-                class: withClasses(
-                    "fa-brands",
-                    props.iconClass,
-                    props.extraClass,
-                ),
-                "aria-hidden": "true",
-            });
-    },
+    template: `
+        <span :class="['fa-brands', iconClass, extraClass]" aria-hidden="true"></span>
+    `,
 });
 
 export const ResponsiveField = defineComponent({
@@ -50,23 +30,122 @@ export const ResponsiveField = defineComponent({
         labelClass: { type: String, required: true },
         controlId: { type: String, default: "" },
     },
-    setup(props) {
-        return () =>
-            h("div", { class: props.className }, [
-                h(
-                    "label",
-                    {
-                        class: props.labelClass,
-                        for: props.controlId || null,
-                    },
-                    props.labelText,
-                ),
-            ]);
+    template: `
+        <div :class="className">
+            <label :class="labelClass" :for="controlId || null">{{ labelText }}</label>
+            <slot />
+        </div>
+    `,
+});
+
+export const ResponsiveTextInputField = defineComponent({
+    name: "ResponsiveTextInputField",
+    components: {
+        ResponsiveField,
     },
+    props: {
+        fieldClassName: { type: String, required: true },
+        labelText: { type: String, required: true },
+        labelClassName: { type: String, required: true },
+        controlId: { type: String, required: true },
+        modelValue: { type: String, default: "" },
+        controlType: { type: String, default: "text" },
+        placeholder: { type: String, default: "" },
+        readOnly: { type: Boolean, default: false },
+        ariaLabel: { type: String, default: "" },
+        controlRef: { type: [Object, Function], default: null },
+    },
+    emits: ["update:modelValue"],
+    setup(_props, { emit }) {
+        const updateValue = (event) => {
+            if (!(event.target instanceof HTMLInputElement)) {
+                return;
+            }
+
+            emit("update:modelValue", event.target.value);
+        };
+
+        return {
+            updateValue,
+        };
+    },
+    template: `
+        <responsive-field
+            :class-name="fieldClassName"
+            :label-text="labelText"
+            :label-class="labelClassName"
+            :control-id="controlId"
+        >
+            <input
+                :ref="controlRef || null"
+                :type="controlType"
+                class="text"
+                :id="controlId"
+                :value="modelValue"
+                :placeholder="placeholder || null"
+                :readonly="readOnly"
+                :aria-label="ariaLabel || null"
+                @input="updateValue"
+            />
+        </responsive-field>
+    `,
+});
+
+export const ResponsiveTextareaField = defineComponent({
+    name: "ResponsiveTextareaField",
+    components: {
+        ResponsiveField,
+    },
+    props: {
+        fieldClassName: { type: String, required: true },
+        labelText: { type: String, required: true },
+        labelClassName: { type: String, required: true },
+        controlId: { type: String, required: true },
+        modelValue: { type: String, default: "" },
+        rows: { type: Number, default: 3 },
+        ariaLabel: { type: String, default: "" },
+        controlRef: { type: [Object, Function], default: null },
+    },
+    emits: ["update:modelValue"],
+    setup(_props, { emit }) {
+        const updateValue = (event) => {
+            if (!(event.target instanceof HTMLTextAreaElement)) {
+                return;
+            }
+
+            emit("update:modelValue", event.target.value);
+        };
+
+        return {
+            updateValue,
+        };
+    },
+    template: `
+        <responsive-field
+            :class-name="fieldClassName"
+            :label-text="labelText"
+            :label-class="labelClassName"
+            :control-id="controlId"
+        >
+            <textarea
+                :ref="controlRef || null"
+                class="text"
+                :id="controlId"
+                :rows="rows"
+                :aria-label="ariaLabel || null"
+                :value="modelValue"
+                @input="updateValue"
+            ></textarea>
+        </responsive-field>
+    `,
 });
 
 export const ResponsiveActionButton = defineComponent({
     name: "ResponsiveActionButton",
+    components: {
+        ResponsiveBrandIcon,
+        ResponsiveMaterialIcon,
+    },
     props: {
         dataId: { type: String, default: "" },
         elementId: { type: String, default: "" },
@@ -78,49 +157,43 @@ export const ResponsiveActionButton = defineComponent({
             type: String,
             default: "responsive-inline-editor-button",
         },
-        onPress: { type: Function, default: null },
     },
-    setup(props) {
+    emits: ["press"],
+    setup(_props, { emit }) {
         const handleClick = (event) => {
             event.preventDefault();
 
             const target = event.currentTarget;
-            if (
-                target instanceof HTMLButtonElement &&
-                typeof props.onPress === "function"
-            ) {
-                props.onPress(target);
+            if (target instanceof HTMLButtonElement) {
+                emit("press", target);
             }
         };
 
-        return () =>
-            h(
-                "button",
-                {
-                    type: "button",
-                    class: withClasses(
-                        "button",
-                        props.className,
-                        props.variantClass,
-                    ),
-                    id: props.elementId || null,
-                    "data-id": props.dataId || null,
-                    "aria-label": props.label,
-                    title: props.label,
-                    onClick: handleClick,
-                },
-                [
-                    props.iconLibrary === "brand"
-                        ? h(ResponsiveBrandIcon, {
-                              iconClass: props.iconName,
-                              extraClass: "responsive-brand-icon",
-                          })
-                        : h(ResponsiveMaterialIcon, {
-                              iconName: props.iconName,
-                          }),
-                ],
-            );
+        return {
+            handleClick,
+        };
     },
+    template: `
+        <button
+            type="button"
+            :class="['button', className, variantClass]"
+            :id="elementId || null"
+            :data-id="dataId || null"
+            :aria-label="label"
+            :title="label"
+            @click="handleClick"
+        >
+            <responsive-brand-icon
+                v-if="iconLibrary === 'brand'"
+                :icon-class="iconName"
+                extra-class="responsive-brand-icon"
+            />
+            <responsive-material-icon
+                v-else
+                :icon-name="iconName"
+            />
+        </button>
+    `,
 });
 
 export function renderVueElement(component, props = {}) {

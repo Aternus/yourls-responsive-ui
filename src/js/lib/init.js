@@ -1,4 +1,4 @@
-import { h, onBeforeUnmount, onMounted } from "vue";
+import { defineComponent, onBeforeUnmount, onMounted } from "vue";
 import { initDeleteConfirmDialog } from "./delete-confirm.js";
 import { initDesktopRowDrawers } from "./desktop-drawers.js";
 import { initInfosPage } from "./infos-page.js";
@@ -6,7 +6,10 @@ import {
     initInlineCardEditing,
     initInlineCardSharing,
 } from "./inline-mobile.js";
-import { initNavMenu, initScrollTopButton } from "./navigation.js";
+import {
+    ResponsiveNavControls,
+    ResponsiveScrollTopControl,
+} from "./navigation.js";
 import { initPluginActionIcons, initPluginsFilterButton } from "./plugins.js";
 import { initSearchFilters } from "./search-filters.js";
 import {
@@ -15,8 +18,6 @@ import {
 } from "./table-enhancements.js";
 
 const FEATURE_INITS = [
-    initNavMenu,
-    initScrollTopButton,
     initDestinationTitleExpansion,
     initRowLinkCopyButtons,
     initDeleteConfirmDialog,
@@ -29,8 +30,12 @@ const FEATURE_INITS = [
     initInfosPage,
 ];
 
-export const ResponsiveUIRoot = {
+export const ResponsiveUIRoot = defineComponent({
     name: "ResponsiveUIRoot",
+    components: {
+        ResponsiveNavControls,
+        ResponsiveScrollTopControl,
+    },
     setup() {
         let pendingReinit = 0;
         let observer = null;
@@ -78,6 +83,10 @@ export const ResponsiveUIRoot = {
             disconnectObserver();
         });
 
-        return () => h("span", { hidden: true });
+        return {};
     },
-};
+    template: `
+        <responsive-nav-controls />
+        <responsive-scroll-top-control />
+    `,
+});

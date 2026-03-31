@@ -12,10 +12,10 @@ function mountResponsiveUI() {
         return;
     }
 
-    const mount = document.createElement("div");
-    mount.id = "responsive-ui-vue-root";
-    mount.hidden = true;
-    document.body.append(mount);
+    const mount = document.querySelector("#responsive-ui-vue-root");
+    if (!(mount instanceof HTMLElement)) {
+        return;
+    }
 
     app = createApp(ResponsiveUIRoot);
     app.mount(mount);

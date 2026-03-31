@@ -1,11 +1,324 @@
+import { computed, defineComponent, h, ref, render } from "vue";
+import { copyToClipboard, isMobile, replaceRowFromHtml } from "./shared.js";
 import {
-    copyToClipboard,
-    createActionButton,
-    isMobile,
-    makeField,
-    replaceRowFromHtml,
-} from "./shared.js";
+    ResponsiveActionButton,
+    ResponsiveTextInputField,
+    ResponsiveTextareaField,
+} from "./shared-vue.js";
+import {
+    openShareWindow,
+    useCopyFeedback,
+    usePrimaryControlFocus,
+} from "./vue-composables.js";
 import { mountVueFeature } from "./vue-feature.js";
+
+function buildShareMessage(title, shortUrl) {
+    const normalizedTitle = typeof title === "string" ? title.trim() : "";
+    const normalizedShortUrl =
+        typeof shortUrl === "string" ? shortUrl.trim() : "";
+
+    return `${normalizedTitle ? `${normalizedTitle} ` : ""}${normalizedShortUrl}`.trim();
+}
+
+const ResponsiveInlineEditCard = defineComponent({
+    name: "ResponsiveInlineEditCard",
+    components: {
+        ResponsiveActionButton,
+        ResponsiveTextInputField,
+    },
+    props: {
+        id: { type: String, required: true },
+        initialShortUrl: { type: String, required: true },
+        initialDestinationUrl: { type: String, required: true },
+        initialTitle: { type: String, required: true },
+        keyword: { type: String, required: true },
+        nonce: { type: String, required: true },
+        actionsTarget: { type: String, default: "" },
+    },
+    emits: ["cancel", "save"],
+    setup(props, { emit }) {
+        const shortUrl = ref(props.initialShortUrl);
+        const destinationUrl = ref(props.initialDestinationUrl);
+        const title = ref(props.initialTitle);
+        const primaryControl = ref(null);
+        const hasActionsTarget = computed(() => props.actionsTarget !== "");
+        usePrimaryControlFocus(primaryControl);
+
+        const handleSave = (button) => {
+            emit(
+                "save",
+                {
+                    id: props.id,
+                    keyword: props.keyword,
+                    nonce: props.nonce,
+                    shortUrl: shortUrl.value,
+                    destinationUrl: destinationUrl.value,
+                    title: title.value,
+                },
+                button,
+            );
+        };
+
+        const cancelEdit = () => {
+            emit("cancel", props.id);
+        };
+
+        return {
+            shortUrl,
+            destinationUrl,
+            title,
+            primaryControl,
+            hasActionsTarget,
+            handleSave,
+            cancelEdit,
+        };
+    },
+    template: `
+        <p class="responsive-inline-editor-title">Edit Link</p>
+        <responsive-text-input-field
+            field-class-name="responsive-inline-editor-field"
+            label-class-name="responsive-inline-editor-label"
+            label-text="Short URL"
+            :control-id="\`responsive-inline-keyword-\${id}\`"
+            :model-value="shortUrl"
+            aria-label="Short URL"
+            :control-ref="primaryControl"
+            @update:model-value="shortUrl = $event"
+        />
+        <responsive-text-input-field
+            field-class-name="responsive-inline-editor-field"
+            label-class-name="responsive-inline-editor-label"
+            label-text="Destination URL"
+            :control-id="\`responsive-inline-url-\${id}\`"
+            :model-value="destinationUrl"
+            placeholder="Destination URL"
+            aria-label="Destination URL"
+            @update:model-value="destinationUrl = $event"
+        />
+        <responsive-text-input-field
+            field-class-name="responsive-inline-editor-field"
+            label-class-name="responsive-inline-editor-label"
+            label-text="Title"
+            :control-id="\`responsive-inline-title-\${id}\`"
+            :model-value="title"
+            placeholder="Title"
+            aria-label="Title"
+            @update:model-value="title = $event"
+        />
+
+        <teleport v-if="hasActionsTarget" :to="actionsTarget">
+            <div class="responsive-inline-editor-strip-actions">
+                <responsive-action-button
+                    :data-id="id"
+                    icon-name="save"
+                    label="Save"
+                    variant-class="is-primary"
+                    @press="handleSave"
+                />
+                <responsive-action-button
+                    :data-id="id"
+                    icon-name="close"
+                    label="Cancel"
+                    variant-class="is-tonal"
+                    @press="cancelEdit"
+                />
+            </div>
+        </teleport>
+        <div v-else class="responsive-inline-editor-actions">
+            <responsive-action-button
+                :data-id="id"
+                icon-name="save"
+                label="Save"
+                variant-class="is-primary"
+                @press="handleSave"
+            />
+            <responsive-action-button
+                :data-id="id"
+                icon-name="close"
+                label="Cancel"
+                variant-class="is-tonal"
+                @press="cancelEdit"
+            />
+        </div>
+    `,
+});
+
+const ResponsiveInlineShareCard = defineComponent({
+    name: "ResponsiveInlineShareCard",
+    components: {
+        ResponsiveActionButton,
+        ResponsiveTextInputField,
+        ResponsiveTextareaField,
+    },
+    props: {
+        id: { type: String, required: true },
+        shortUrl: { type: String, required: true },
+        destinationUrl: { type: String, required: true },
+        title: { type: String, required: true },
+        actionsTarget: { type: String, default: "" },
+    },
+    emits: ["close"],
+    setup(props, { emit }) {
+        const shortUrl = ref(props.shortUrl);
+        const message = ref(buildShareMessage(props.title, props.shortUrl));
+        const primaryControl = ref(null);
+        const hasActionsTarget = computed(() => props.actionsTarget !== "");
+        const {
+            iconName: copyIconName,
+            label: copyLabel,
+            markCopied,
+        } = useCopyFeedback();
+        usePrimaryControlFocus(primaryControl);
+
+        const copyShortUrl = async () => {
+            const copied = await copyToClipboard(shortUrl.value);
+            if (!copied) {
+                return;
+            }
+
+            markCopied();
+        };
+
+        const shareOnTwitter = () => {
+            openShareWindow(
+                "tw",
+                message.value.trim(),
+                shortUrl.value.trim(),
+                props.destinationUrl,
+            );
+        };
+
+        const shareOnFacebook = () => {
+            openShareWindow(
+                "fb",
+                message.value.trim(),
+                shortUrl.value.trim(),
+                props.destinationUrl,
+            );
+        };
+
+        const closeShare = () => {
+            emit("close");
+        };
+
+        return {
+            shortUrl,
+            message,
+            primaryControl,
+            hasActionsTarget,
+            copyIconName,
+            copyLabel,
+            copyShortUrl,
+            shareOnTwitter,
+            shareOnFacebook,
+            closeShare,
+        };
+    },
+    template: `
+        <p class="responsive-inline-share-title">Share Link</p>
+        <responsive-text-input-field
+            field-class-name="responsive-inline-share-field"
+            label-class-name="responsive-inline-share-label"
+            label-text="Short URL"
+            :control-id="\`responsive-inline-share-shorturl-\${id}\`"
+            :model-value="shortUrl"
+            :read-only="true"
+            aria-label="Short URL to share"
+            :control-ref="primaryControl"
+        />
+        <responsive-textarea-field
+            field-class-name="responsive-inline-share-field"
+            label-class-name="responsive-inline-share-label"
+            label-text="Message"
+            :control-id="\`responsive-inline-share-message-\${id}\`"
+            :model-value="message"
+            :rows="3"
+            aria-label="Share message"
+            @update:model-value="message = $event"
+        />
+
+        <teleport v-if="hasActionsTarget" :to="actionsTarget">
+            <div class="responsive-inline-share-strip-actions">
+                <responsive-action-button
+                    :data-id="id"
+                    :icon-name="copyIconName"
+                    :label="copyLabel"
+                    variant-class="is-primary"
+                    @press="copyShortUrl"
+                />
+                <responsive-action-button
+                    :data-id="id"
+                    icon-name="fa-x-twitter"
+                    icon-library="brand"
+                    label="Share on Twitter"
+                    variant-class="is-tonal"
+                    @press="shareOnTwitter"
+                />
+                <responsive-action-button
+                    :data-id="id"
+                    icon-name="fa-facebook-f"
+                    icon-library="brand"
+                    label="Share on Facebook"
+                    variant-class="is-tonal"
+                    @press="shareOnFacebook"
+                />
+                <responsive-action-button
+                    :data-id="id"
+                    icon-name="close"
+                    label="Close share mode"
+                    variant-class="is-tonal"
+                    @press="closeShare"
+                />
+            </div>
+        </teleport>
+        <div v-else class="responsive-inline-editor-actions">
+            <responsive-action-button
+                :data-id="id"
+                :icon-name="copyIconName"
+                :label="copyLabel"
+                variant-class="is-primary"
+                @press="copyShortUrl"
+            />
+            <responsive-action-button
+                :data-id="id"
+                icon-name="fa-x-twitter"
+                icon-library="brand"
+                label="Share on Twitter"
+                variant-class="is-tonal"
+                @press="shareOnTwitter"
+            />
+            <responsive-action-button
+                :data-id="id"
+                icon-name="fa-facebook-f"
+                icon-library="brand"
+                label="Share on Facebook"
+                variant-class="is-tonal"
+                @press="shareOnFacebook"
+            />
+            <responsive-action-button
+                :data-id="id"
+                icon-name="close"
+                label="Close share mode"
+                variant-class="is-tonal"
+                @press="closeShare"
+            />
+        </div>
+    `,
+});
+
+function createActionsTarget(row, className, id) {
+    const actionsCell = row.querySelector("td.actions");
+    if (!(actionsCell instanceof HTMLElement)) {
+        return "";
+    }
+
+    const mount = document.createElement("div");
+    mount.id = id;
+    mount.className = className;
+    actionsCell.append(mount);
+
+    return `#${id}`;
+}
 
 export function initInlineCardEditing() {
     const table = document.querySelector("#main_table");
@@ -45,17 +358,82 @@ export function initInlineCardEditing() {
                 const row = document.querySelector(`#id-${id}`);
                 if (row instanceof HTMLElement) {
                     row.classList.remove("is-editing");
+                }
+
+                const editor = getInlineEditor(id);
+                if (editor instanceof HTMLElement) {
+                    render(null, editor);
+                    editor.remove();
+                }
+
+                if (row instanceof HTMLElement) {
                     row.querySelector(
                         ".responsive-inline-editor-strip-actions",
                     )?.remove();
                 }
 
-                const editor = getInlineEditor(id);
-                if (editor instanceof HTMLElement) {
-                    editor.remove();
+                document.querySelector(`#edit-${id}`)?.remove();
+            };
+
+            const cancelInlineEditor = (id) => {
+                cleanupInlineEditor(id);
+
+                if (typeof window.end_disable === "function") {
+                    window.end_disable(`#actions-${id} .button`);
+                }
+            };
+
+            const saveInlineEditor = (payload, triggerButton) => {
+                if (typeof jq !== "function") {
+                    return;
                 }
 
-                document.querySelector(`#edit-${id}`)?.remove();
+                if (typeof window.add_loading === "function") {
+                    window.add_loading(triggerButton);
+                }
+
+                jq.getJSON(
+                    window.ajaxurl,
+                    {
+                        action: "edit_save",
+                        url: payload.destinationUrl,
+                        id: payload.id,
+                        keyword: payload.keyword,
+                        newkeyword: payload.shortUrl,
+                        title: payload.title,
+                        nonce: payload.nonce,
+                    },
+                    (data) => {
+                        if (data?.status === "success") {
+                            const rowReplaced = replaceRowFromHtml(
+                                payload.id,
+                                data?.row_html,
+                            );
+
+                            cleanupInlineEditor(payload.id);
+                            jq("#main_table tbody").trigger("update");
+
+                            if (!rowReplaced) {
+                                window.location.reload();
+                                return;
+                            }
+                        }
+
+                        if (typeof window.feedback === "function") {
+                            window.feedback(data?.message, data?.status);
+                        }
+
+                        if (typeof window.end_loading === "function") {
+                            window.end_loading(triggerButton);
+                        }
+
+                        if (typeof window.end_disable === "function") {
+                            window.end_disable(
+                                `#actions-${payload.id} .button`,
+                            );
+                        }
+                    },
+                );
             };
 
             const mountInlineEditor = (editRow) => {
@@ -83,115 +461,49 @@ export function initInlineCardEditing() {
                     `#edit-keyword-${id}`,
                 );
                 const titleInput = editRow.querySelector(`#edit-title-${id}`);
-                const submitButton = editRow.querySelector(
-                    `#edit-submit-${id}`,
-                );
-                const closeButton = editRow.querySelector(`#edit-close-${id}`);
                 const oldKeyword = editRow.querySelector(`#old_keyword_${id}`);
                 const nonceInput = editRow.querySelector(`#nonce_${id}`);
-                const actionsCell = row.querySelector("td.actions");
 
                 if (
-                    !(urlInput instanceof HTMLElement) ||
-                    !(keywordInput instanceof HTMLElement) ||
-                    !(titleInput instanceof HTMLElement) ||
-                    !(submitButton instanceof HTMLElement) ||
-                    !(closeButton instanceof HTMLElement)
+                    !(urlInput instanceof HTMLInputElement) ||
+                    !(keywordInput instanceof HTMLInputElement) ||
+                    !(titleInput instanceof HTMLInputElement) ||
+                    !(oldKeyword instanceof HTMLInputElement) ||
+                    !(nonceInput instanceof HTMLInputElement)
                 ) {
                     return;
                 }
 
+                const actionsTarget = createActionsTarget(
+                    row,
+                    "responsive-inline-editor-strip-actions",
+                    `responsive-inline-editor-strip-${id}`,
+                );
+
                 const editor = document.createElement("section");
                 editor.className = "responsive-inline-editor";
                 editor.dataset.id = id;
-                const editorTitle = document.createElement("p");
-                editorTitle.className = "responsive-inline-editor-title";
-                editorTitle.textContent = "Edit Link";
-
-                if (keywordInput instanceof HTMLInputElement) {
-                    keywordInput.type = "text";
-                    keywordInput.setAttribute("aria-label", "Short URL");
-                }
-
-                if (urlInput instanceof HTMLInputElement) {
-                    urlInput.type = "text";
-                    urlInput.placeholder = "Destination URL";
-                    urlInput.setAttribute("aria-label", "Destination URL");
-                }
-
-                if (titleInput instanceof HTMLInputElement) {
-                    titleInput.type = "text";
-                    titleInput.placeholder = "Title";
-                    titleInput.setAttribute("aria-label", "Title");
-                }
-
-                editor.append(
-                    editorTitle,
-                    makeField(
-                        "responsive-inline-editor-field",
-                        "Short URL",
-                        keywordInput,
-                    ),
-                    makeField(
-                        "responsive-inline-editor-field",
-                        "Destination URL",
-                        urlInput,
-                    ),
-                    makeField(
-                        "responsive-inline-editor-field",
-                        "Title",
-                        titleInput,
-                    ),
-                );
-
-                const actions = document.createElement("div");
-                actions.className = "responsive-inline-editor-actions";
-                const submitControl = createActionButton({
-                    source: submitButton,
-                    id,
-                    iconName: "save",
-                    label: "Save",
-                    variantClass: "is-primary",
-                    onClick: () => window.edit_link_save(id),
-                });
-                const closeControl = createActionButton({
-                    source: closeButton,
-                    id,
-                    iconName: "close",
-                    label: "Cancel",
-                    variantClass: "is-tonal",
-                    onClick: () => window.edit_link_hide(id),
-                });
-                actions.append(submitControl, closeControl);
-
-                if (actionsCell instanceof HTMLElement) {
-                    const stripActions = document.createElement("div");
-                    stripActions.className =
-                        "responsive-inline-editor-strip-actions";
-                    stripActions.append(submitControl, closeControl);
-                    actionsCell.append(stripActions);
-                } else {
-                    editor.append(actions);
-                }
-
-                if (oldKeyword instanceof HTMLElement) {
-                    editor.append(oldKeyword);
-                }
-                if (nonceInput instanceof HTMLElement) {
-                    editor.append(nonceInput);
-                }
 
                 row.append(editor);
                 row.classList.add("is-editing");
 
-                editRow.style.display = "none";
-                editRow.setAttribute("aria-hidden", "true");
+                render(
+                    h(ResponsiveInlineEditCard, {
+                        id,
+                        initialShortUrl: keywordInput.value,
+                        initialDestinationUrl: urlInput.value,
+                        initialTitle: titleInput.value,
+                        keyword: oldKeyword.value,
+                        nonce: nonceInput.value,
+                        actionsTarget,
+                        onCancel: (editorId) => cancelInlineEditor(editorId),
+                        onSave: (payload, triggerButton) =>
+                            saveInlineEditor(payload, triggerButton),
+                    }),
+                    editor,
+                );
 
-                if (keywordInput instanceof HTMLInputElement) {
-                    keywordInput.focus();
-                } else if (urlInput instanceof HTMLInputElement) {
-                    urlInput.focus();
-                }
+                editRow.remove();
             };
 
             const originalEditLinkHide = window.edit_link_hide;
@@ -200,81 +512,25 @@ export function initInlineCardEditing() {
                     return originalEditLinkHide(id);
                 }
 
-                cleanupInlineEditor(id);
-
-                if (typeof window.end_disable === "function") {
-                    window.end_disable(`#actions-${id} .button`);
-                }
-
+                cancelInlineEditor(id);
                 return true;
             };
 
             const originalEditLinkSave = window.edit_link_save;
             window.edit_link_save = function (id) {
-                if (
-                    !isMobile() ||
-                    !getInlineEditor(id) ||
-                    typeof jq !== "function"
-                ) {
+                if (!isMobile() || !getInlineEditor(id)) {
                     return originalEditLinkSave(id);
                 }
 
-                if (typeof window.add_loading === "function") {
-                    window.add_loading(`#edit-close-${id}`);
+                const saveButton = document.querySelector(
+                    `#id-${id} .responsive-inline-editor-button.is-primary`,
+                );
+                if (saveButton instanceof HTMLButtonElement) {
+                    saveButton.click();
+                    return true;
                 }
 
-                const newUrl = jq(`#edit-url-${id}`).val();
-                const newKeyword = jq(`#edit-keyword-${id}`).val();
-                const title = jq(`#edit-title-${id}`).val();
-                const keyword = jq(`#old_keyword_${id}`).val();
-                const nonce = jq(`#nonce_${id}`).val();
-
-                jq.getJSON(
-                    window.ajaxurl,
-                    {
-                        action: "edit_save",
-                        url: newUrl,
-                        id: id,
-                        keyword: keyword,
-                        newkeyword: newKeyword,
-                        title: title,
-                        nonce: nonce,
-                    },
-                    (data) => {
-                        if (data?.status === "success") {
-                            const rowReplaced = replaceRowFromHtml(
-                                id,
-                                data?.row_html,
-                            );
-
-                            cleanupInlineEditor(id);
-
-                            jq("#main_table tbody").trigger("update");
-
-                            if (!rowReplaced) {
-                                window.location.reload();
-                                return;
-                            }
-                        }
-
-                        if (typeof window.feedback === "function") {
-                            window.feedback(data?.message, data?.status);
-                        }
-
-                        if (typeof window.end_loading === "function") {
-                            window.end_loading(`#edit-close-${id}`);
-                        }
-
-                        if (typeof window.end_disable === "function") {
-                            window.end_disable(`#edit-close-${id}`);
-                            if (data?.status === "success") {
-                                window.end_disable(`#actions-${id} .button`);
-                            }
-                        }
-                    },
-                );
-
-                return true;
+                return false;
             };
 
             const observer = new MutationObserver((mutations) => {
@@ -336,14 +592,18 @@ export function initInlineCardSharing() {
                 const row = document.querySelector(`#id-${id}`);
                 if (row instanceof HTMLElement) {
                     row.classList.remove("is-sharing");
-                    row.querySelector(
-                        ".responsive-inline-share-strip-actions",
-                    )?.remove();
                 }
 
                 const share = getInlineShare(id);
                 if (share instanceof HTMLElement) {
+                    render(null, share);
                     share.remove();
+                }
+
+                if (row instanceof HTMLElement) {
+                    row.querySelector(
+                        ".responsive-inline-share-strip-actions",
+                    )?.remove();
                 }
             };
 
@@ -362,6 +622,7 @@ export function initInlineCardSharing() {
 
                         const shareId = share.dataset.id ?? "";
                         if (!shareId) {
+                            render(null, share);
                             share.remove();
                             return;
                         }
@@ -371,6 +632,13 @@ export function initInlineCardSharing() {
             };
 
             window.responsiveInlineShareCleanup = cleanupInlineShare;
+
+            const closeInlineShare = (id) => {
+                cleanupInlineShareById(id);
+                if (typeof window.end_disable === "function") {
+                    window.end_disable(`#actions-${id} .button`);
+                }
+            };
 
             const buildInlineShare = (id) => {
                 const row = document.querySelector(`#id-${id}`);
@@ -407,164 +675,30 @@ export function initInlineCardSharing() {
                     return false;
                 }
 
-                const message = `${title ? `${title} ` : ""}${shortUrl}`.trim();
-
-                const shortUrlInput = document.createElement("input");
-                shortUrlInput.type = "text";
-                shortUrlInput.className = "text";
-                shortUrlInput.id = `share-shorturl-${id}`;
-                shortUrlInput.value = shortUrl;
-                shortUrlInput.readOnly = true;
-                shortUrlInput.setAttribute("aria-label", "Short URL to share");
-
-                const messageInput = document.createElement("textarea");
-                messageInput.className = "text";
-                messageInput.id = `share-message-${id}`;
-                messageInput.value = message;
-                messageInput.rows = 3;
-                messageInput.setAttribute("aria-label", "Share message");
-
-                const editor = document.createElement("section");
-                editor.className = "responsive-inline-share";
-                editor.dataset.id = id;
-
-                const editorTitle = document.createElement("p");
-                editorTitle.className = "responsive-inline-share-title";
-                editorTitle.textContent = "Share Link";
-
-                editor.append(
-                    editorTitle,
-                    makeField(
-                        "responsive-inline-share-field",
-                        "Short URL",
-                        shortUrlInput,
-                    ),
-                    makeField(
-                        "responsive-inline-share-field",
-                        "Message",
-                        messageInput,
-                    ),
+                const actionsTarget = createActionsTarget(
+                    row,
+                    "responsive-inline-share-strip-actions",
+                    `responsive-inline-share-strip-${id}`,
                 );
 
-                const openShareWindow = (destination) => {
-                    const text = encodeURIComponent(
-                        messageInput.value.trim() || shortUrlInput.value.trim(),
-                    );
-                    const encodedShortUrl = encodeURIComponent(
-                        shortUrlInput.value.trim(),
-                    );
-                    const encodedDestinationUrl =
-                        encodeURIComponent(destinationUrl);
+                const share = document.createElement("section");
+                share.className = "responsive-inline-share";
+                share.dataset.id = id;
 
-                    if (destination === "tw") {
-                        const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
-                        window.open(
-                            twitterUrl,
-                            "tw",
-                            "toolbar=no,width=800,height=550",
-                        );
-                        return;
-                    }
-
-                    if (destination === "fb") {
-                        const targetUrl =
-                            encodedDestinationUrl || encodedShortUrl;
-                        const facebookUrl = `https://www.facebook.com/share.php?u=${targetUrl}`;
-                        window.open(
-                            facebookUrl,
-                            "fb",
-                            "toolbar=no,width=1000,height=550",
-                        );
-                    }
-                };
-
-                const copyButton = createActionButton({
-                    id,
-                    iconName: "content_copy",
-                    label: "Copy short URL",
-                    variantClass: "is-primary",
-                    onClick: async (button) => {
-                        const copied = await copyToClipboard(
-                            shortUrlInput.value,
-                        );
-                        if (!copied) {
-                            return;
-                        }
-
-                        const icon = button.querySelector(".material-icons");
-                        button.setAttribute("title", "Copied");
-                        button.setAttribute("aria-label", "Copied");
-
-                        if (icon instanceof HTMLElement) {
-                            icon.textContent = "check";
-                        }
-
-                        window.setTimeout(() => {
-                            button.setAttribute("title", "Copy short URL");
-                            button.setAttribute("aria-label", "Copy short URL");
-                            if (icon instanceof HTMLElement) {
-                                icon.textContent = "content_copy";
-                            }
-                        }, 1200);
-                    },
-                });
-
-                const twitterButton = createActionButton({
-                    id,
-                    iconName: "fa-x-twitter",
-                    iconLibrary: "brand",
-                    label: "Share on Twitter",
-                    variantClass: "is-tonal",
-                    onClick: () => openShareWindow("tw"),
-                });
-
-                const facebookButton = createActionButton({
-                    id,
-                    iconName: "fa-facebook-f",
-                    iconLibrary: "brand",
-                    label: "Share on Facebook",
-                    variantClass: "is-tonal",
-                    onClick: () => openShareWindow("fb"),
-                });
-
-                const closeButton = createActionButton({
-                    id,
-                    iconName: "close",
-                    label: "Close share mode",
-                    variantClass: "is-tonal",
-                    onClick: () => {
-                        cleanupInlineShareById(id);
-                        if (typeof window.end_disable === "function") {
-                            window.end_disable(`#actions-${id} .button`);
-                        }
-                    },
-                });
-
-                const actionButtons = [
-                    copyButton,
-                    twitterButton,
-                    facebookButton,
-                    closeButton,
-                ];
-
-                const actionsCell = row.querySelector("td.actions");
-                if (actionsCell instanceof HTMLElement) {
-                    const stripActions = document.createElement("div");
-                    stripActions.className =
-                        "responsive-inline-share-strip-actions";
-                    stripActions.append(...actionButtons);
-                    actionsCell.append(stripActions);
-                } else {
-                    const actions = document.createElement("div");
-                    actions.className = "responsive-inline-editor-actions";
-                    actions.append(...actionButtons);
-                    editor.append(actions);
-                }
-
-                row.append(editor);
+                row.append(share);
                 row.classList.add("is-sharing");
-                shortUrlInput.focus();
-                shortUrlInput.select();
+
+                render(
+                    h(ResponsiveInlineShareCard, {
+                        id,
+                        shortUrl,
+                        destinationUrl,
+                        title,
+                        actionsTarget,
+                        onClose: () => closeInlineShare(id),
+                    }),
+                    share,
+                );
 
                 return true;
             };
@@ -589,10 +723,7 @@ export function initInlineCardSharing() {
 
                 const isOpen = getInlineShare(id) instanceof HTMLElement;
                 if (isOpen) {
-                    cleanupInlineShareById(id);
-                    if (typeof window.end_disable === "function") {
-                        window.end_disable(`#actions-${id} .button`);
-                    }
+                    closeInlineShare(id);
                     return false;
                 }
 

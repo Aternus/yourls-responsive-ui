@@ -19,8 +19,8 @@ function responsive_head(): void {
     $dark  = RESPONSIVE_SCHEME_DARK;
     echo <<<HEAD
         <meta name="color-scheme" content="$scheme">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/animate.css@4/animate.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@7/css/all.min.css">
         <link rel="stylesheet" href="$css">
         <script>
         const RESPONSIVEUI = {
@@ -34,7 +34,7 @@ function responsive_head(): void {
         <script type="importmap">
         {
             "imports": {
-                "vue": "https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.esm-browser.prod.js"
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
             }
         }
         </script>
@@ -44,21 +44,12 @@ function responsive_head(): void {
 
 yourls_add_action( 'html_head', 'responsive_head' );
 
-function responsive_nav_menu(): void {
+function responsive_vue_root(): void {
     if ( yourls_is_valid_user() !== true ) {
         return;
     }
-    echo <<<NAV_MENU
-        <input type="checkbox" id="nav_menu">
-        <label for="nav_menu" class="nav_menu_button" role="button" aria-controls="admin_menu" aria-expanded="false" aria-label="Toggle navigation menu">
-            <span class="material-icons nav_menu_icon nav_menu_icon_open" aria-hidden="true">menu</span>
-            <span class="material-icons nav_menu_icon nav_menu_icon_close" aria-hidden="true">close</span>
-        </label>
-        <label for="nav_menu" class="nav_menu_overlay" aria-hidden="true"></label>
-        <button type="button" class="responsive-scroll-top-button" aria-label="Scroll to top" title="Scroll to top">
-            <span class="material-icons" aria-hidden="true">arrow_upward</span>
-        </button>
-        NAV_MENU;
+
+    echo '<div id="responsive-ui-vue-root"></div>';
 }
 
-yourls_add_action( 'html_logo', 'responsive_nav_menu' );
+yourls_add_action( 'html_logo', 'responsive_vue_root' );

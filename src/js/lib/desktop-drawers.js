@@ -1,13 +1,247 @@
+import { computed, defineComponent, h, ref, render } from "vue";
 import {
     copyToClipboard,
-    createActionButton,
     createMaterialIcon,
     isDesktop,
-    makeField,
     replaceRowFromHtml,
     setMaterialIcon,
 } from "./shared.js";
+import {
+    ResponsiveActionButton,
+    ResponsiveTextInputField,
+    ResponsiveTextareaField,
+} from "./shared-vue.js";
+import {
+    openShareWindow,
+    useCopyFeedback,
+    usePrimaryControlFocus,
+} from "./vue-composables.js";
 import { mountVueFeature } from "./vue-feature.js";
+
+function buildShareMessage(data) {
+    const title = typeof data.title === "string" ? data.title.trim() : "";
+    const shortUrl =
+        typeof data.shortUrl === "string" ? data.shortUrl.trim() : "";
+
+    return `${title ? `${title} ` : ""}${shortUrl}`.trim();
+}
+
+const ResponsiveDesktopDrawerPanel = defineComponent({
+    name: "ResponsiveDesktopDrawerPanel",
+    components: {
+        ResponsiveActionButton,
+        ResponsiveTextInputField,
+        ResponsiveTextareaField,
+    },
+    props: {
+        mode: { type: String, required: true },
+        data: { type: Object, required: true },
+    },
+    emits: ["close", "saveEdit"],
+    setup(props, { emit }) {
+        const shortUrl = ref(String(props.data.shortUrl ?? ""));
+        const destinationUrl = ref(String(props.data.destinationUrl ?? ""));
+        const title = ref(String(props.data.title ?? ""));
+        const message = ref(buildShareMessage(props.data));
+        const primaryControl = ref(null);
+        const {
+            iconName: copyIconName,
+            label: copyLabel,
+            markCopied,
+        } = useCopyFeedback();
+        usePrimaryControlFocus(primaryControl);
+
+        const closeDrawer = () => {
+            emit("close");
+        };
+
+        const copyShortUrl = async () => {
+            const copied = await copyToClipboard(shortUrl.value);
+            if (!copied) {
+                return;
+            }
+
+            markCopied();
+        };
+
+        const saveEdit = (button) => {
+            emit(
+                "saveEdit",
+                {
+                    id: String(props.data.id ?? ""),
+                    keyword: String(props.data.keyword ?? ""),
+                    nonce: String(props.data.nonce ?? ""),
+                    shortUrl: shortUrl.value,
+                    destinationUrl: destinationUrl.value,
+                    title: title.value,
+                },
+                button,
+            );
+        };
+
+        const drawerId = String(props.data.id ?? "");
+
+        const isEditMode = computed(() => props.mode === "edit");
+
+        const shareOnTwitter = () => {
+            openShareWindow(
+                "tw",
+                message.value.trim(),
+                shortUrl.value.trim(),
+                String(props.data.destinationUrl ?? ""),
+            );
+        };
+
+        const shareOnFacebook = () => {
+            openShareWindow(
+                "fb",
+                message.value.trim(),
+                shortUrl.value.trim(),
+                String(props.data.destinationUrl ?? ""),
+            );
+        };
+
+        return {
+            shortUrl,
+            destinationUrl,
+            title,
+            message,
+            primaryControl,
+            copyIconName,
+            copyLabel,
+            copyShortUrl,
+            closeDrawer,
+            saveEdit,
+            drawerId,
+            isEditMode,
+            shareOnTwitter,
+            shareOnFacebook,
+        };
+    },
+    template: `
+        <div name="dialog_title" id="responsive-row-drawer-title">
+            {{ isEditMode ? 'Edit Link' : 'Share Link' }}
+        </div>
+        <div class="confirm-message">
+            <section class="responsive-row-drawer-content">
+                <section
+                    v-if="isEditMode"
+                    class="responsive-inline-editor responsive-drawer-editor"
+                    :data-id="drawerId"
+                >
+                    <p class="responsive-inline-editor-title">Edit mode</p>
+                    <responsive-text-input-field
+                        field-class-name="responsive-inline-editor-field"
+                        label-text="Short URL"
+                        label-class-name="responsive-inline-editor-label"
+                        :control-id="\`responsive-drawer-keyword-\${drawerId}\`"
+                        :model-value="shortUrl"
+                        aria-label="Short URL"
+                        :control-ref="primaryControl"
+                        @update:model-value="shortUrl = $event"
+                    />
+                    <responsive-text-input-field
+                        field-class-name="responsive-inline-editor-field"
+                        label-text="Destination URL"
+                        label-class-name="responsive-inline-editor-label"
+                        :control-id="\`responsive-drawer-url-\${drawerId}\`"
+                        :model-value="destinationUrl"
+                        aria-label="Destination URL"
+                        @update:model-value="destinationUrl = $event"
+                    />
+                    <responsive-text-input-field
+                        field-class-name="responsive-inline-editor-field"
+                        label-text="Title"
+                        label-class-name="responsive-inline-editor-label"
+                        :control-id="\`responsive-drawer-title-input-\${drawerId}\`"
+                        :model-value="title"
+                        aria-label="Title"
+                        @update:model-value="title = $event"
+                    />
+                </section>
+                <section
+                    v-else
+                    class="responsive-inline-share responsive-drawer-share"
+                    :data-id="drawerId"
+                >
+                    <p class="responsive-inline-share-title">Share mode</p>
+                    <responsive-text-input-field
+                        field-class-name="responsive-inline-share-field"
+                        label-text="Short URL"
+                        label-class-name="responsive-inline-share-label"
+                        :control-id="\`responsive-drawer-share-shorturl-\${drawerId}\`"
+                        :model-value="shortUrl"
+                        :read-only="true"
+                        aria-label="Short URL to share"
+                        :control-ref="primaryControl"
+                    />
+                    <responsive-textarea-field
+                        field-class-name="responsive-inline-share-field"
+                        label-text="Message"
+                        label-class-name="responsive-inline-share-label"
+                        :control-id="\`responsive-drawer-share-message-\${drawerId}\`"
+                        :model-value="message"
+                        :rows="3"
+                        aria-label="Share message"
+                        @update:model-value="message = $event"
+                    />
+                </section>
+            </section>
+        </div>
+        <div class="button-group responsive-row-drawer-actions">
+            <responsive-action-button
+                v-if="isEditMode"
+                icon-name="save"
+                label="Save"
+                variant-class="is-primary"
+                class-name="responsive-drawer-button"
+                @press="saveEdit"
+            />
+            <responsive-action-button
+                v-else
+                :icon-name="copyIconName"
+                :label="copyLabel"
+                variant-class="is-primary"
+                class-name="responsive-drawer-button"
+                @press="copyShortUrl"
+            />
+            <responsive-action-button
+                v-if="isEditMode"
+                icon-name="close"
+                label="Cancel"
+                variant-class="is-tonal"
+                class-name="responsive-drawer-button"
+                @press="closeDrawer"
+            />
+            <responsive-action-button
+                v-else
+                icon-name="fa-x-twitter"
+                icon-library="brand"
+                label="Share on Twitter"
+                variant-class="is-tonal"
+                class-name="responsive-drawer-button"
+                @press="shareOnTwitter"
+            />
+            <responsive-action-button
+                v-if="!isEditMode"
+                icon-name="fa-facebook-f"
+                icon-library="brand"
+                label="Share on Facebook"
+                variant-class="is-tonal"
+                class-name="responsive-drawer-button"
+                @press="shareOnFacebook"
+            />
+            <responsive-action-button
+                v-if="!isEditMode"
+                icon-name="close"
+                label="Close share mode"
+                variant-class="is-tonal"
+                class-name="responsive-drawer-button"
+                @press="closeDrawer"
+            />
+        </div>
+    `,
+});
 
 export function initDesktopRowDrawers() {
     const table = document.querySelector("#main_table");
@@ -179,11 +413,6 @@ export function initDesktopRowDrawers() {
             dialog = document.createElement("dialog");
             dialog.id = "responsive-row-drawer";
             dialog.className = "responsive-row-drawer";
-            dialog.innerHTML =
-                '<div name="dialog_title" id="responsive-row-drawer-title"></div>' +
-                '<div class="confirm-message"><section class="responsive-row-drawer-content"></section></div>' +
-                '<div class="button-group responsive-row-drawer-actions"></div>';
-
             document.body.append(dialog);
             return dialog;
         };
@@ -197,6 +426,10 @@ export function initDesktopRowDrawers() {
         if (!(state.dialog instanceof HTMLDialogElement)) {
             return;
         }
+
+        const unmountDrawerView = () => {
+            render(null, state.dialog);
+        };
 
         const setModeButtons = (mode, id) => {
             const shareButton = document.querySelector(`#share-button-${id}`);
@@ -243,11 +476,15 @@ export function initDesktopRowDrawers() {
         const closeDrawer = () => {
             if (state.dialog.open) {
                 state.dialog.close();
+                return;
             }
+
+            unmountDrawerView();
             clearModeState();
         };
 
         state.dialog.addEventListener("close", () => {
+            unmountDrawerView();
             clearModeState();
         });
 
@@ -312,343 +549,85 @@ export function initDesktopRowDrawers() {
             };
         };
 
-        const renderEditContent = (data) => {
-            const content = state.dialog.querySelector(
-                ".responsive-row-drawer-content",
-            );
-            const actions = state.dialog.querySelector(
-                ".responsive-row-drawer-actions",
-            );
-            const title = state.dialog.querySelector(
-                "#responsive-row-drawer-title",
-            );
-
-            if (
-                !(content instanceof HTMLElement) ||
-                !(actions instanceof HTMLElement) ||
-                !(title instanceof HTMLElement)
-            ) {
-                return false;
+        const saveDrawerEdit = (payload, saveButton) => {
+            if (payload.keyword === "" || payload.nonce === "") {
+                window.location.reload();
+                return;
             }
 
-            title.textContent = "Edit Link";
-            content.replaceChildren();
-            actions.replaceChildren();
+            if (
+                saveButton instanceof HTMLButtonElement &&
+                typeof window.add_loading === "function"
+            ) {
+                window.add_loading(saveButton);
+            }
 
-            const editor = document.createElement("section");
-            editor.className =
-                "responsive-inline-editor responsive-drawer-editor";
-            editor.dataset.id = data.id;
-
-            const editorTitle = document.createElement("p");
-            editorTitle.className = "responsive-inline-editor-title";
-            editorTitle.textContent = "Edit mode";
-
-            const shortUrlInput = document.createElement("input");
-            shortUrlInput.type = "text";
-            shortUrlInput.className = "text";
-            shortUrlInput.id = `responsive-drawer-keyword-${data.id}`;
-            shortUrlInput.value = data.shortUrl;
-            shortUrlInput.setAttribute("aria-label", "Short URL");
-
-            const destinationInput = document.createElement("input");
-            destinationInput.type = "text";
-            destinationInput.className = "text";
-            destinationInput.id = `responsive-drawer-url-${data.id}`;
-            destinationInput.value = data.destinationUrl;
-            destinationInput.setAttribute("aria-label", "Destination URL");
-
-            const titleInput = document.createElement("input");
-            titleInput.type = "text";
-            titleInput.className = "text";
-            titleInput.id = `responsive-drawer-title-input-${data.id}`;
-            titleInput.value = data.title;
-            titleInput.setAttribute("aria-label", "Title");
-
-            editor.append(
-                editorTitle,
-                makeField(
-                    "responsive-inline-editor-field",
-                    "Short URL",
-                    shortUrlInput,
-                ),
-                makeField(
-                    "responsive-inline-editor-field",
-                    "Destination URL",
-                    destinationInput,
-                ),
-                makeField(
-                    "responsive-inline-editor-field",
-                    "Title",
-                    titleInput,
-                ),
-            );
-
-            const saveEdit = () => {
-                if (data.keyword === "" || data.nonce === "") {
-                    window.location.reload();
-                    return;
-                }
-
-                const saveButton = actions.querySelector(
-                    ".responsive-drawer-button.is-primary",
-                );
-                if (
-                    saveButton instanceof HTMLButtonElement &&
-                    typeof window.add_loading === "function"
-                ) {
-                    window.add_loading(saveButton);
-                }
-
-                jq.getJSON(
-                    window.ajaxurl,
-                    {
-                        action: "edit_save",
-                        url: destinationInput.value,
-                        id: data.id,
-                        keyword: data.keyword,
-                        newkeyword: normalizeKeywordFromInput(
-                            shortUrlInput.value,
-                            data.keyword,
-                        ),
-                        title: titleInput.value,
-                        nonce: data.nonce,
-                    },
-                    (response) => {
-                        if (response?.status === "success") {
-                            const rowReplaced = replaceRowFromHtml(
-                                data.id,
-                                response?.row_html,
-                            );
-
-                            closeDrawer();
-                            jq("#main_table tbody").trigger("update");
-
-                            if (!rowReplaced) {
-                                window.location.reload();
-                                return;
-                            }
-                        }
-
-                        if (typeof window.feedback === "function") {
-                            window.feedback(
-                                response?.message,
-                                response?.status,
-                            );
-                        }
-
-                        if (
-                            saveButton instanceof HTMLButtonElement &&
-                            typeof window.end_loading === "function"
-                        ) {
-                            window.end_loading(saveButton);
-                        }
-                    },
-                );
-            };
-
-            const saveButton = createActionButton({
-                iconName: "save",
-                label: "Save",
-                variantClass: "is-primary",
-                className: "responsive-drawer-button",
-                onClick: () => {
-                    saveEdit();
+            jq.getJSON(
+                window.ajaxurl,
+                {
+                    action: "edit_save",
+                    url: payload.destinationUrl,
+                    id: payload.id,
+                    keyword: payload.keyword,
+                    newkeyword: normalizeKeywordFromInput(
+                        payload.shortUrl,
+                        payload.keyword,
+                    ),
+                    title: payload.title,
+                    nonce: payload.nonce,
                 },
-            });
+                (response) => {
+                    if (response?.status === "success") {
+                        const rowReplaced = replaceRowFromHtml(
+                            payload.id,
+                            response?.row_html,
+                        );
 
-            const cancelButton = createActionButton({
-                iconName: "close",
-                label: "Cancel",
-                variantClass: "is-tonal",
-                className: "responsive-drawer-button",
-                onClick: () => closeDrawer(),
-            });
+                        closeDrawer();
+                        jq("#main_table tbody").trigger("update");
 
-            actions.append(saveButton, cancelButton);
-            content.append(editor);
+                        if (!rowReplaced) {
+                            window.location.reload();
+                            return;
+                        }
+                    }
 
-            window.requestAnimationFrame(() => {
-                shortUrlInput.focus();
-                shortUrlInput.select();
-            });
+                    if (typeof window.feedback === "function") {
+                        window.feedback(response?.message, response?.status);
+                    }
+
+                    if (
+                        saveButton instanceof HTMLButtonElement &&
+                        typeof window.end_loading === "function"
+                    ) {
+                        window.end_loading(saveButton);
+                    }
+                },
+            );
+        };
+
+        const renderDrawerContent = (mode, data) => {
+            render(
+                h(ResponsiveDesktopDrawerPanel, {
+                    mode,
+                    data,
+                    onClose: closeDrawer,
+                    onSaveEdit: saveDrawerEdit,
+                }),
+                state.dialog,
+            );
 
             return true;
         };
 
-        const renderShareContent = (data) => {
-            const content = state.dialog.querySelector(
-                ".responsive-row-drawer-content",
-            );
-            const actions = state.dialog.querySelector(
-                ".responsive-row-drawer-actions",
-            );
-            const title = state.dialog.querySelector(
-                "#responsive-row-drawer-title",
-            );
-
-            if (
-                !(content instanceof HTMLElement) ||
-                !(actions instanceof HTMLElement) ||
-                !(title instanceof HTMLElement)
-            ) {
-                return false;
-            }
-
-            title.textContent = "Share Link";
-            content.replaceChildren();
-            actions.replaceChildren();
-
-            const share = document.createElement("section");
-            share.className = "responsive-inline-share responsive-drawer-share";
-            share.dataset.id = data.id;
-
-            const shareTitle = document.createElement("p");
-            shareTitle.className = "responsive-inline-share-title";
-            shareTitle.textContent = "Share mode";
-
-            const shortUrlInput = document.createElement("input");
-            shortUrlInput.type = "text";
-            shortUrlInput.className = "text";
-            shortUrlInput.id = `responsive-drawer-share-shorturl-${data.id}`;
-            shortUrlInput.value = data.shortUrl;
-            shortUrlInput.readOnly = true;
-            shortUrlInput.setAttribute("aria-label", "Short URL to share");
-
-            const messageInput = document.createElement("textarea");
-            messageInput.className = "text";
-            messageInput.id = `responsive-drawer-share-message-${data.id}`;
-            messageInput.value =
-                `${data.title ? `${data.title} ` : ""}${data.shortUrl}`.trim();
-            messageInput.rows = 3;
-            messageInput.setAttribute("aria-label", "Share message");
-
-            share.append(
-                shareTitle,
-                makeField(
-                    "responsive-inline-share-field",
-                    "Short URL",
-                    shortUrlInput,
-                ),
-                makeField(
-                    "responsive-inline-share-field",
-                    "Message",
-                    messageInput,
-                ),
-            );
-
-            const openShareWindow = (destination) => {
-                const text = encodeURIComponent(
-                    messageInput.value.trim() || shortUrlInput.value.trim(),
-                );
-                const encodedShortUrl = encodeURIComponent(
-                    shortUrlInput.value.trim(),
-                );
-                const encodedDestinationUrl = encodeURIComponent(
-                    data.destinationUrl,
-                );
-
-                if (destination === "tw") {
-                    const twitterUrl = `https://twitter.com/intent/tweet?text=${text}`;
-                    window.open(
-                        twitterUrl,
-                        "tw",
-                        "toolbar=no,width=800,height=550",
-                    );
-                    return;
-                }
-
-                if (destination === "fb") {
-                    const targetUrl = encodedDestinationUrl || encodedShortUrl;
-                    const facebookUrl = `https://www.facebook.com/share.php?u=${targetUrl}`;
-                    window.open(
-                        facebookUrl,
-                        "fb",
-                        "toolbar=no,width=1000,height=550",
-                    );
-                }
-            };
-
-            const copyButton = createActionButton({
-                iconName: "content_copy",
-                label: "Copy short URL",
-                variantClass: "is-primary",
-                className: "responsive-drawer-button",
-                onClick: async (button) => {
-                    const copied = await copyToClipboard(shortUrlInput.value);
-                    if (!copied) {
-                        return;
-                    }
-
-                    const icon = button.querySelector(".material-icons");
-                    button.setAttribute("title", "Copied");
-                    button.setAttribute("aria-label", "Copied");
-
-                    if (icon instanceof HTMLElement) {
-                        icon.textContent = "check";
-                    }
-
-                    window.setTimeout(() => {
-                        button.setAttribute("title", "Copy short URL");
-                        button.setAttribute("aria-label", "Copy short URL");
-                        if (icon instanceof HTMLElement) {
-                            icon.textContent = "content_copy";
-                        }
-                    }, 1200);
-                },
-            });
-
-            const twitterButton = createActionButton({
-                iconName: "fa-x-twitter",
-                iconLibrary: "brand",
-                label: "Share on Twitter",
-                variantClass: "is-tonal",
-                className: "responsive-drawer-button",
-                onClick: () => openShareWindow("tw"),
-            });
-
-            const facebookButton = createActionButton({
-                iconName: "fa-facebook-f",
-                iconLibrary: "brand",
-                label: "Share on Facebook",
-                variantClass: "is-tonal",
-                className: "responsive-drawer-button",
-                onClick: () => openShareWindow("fb"),
-            });
-
-            const closeButton = createActionButton({
-                iconName: "close",
-                label: "Close share mode",
-                variantClass: "is-tonal",
-                className: "responsive-drawer-button",
-                onClick: () => closeDrawer(),
-            });
-
-            actions.append(
-                copyButton,
-                twitterButton,
-                facebookButton,
-                closeButton,
-            );
-            content.append(share);
-
-            window.requestAnimationFrame(() => {
-                shortUrlInput.focus();
-                shortUrlInput.select();
-            });
-
-            return true;
-        };
-
-        const showDrawer = (mode, id, data, mounted) => {
-            if (!mounted) {
+        const showDrawer = (mode, id, data) => {
+            if (!renderDrawerContent(mode, data)) {
                 return false;
             }
 
             state.mode = mode;
             state.id = String(id);
             setModeButtons(mode, state.id);
-
             state.dialog.showModal();
             return true;
         };
@@ -708,17 +687,12 @@ export function initDesktopRowDrawers() {
 
             if (mode === "edit") {
                 fetchEditSaveNonce(data, (updatedData) => {
-                    showDrawer(
-                        mode,
-                        id,
-                        updatedData,
-                        renderEditContent(updatedData),
-                    );
+                    showDrawer(mode, id, updatedData);
                 });
                 return true;
             }
 
-            return showDrawer(mode, id, data, renderShareContent(data));
+            return showDrawer(mode, id, data);
         };
 
         const originalEditLinkDisplay = window.edit_link_display;
@@ -755,7 +729,7 @@ export function initDesktopRowDrawers() {
             }
 
             const saveButton = state.dialog.querySelector(
-                ".responsive-drawer-button.is-primary",
+                ".responsive-row-drawer-actions .responsive-drawer-button.is-primary",
             );
             if (saveButton instanceof HTMLButtonElement) {
                 saveButton.click();
