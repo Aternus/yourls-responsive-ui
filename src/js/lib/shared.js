@@ -1,8 +1,8 @@
 import { h, render } from "vue";
-import { ResponsiveActionButton } from "./components/ResponsiveActionButton.js";
-import { ResponsiveBrandIcon } from "./components/ResponsiveBrandIcon.js";
-import { ResponsiveField } from "./components/ResponsiveField.js";
-import { ResponsiveMaterialIcon } from "./components/ResponsiveMaterialIcon.js";
+import { ResponsiveActionButton } from "../components/ResponsiveActionButton.js";
+import { ResponsiveBrandIcon } from "../components/ResponsiveBrandIcon.js";
+import { ResponsiveField } from "../components/ResponsiveField.js";
+import { ResponsiveMaterialIcon } from "../components/ResponsiveMaterialIcon.js";
 
 function renderVueElement(component, props = {}) {
     const mountPoint = document.createElement("div");

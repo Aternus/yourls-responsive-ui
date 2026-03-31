@@ -12,8 +12,8 @@ function responsive_head(): void {
     $scheme = responsive_get_color_scheme();
 
     $url = RESPONSIVE_PLUGIN_URL;
-    $css = responsive_get_asset_url( 'release/css/theme.css' );
-    $js  = responsive_get_asset_url( 'release/js/theme.js', 'src/js/theme.js' );
+    $css = responsive_get_asset_url( 'release/css/app.css' );
+    $js  = responsive_get_asset_url( 'release/js/app.js', 'src/js/app.js' );
 
     $light = RESPONSIVE_SCHEME_LIGHT;
     $dark  = RESPONSIVE_SCHEME_DARK;

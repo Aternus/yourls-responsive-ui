@@ -5,7 +5,7 @@ import {
     replaceRowFromHtml,
     setMaterialIcon,
 } from "./shared.js";
-import { ResponsiveDesktopDrawerPanel } from "./components/ResponsiveDesktopDrawerPanel.js";
+import { ResponsiveDesktopDrawerPanel } from "../components/ResponsiveDesktopDrawerPanel.js";
 import { mountVueFeature } from "./vue-feature.js";
 
 export function initDesktopRowDrawers() {

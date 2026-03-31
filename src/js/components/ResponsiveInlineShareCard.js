@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref } from "vue";
-import { copyToClipboard, openShareWindow } from "../shared.js";
+import { copyToClipboard, openShareWindow } from "../lib/shared.js";
 import { useCopyFeedback } from "../composables/useCopyFeedback.js";
 import { usePrimaryControlFocus } from "../composables/usePrimaryControlFocus.js";
 import { ResponsiveActionButton } from "./ResponsiveActionButton.js";

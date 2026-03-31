@@ -1,17 +1,20 @@
 import { defineComponent, onBeforeUnmount, onMounted } from "vue";
-import { initDeleteConfirmDialog } from "../delete-confirm.js";
-import { initDesktopRowDrawers } from "../desktop-drawers.js";
-import { initInfosPage } from "../infos-page.js";
+import { initDeleteConfirmDialog } from "../lib/delete-confirm.js";
+import { initDesktopRowDrawers } from "../lib/desktop-drawers.js";
+import { initInfosPage } from "../lib/infos-page.js";
 import {
     initInlineCardEditing,
     initInlineCardSharing,
-} from "../inline-mobile.js";
-import { initPluginActionIcons, initPluginsFilterButton } from "../plugins.js";
-import { initSearchFilters } from "../search-filters.js";
+} from "../lib/inline-mobile.js";
+import {
+    initPluginActionIcons,
+    initPluginsFilterButton,
+} from "../lib/plugins.js";
+import { initSearchFilters } from "../lib/search-filters.js";
 import {
     initDestinationTitleExpansion,
     initRowLinkCopyButtons,
-} from "../table-enhancements.js";
+} from "../lib/table-enhancements.js";
 import { ResponsiveNavControls } from "./ResponsiveNavControls.js";
 import { ResponsiveScrollTopControl } from "./ResponsiveScrollTopControl.js";
 

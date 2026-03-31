@@ -1,7 +1,7 @@
 import { h, render } from "vue";
 import { isMobile, replaceRowFromHtml } from "./shared.js";
-import { ResponsiveInlineEditCard } from "./components/ResponsiveInlineEditCard.js";
-import { ResponsiveInlineShareCard } from "./components/ResponsiveInlineShareCard.js";
+import { ResponsiveInlineEditCard } from "../components/ResponsiveInlineEditCard.js";
+import { ResponsiveInlineShareCard } from "../components/ResponsiveInlineShareCard.js";
 import { mountVueFeature } from "./vue-feature.js";
 
 function createActionsTarget(row, className, id) {

@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import { ResponsiveSearchFilters } from "./components/ResponsiveSearchFilters.js";
+import { ResponsiveSearchFilters } from "../components/ResponsiveSearchFilters.js";
 
 function isSelectAtDefault(selectControl) {
     if (!(selectControl instanceof HTMLSelectElement)) {
