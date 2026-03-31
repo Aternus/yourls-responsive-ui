@@ -3,6 +3,11 @@
 ///////////////////////////////////////////////////////////
 
 (function () {
+    //=== Shared Utilities ===//
+
+    const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
+    const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
+
     function createMaterialIcon(iconName, extraClass = "") {
         const icon = document.createElement("span");
         icon.className = `material-icons${extraClass ? ` ${extraClass}` : ""}`;
@@ -27,6 +32,127 @@
         icon.setAttribute("aria-hidden", "true");
         return icon;
     }
+
+    function fallbackCopyText(value) {
+        const textarea = document.createElement("textarea");
+        textarea.value = value;
+        textarea.setAttribute("readonly", "true");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        textarea.style.pointerEvents = "none";
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        let copied = false;
+        try {
+            copied = document.execCommand("copy");
+        } catch (_error) {
+            copied = false;
+        }
+
+        textarea.remove();
+        return copied;
+    }
+
+    async function copyToClipboard(value) {
+        const text = value.trim();
+        if (!text) {
+            return false;
+        }
+
+        if (navigator.clipboard?.writeText) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (_error) {
+                // Fall back to document.execCommand below.
+            }
+        }
+
+        return fallbackCopyText(text);
+    }
+
+    function replaceRowFromHtml(id, rowHtml) {
+        const currentRow = document.querySelector(`#id-${id}`);
+        if (!(currentRow instanceof HTMLElement)) {
+            return false;
+        }
+
+        if (typeof rowHtml !== "string" || rowHtml.trim() === "") {
+            return false;
+        }
+
+        const tempBody = document.createElement("tbody");
+        tempBody.innerHTML = rowHtml.trim();
+
+        const nextRow = tempBody.querySelector("tr[id^='id-']");
+        if (!(nextRow instanceof HTMLElement)) {
+            return false;
+        }
+
+        currentRow.replaceWith(nextRow);
+        return true;
+    }
+
+    function makeField(className, labelText, control) {
+        const field = document.createElement("div");
+        field.className = className;
+
+        const label = document.createElement("label");
+        label.className = className.includes("share")
+            ? "responsive-inline-share-label"
+            : "responsive-inline-editor-label";
+        label.setAttribute("for", control.id);
+        label.textContent = labelText;
+
+        field.append(label, control);
+        return field;
+    }
+
+    function createActionButton({
+        id,
+        iconName,
+        iconLibrary = "material",
+        label,
+        variantClass,
+        className = "responsive-inline-editor-button",
+        source,
+        onClick,
+    }) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `button ${className} ${variantClass}`;
+        button.setAttribute("aria-label", label);
+        button.setAttribute("title", label);
+
+        if (id !== undefined) {
+            button.dataset.id = String(id);
+        }
+
+        if (source) {
+            button.id = source.id;
+        }
+
+        if (iconLibrary === "brand") {
+            button.append(createBrandIcon(iconName, "responsive-brand-icon"));
+        } else {
+            button.append(createMaterialIcon(iconName));
+        }
+
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+            onClick(button);
+        });
+
+        if (source) {
+            source.remove();
+        }
+
+        return button;
+    }
+
+    // Navigation Menu
+    /////////////////////////////////////////////////
 
     function initNavMenu() {
         const checkbox = document.querySelector("#nav_menu");
@@ -72,6 +198,9 @@
 
         syncState();
     }
+
+    // Scroll to Top
+    /////////////////////////////////////////////////
 
     function initScrollTopButton() {
         const button = document.querySelector(".responsive-scroll-top-button");
@@ -128,6 +257,9 @@
         button.dataset.responsiveScrollTop = "true";
     }
 
+    // Plugins Page
+    /////////////////////////////////////////////////
+
     function initPluginsFilterButton() {
         const toggle = document.querySelector("#toggle_plugins");
 
@@ -165,15 +297,8 @@
         });
     }
 
-    function initPrimaryButtonLabel() {
-        const addButton = document.querySelector("#add-button");
-
-        if (!(addButton instanceof HTMLInputElement)) {
-            return;
-        }
-
-        addButton.value = "Shorten";
-    }
+    // Table Enhancements
+    /////////////////////////////////////////////////
 
     function initDestinationTitleExpansion() {
         const table = document.querySelector("#main_table");
@@ -240,45 +365,6 @@
             return;
         }
 
-        const fallbackCopyText = (value) => {
-            const textarea = document.createElement("textarea");
-            textarea.value = value;
-            textarea.setAttribute("readonly", "true");
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            textarea.style.pointerEvents = "none";
-            document.body.appendChild(textarea);
-            textarea.select();
-
-            let copied = false;
-            try {
-                copied = document.execCommand("copy");
-            } catch (_error) {
-                copied = false;
-            }
-
-            textarea.remove();
-            return copied;
-        };
-
-        const copyToClipboard = async (value) => {
-            const text = value.trim();
-            if (!text) {
-                return false;
-            }
-
-            if (navigator.clipboard?.writeText) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (_error) {
-                    // Fall back to document.execCommand below.
-                }
-            }
-
-            return fallbackCopyText(text);
-        };
-
         table.addEventListener("click", (event) => {
             const target = event.target;
             if (!(target instanceof Element)) {
@@ -327,6 +413,9 @@
         table.dataset.responsiveCopyButtons = "true";
     }
 
+    // Delete Confirm Dialog
+    /////////////////////////////////////////////////
+
     function initDeleteConfirmDialog() {
         const dialog = document.querySelector("#delete-confirm-dialog");
         const message = dialog?.querySelector(".confirm-message");
@@ -350,6 +439,7 @@
             title instanceof HTMLElement &&
             !title.querySelector(".responsive-delete-confirm-heading")
         ) {
+            const headingTitle = title.textContent?.trim() ?? "Delete Link";
             title.textContent = "";
 
             const heading = document.createElement("div");
@@ -358,11 +448,11 @@
             const headingText = document.createElement("div");
             headingText.className = "responsive-delete-confirm-heading-text";
 
-            const headingTitle = document.createElement("span");
-            headingTitle.className = "responsive-delete-confirm-heading-title";
-            headingTitle.textContent = "Delete Link";
+            const headingSpan = document.createElement("span");
+            headingSpan.className = "responsive-delete-confirm-heading-title";
+            headingSpan.textContent = headingTitle;
 
-            headingText.append(headingTitle);
+            headingText.append(headingSpan);
             heading.append(headingText);
 
             title.append(heading);
@@ -552,8 +642,27 @@
             });
         }
 
+        const originalRemoveLink = window.remove_link;
+        window.remove_link = function (id) {
+            const result = originalRemoveLink(id);
+
+            const titleAttr =
+                document
+                    .querySelector(`#url-${id} > a`)
+                    ?.getAttribute("title") ?? "";
+            const titleSpan = dialog.querySelector('span[name="title"]');
+            if (titleSpan instanceof HTMLElement && titleAttr !== "") {
+                titleSpan.textContent = titleAttr;
+            }
+
+            return result;
+        };
+
         dialog.dataset.responsiveDeleteConfirm = "true";
     }
+
+    // Inline Card Editing (Mobile)
+    /////////////////////////////////////////////////
 
     function initInlineCardEditing() {
         const table = document.querySelector("#main_table");
@@ -570,8 +679,6 @@
         ) {
             return;
         }
-
-        const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
 
         const getInlineEditor = (id) => {
             const row = document.querySelector(`#id-${id}`);
@@ -602,46 +709,6 @@
             }
 
             document.querySelector(`#edit-${id}`)?.remove();
-        };
-
-        const makeField = (labelText, input) => {
-            const field = document.createElement("div");
-            field.className = "responsive-inline-editor-field";
-
-            const label = document.createElement("label");
-            label.className = "responsive-inline-editor-label";
-            label.setAttribute("for", input.id);
-            label.textContent = labelText;
-
-            field.append(label, input);
-            return field;
-        };
-
-        const createInlineActionButton = ({
-            source,
-            id,
-            iconName,
-            label,
-            variantClass,
-            onClick,
-        }) => {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.id = source.id;
-            button.className = `button responsive-inline-editor-button ${variantClass}`;
-            button.setAttribute("aria-label", label);
-            button.setAttribute("title", label);
-            button.dataset.id = String(id);
-
-            button.append(createMaterialIcon(iconName));
-
-            button.addEventListener("click", (event) => {
-                event.preventDefault();
-                onClick();
-            });
-
-            source.remove();
-            return button;
         };
 
         const mountInlineEditor = (editRow) => {
@@ -709,14 +776,26 @@
 
             editor.append(
                 editorTitle,
-                makeField("Short URL", keywordInput),
-                makeField("Destination URL", urlInput),
-                makeField("Title", titleInput),
+                makeField(
+                    "responsive-inline-editor-field",
+                    "Short URL",
+                    keywordInput,
+                ),
+                makeField(
+                    "responsive-inline-editor-field",
+                    "Destination URL",
+                    urlInput,
+                ),
+                makeField(
+                    "responsive-inline-editor-field",
+                    "Title",
+                    titleInput,
+                ),
             );
 
             const actions = document.createElement("div");
             actions.className = "responsive-inline-editor-actions";
-            const submitControl = createInlineActionButton({
+            const submitControl = createActionButton({
                 source: submitButton,
                 id,
                 iconName: "save",
@@ -724,7 +803,7 @@
                 variantClass: "is-primary",
                 onClick: () => window.edit_link_save(id),
             });
-            const closeControl = createInlineActionButton({
+            const closeControl = createActionButton({
                 source: closeButton,
                 id,
                 iconName: "close",
@@ -762,28 +841,6 @@
             } else if (urlInput instanceof HTMLInputElement) {
                 urlInput.focus();
             }
-        };
-
-        const replaceRowFromHtml = (id, rowHtml) => {
-            const currentRow = document.querySelector(`#id-${id}`);
-            if (!(currentRow instanceof HTMLElement)) {
-                return false;
-            }
-
-            if (typeof rowHtml !== "string" || rowHtml.trim() === "") {
-                return false;
-            }
-
-            const tempBody = document.createElement("tbody");
-            tempBody.innerHTML = rowHtml.trim();
-
-            const nextRow = tempBody.querySelector("tr[id^='id-']");
-            if (!(nextRow instanceof HTMLElement)) {
-                return false;
-            }
-
-            currentRow.replaceWith(nextRow);
-            return true;
         };
 
         const originalEditLinkHide = window.edit_link_hide;
@@ -890,6 +947,9 @@
         table.dataset.responsiveInlineEdit = "true";
     }
 
+    // Inline Card Sharing (Mobile)
+    /////////////////////////////////////////////////
+
     function initInlineCardSharing() {
         const table = document.querySelector("#main_table");
 
@@ -900,47 +960,6 @@
         ) {
             return;
         }
-
-        const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
-
-        const fallbackCopyText = (value) => {
-            const textarea = document.createElement("textarea");
-            textarea.value = value;
-            textarea.setAttribute("readonly", "true");
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            textarea.style.pointerEvents = "none";
-            document.body.appendChild(textarea);
-            textarea.select();
-
-            let copied = false;
-            try {
-                copied = document.execCommand("copy");
-            } catch (_error) {
-                copied = false;
-            }
-
-            textarea.remove();
-            return copied;
-        };
-
-        const copyToClipboard = async (value) => {
-            const text = value.trim();
-            if (!text) {
-                return false;
-            }
-
-            if (navigator.clipboard?.writeText) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (_error) {
-                    // Fall back to document.execCommand below.
-                }
-            }
-
-            return fallbackCopyText(text);
-        };
 
         const getInlineShare = (id) => {
             const row = document.querySelector(`#id-${id}`);
@@ -995,50 +1014,6 @@
         };
 
         window.responsiveInlineShareCleanup = cleanupInlineShare;
-
-        const makeField = (labelText, fieldControl) => {
-            const field = document.createElement("div");
-            field.className = "responsive-inline-share-field";
-
-            const label = document.createElement("label");
-            label.className = "responsive-inline-share-label";
-            label.setAttribute("for", fieldControl.id);
-            label.textContent = labelText;
-
-            field.append(label, fieldControl);
-            return field;
-        };
-
-        const createShareActionButton = ({
-            id,
-            iconName,
-            iconLibrary = "material",
-            label,
-            variantClass,
-            onClick,
-        }) => {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = `button responsive-inline-editor-button ${variantClass}`;
-            button.setAttribute("aria-label", label);
-            button.setAttribute("title", label);
-            button.dataset.id = String(id);
-
-            if (iconLibrary === "brand") {
-                button.append(
-                    createBrandIcon(iconName, "responsive-brand-icon"),
-                );
-            } else {
-                button.append(createMaterialIcon(iconName));
-            }
-
-            button.addEventListener("click", (event) => {
-                event.preventDefault();
-                onClick(button);
-            });
-
-            return button;
-        };
 
         const buildInlineShare = (id) => {
             const row = document.querySelector(`#id-${id}`);
@@ -1102,8 +1077,16 @@
 
             editor.append(
                 editorTitle,
-                makeField("Short URL", shortUrlInput),
-                makeField("Message", messageInput),
+                makeField(
+                    "responsive-inline-share-field",
+                    "Short URL",
+                    shortUrlInput,
+                ),
+                makeField(
+                    "responsive-inline-share-field",
+                    "Message",
+                    messageInput,
+                ),
             );
 
             const openShareWindow = (destination) => {
@@ -1137,7 +1120,7 @@
                 }
             };
 
-            const copyButton = createShareActionButton({
+            const copyButton = createActionButton({
                 id,
                 iconName: "content_copy",
                 label: "Copy short URL",
@@ -1166,7 +1149,7 @@
                 },
             });
 
-            const twitterButton = createShareActionButton({
+            const twitterButton = createActionButton({
                 id,
                 iconName: "fa-x-twitter",
                 iconLibrary: "brand",
@@ -1175,7 +1158,7 @@
                 onClick: () => openShareWindow("tw"),
             });
 
-            const facebookButton = createShareActionButton({
+            const facebookButton = createActionButton({
                 id,
                 iconName: "fa-facebook-f",
                 iconLibrary: "brand",
@@ -1184,7 +1167,7 @@
                 onClick: () => openShareWindow("fb"),
             });
 
-            const closeButton = createShareActionButton({
+            const closeButton = createActionButton({
                 id,
                 iconName: "close",
                 label: "Close share mode",
@@ -1266,6 +1249,9 @@
         table.dataset.responsiveInlineShare = "true";
     }
 
+    // Desktop Row Drawers
+    /////////////////////////////////////////////////
+
     function initDesktopRowDrawers() {
         const table = document.querySelector("#main_table");
         const jq = window.jQuery;
@@ -1281,8 +1267,6 @@
         ) {
             return;
         }
-
-        const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
 
         const ensureButtonDefaults = (button) => {
             if (!(button instanceof HTMLElement)) {
@@ -1375,65 +1359,58 @@
             }
         };
 
-        const fallbackCopyText = (value) => {
-            const textarea = document.createElement("textarea");
-            textarea.value = value;
-            textarea.setAttribute("readonly", "true");
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            textarea.style.pointerEvents = "none";
-            document.body.appendChild(textarea);
-            textarea.select();
-
-            let copied = false;
-            try {
-                copied = document.execCommand("copy");
-            } catch (_error) {
-                copied = false;
+        const normalizeKeywordFromInput = (value, fallbackKeyword = "") => {
+            let normalized = typeof value === "string" ? value.trim() : "";
+            if (normalized === "") {
+                return fallbackKeyword;
             }
 
-            textarea.remove();
-            return copied;
-        };
+            const siteInput = document.querySelector("#yourls-site");
+            const siteUrl =
+                siteInput instanceof HTMLInputElement
+                    ? siteInput.value.trim()
+                    : "";
 
-        const copyToClipboard = async (value) => {
-            const text = value.trim();
-            if (!text) {
-                return false;
-            }
-
-            if (navigator.clipboard?.writeText) {
+            if (siteUrl !== "" && normalized.startsWith(siteUrl)) {
+                normalized = normalized.slice(siteUrl.length);
+            } else if (/^https?:\/\//i.test(normalized)) {
                 try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
+                    const parsedUrl = new URL(normalized);
+                    let parsedPath = parsedUrl.pathname.replace(/^\/+/, "");
+
+                    if (siteUrl !== "") {
+                        const yourlsUrl = new URL(
+                            siteUrl,
+                            window.location.origin,
+                        );
+                        const sitePath = yourlsUrl.pathname.replace(
+                            /^\/+|\/+$/g,
+                            "",
+                        );
+
+                        if (sitePath !== "") {
+                            if (parsedPath.startsWith(`${sitePath}/`)) {
+                                parsedPath = parsedPath.slice(
+                                    sitePath.length + 1,
+                                );
+                            } else if (parsedPath === sitePath) {
+                                parsedPath = "";
+                            }
+                        }
+                    }
+
+                    normalized = parsedPath;
                 } catch (_error) {
-                    // Fall back to document.execCommand below.
+                    // Keep the input as-is when URL parsing fails.
                 }
             }
 
-            return fallbackCopyText(text);
-        };
+            normalized = normalized
+                .split("#")[0]
+                .split("?")[0]
+                .replace(/^\/+|\/+$/g, "");
 
-        const replaceRowFromHtml = (id, rowHtml) => {
-            const currentRow = document.querySelector(`#id-${id}`);
-            if (!(currentRow instanceof HTMLElement)) {
-                return false;
-            }
-
-            if (typeof rowHtml !== "string" || rowHtml.trim() === "") {
-                return false;
-            }
-
-            const tempBody = document.createElement("tbody");
-            tempBody.innerHTML = rowHtml.trim();
-
-            const nextRow = tempBody.querySelector("tr[id^='id-']");
-            if (!(nextRow instanceof HTMLElement)) {
-                return false;
-            }
-
-            currentRow.replaceWith(nextRow);
-            return true;
+            return normalized || fallbackKeyword;
         };
 
         const ensureDesktopDrawer = () => {
@@ -1578,50 +1555,6 @@
             };
         };
 
-        const makeField = (className, labelText, control) => {
-            const field = document.createElement("div");
-            field.className = className;
-
-            const label = document.createElement("label");
-            label.className = className.includes("share")
-                ? "responsive-inline-share-label"
-                : "responsive-inline-editor-label";
-            label.setAttribute("for", control.id);
-            label.textContent = labelText;
-
-            field.append(label, control);
-            return field;
-        };
-
-        const createDrawerButton = ({
-            iconName,
-            iconLibrary = "material",
-            label,
-            variantClass,
-            onClick,
-        }) => {
-            const button = document.createElement("button");
-            button.type = "button";
-            button.className = `button responsive-drawer-button ${variantClass}`;
-            button.setAttribute("title", label);
-            button.setAttribute("aria-label", label);
-
-            if (iconLibrary === "brand") {
-                button.append(
-                    createBrandIcon(iconName, "responsive-brand-icon"),
-                );
-            } else {
-                button.append(createMaterialIcon(iconName));
-            }
-
-            button.addEventListener("click", (event) => {
-                event.preventDefault();
-                onClick(button);
-            });
-
-            return button;
-        };
-
         const renderEditContent = (data) => {
             const content = state.dialog.querySelector(
                 ".responsive-row-drawer-content",
@@ -1717,7 +1650,10 @@
                         url: destinationInput.value,
                         id: data.id,
                         keyword: data.keyword,
-                        newkeyword: shortUrlInput.value,
+                        newkeyword: normalizeKeywordFromInput(
+                            shortUrlInput.value,
+                            data.keyword,
+                        ),
                         title: titleInput.value,
                         nonce: data.nonce,
                     },
@@ -1754,19 +1690,21 @@
                 );
             };
 
-            const saveButton = createDrawerButton({
+            const saveButton = createActionButton({
                 iconName: "save",
                 label: "Save",
                 variantClass: "is-primary",
+                className: "responsive-drawer-button",
                 onClick: () => {
                     saveEdit();
                 },
             });
 
-            const cancelButton = createDrawerButton({
+            const cancelButton = createActionButton({
                 iconName: "close",
                 label: "Cancel",
                 variantClass: "is-tonal",
+                className: "responsive-drawer-button",
                 onClick: () => closeDrawer(),
             });
 
@@ -1874,10 +1812,11 @@
                 }
             };
 
-            const copyButton = createDrawerButton({
+            const copyButton = createActionButton({
                 iconName: "content_copy",
                 label: "Copy short URL",
                 variantClass: "is-primary",
+                className: "responsive-drawer-button",
                 onClick: async (button) => {
                     const copied = await copyToClipboard(shortUrlInput.value);
                     if (!copied) {
@@ -1902,26 +1841,29 @@
                 },
             });
 
-            const twitterButton = createDrawerButton({
+            const twitterButton = createActionButton({
                 iconName: "fa-x-twitter",
                 iconLibrary: "brand",
                 label: "Share on Twitter",
                 variantClass: "is-tonal",
+                className: "responsive-drawer-button",
                 onClick: () => openShareWindow("tw"),
             });
 
-            const facebookButton = createDrawerButton({
+            const facebookButton = createActionButton({
                 iconName: "fa-facebook-f",
                 iconLibrary: "brand",
                 label: "Share on Facebook",
                 variantClass: "is-tonal",
+                className: "responsive-drawer-button",
                 onClick: () => openShareWindow("fb"),
             });
 
-            const closeButton = createDrawerButton({
+            const closeButton = createActionButton({
                 iconName: "close",
                 label: "Close share mode",
                 variantClass: "is-tonal",
+                className: "responsive-drawer-button",
                 onClick: () => closeDrawer(),
             });
 
@@ -1939,6 +1881,53 @@
             });
 
             return true;
+        };
+
+        const showDrawer = (mode, id, data, mounted) => {
+            if (!mounted) {
+                return false;
+            }
+
+            state.mode = mode;
+            state.id = String(id);
+            setModeButtons(mode, state.id);
+
+            state.dialog.showModal();
+            return true;
+        };
+
+        const fetchEditSaveNonce = (data, callback) => {
+            if (typeof window.add_loading === "function") {
+                window.add_loading(`#actions-${data.id} .button`);
+            }
+
+            jq.getJSON(
+                window.ajaxurl,
+                {
+                    action: "edit_display",
+                    keyword: data.keyword,
+                    nonce: data.nonce,
+                    id: data.id,
+                },
+                (response) => {
+                    if (typeof window.end_loading === "function") {
+                        window.end_loading(`#actions-${data.id} .button`);
+                    }
+
+                    if (!response?.html) {
+                        return;
+                    }
+
+                    const temp = document.createElement("div");
+                    temp.innerHTML = response.html;
+                    const nonceInput = temp.querySelector(`#nonce_${data.id}`);
+                    if (nonceInput instanceof HTMLInputElement) {
+                        data.nonce = nonceInput.value;
+                    }
+
+                    callback(data);
+                },
+            );
         };
 
         const openDrawer = (mode, id) => {
@@ -1960,20 +1949,19 @@
                 closeDrawer();
             }
 
-            const mounted =
-                mode === "edit"
-                    ? renderEditContent(data)
-                    : renderShareContent(data);
-            if (!mounted) {
-                return false;
+            if (mode === "edit") {
+                fetchEditSaveNonce(data, (updatedData) => {
+                    showDrawer(
+                        mode,
+                        id,
+                        updatedData,
+                        renderEditContent(updatedData),
+                    );
+                });
+                return true;
             }
 
-            state.mode = mode;
-            state.id = String(id);
-            setModeButtons(mode, state.id);
-
-            state.dialog.showModal();
-            return true;
+            return showDrawer(mode, id, data, renderShareContent(data));
         };
 
         const originalEditLinkDisplay = window.edit_link_display;
@@ -2031,6 +2019,9 @@
 
         table.dataset.responsiveDesktopDrawers = "true";
     }
+
+    // Search Filters
+    /////////////////////////////////////////////////
 
     function initSearchFilters() {
         const filterForm = document.querySelector("#filter_form form");
@@ -2273,6 +2264,9 @@
         filterOptions.replaceChildren(disclosure);
         filterOptions.dataset.responsiveEnhanced = "true";
     }
+
+    // Infos Page
+    /////////////////////////////////////////////////
 
     function initInfosPage() {
         const body = document.body;
@@ -2527,45 +2521,6 @@
             });
         }
 
-        const fallbackCopyText = (value) => {
-            const textarea = document.createElement("textarea");
-            textarea.value = value;
-            textarea.setAttribute("readonly", "true");
-            textarea.style.position = "fixed";
-            textarea.style.opacity = "0";
-            textarea.style.pointerEvents = "none";
-            document.body.appendChild(textarea);
-            textarea.select();
-
-            let copied = false;
-            try {
-                copied = document.execCommand("copy");
-            } catch (_error) {
-                copied = false;
-            }
-
-            textarea.remove();
-            return copied;
-        };
-
-        const copyToClipboard = async (value) => {
-            const text = value.trim();
-            if (!text) {
-                return false;
-            }
-
-            if (navigator.clipboard?.writeText) {
-                try {
-                    await navigator.clipboard.writeText(text);
-                    return true;
-                } catch (_error) {
-                    // Fall back to document.execCommand below.
-                }
-            }
-
-            return fallbackCopyText(text);
-        };
-
         const makeLinkRow = (anchor, label) => {
             if (!(anchor instanceof HTMLAnchorElement)) {
                 return;
@@ -2743,33 +2698,49 @@
         body.dataset.responsiveInfosEnhanced = "true";
     }
 
-    function initResponsiveUI() {
-        initNavMenu();
-        initScrollTopButton();
-        initPrimaryButtonLabel();
-        initDestinationTitleExpansion();
-        initRowLinkCopyButtons();
-        initDeleteConfirmDialog();
-        initInlineCardEditing();
-        initInlineCardSharing();
-        initDesktopRowDrawers();
-        initPluginsFilterButton();
-        initPluginActionIcons();
-        initSearchFilters();
-        initInfosPage();
+    ///////////////////////////////////////////////////////////
+    // Initialization
+    ///////////////////////////////////////////////////////////
 
-        // Wait for inline page scripts (like plugins.php) to inject controls.
-        window.requestAnimationFrame(initScrollTopButton);
-        window.requestAnimationFrame(initPluginsFilterButton);
-        window.requestAnimationFrame(initDestinationTitleExpansion);
-        window.requestAnimationFrame(initRowLinkCopyButtons);
-        window.requestAnimationFrame(initDeleteConfirmDialog);
-        window.requestAnimationFrame(initInlineCardEditing);
-        window.requestAnimationFrame(initInlineCardSharing);
-        window.requestAnimationFrame(initDesktopRowDrawers);
-        window.requestAnimationFrame(initPluginActionIcons);
-        window.requestAnimationFrame(initSearchFilters);
-        window.requestAnimationFrame(initInfosPage);
+    function initResponsiveUI() {
+        const inits = [
+            initNavMenu,
+            initScrollTopButton,
+            initDestinationTitleExpansion,
+            initRowLinkCopyButtons,
+            initDeleteConfirmDialog,
+            initInlineCardEditing,
+            initInlineCardSharing,
+            initDesktopRowDrawers,
+            initPluginsFilterButton,
+            initPluginActionIcons,
+            initSearchFilters,
+            initInfosPage,
+        ];
+
+        inits.forEach((fn) => fn());
+
+        let pendingReinit = 0;
+        let observer = new MutationObserver(() => {
+            if (pendingReinit) {
+                return;
+            }
+
+            pendingReinit = window.requestAnimationFrame(() => {
+                pendingReinit = 0;
+                inits.forEach((fn) => fn());
+            });
+        });
+
+        const root = document.querySelector("#wrap") || document.body;
+        observer.observe(root, { childList: true, subtree: true });
+
+        window.addEventListener("pagehide", () => {
+            if (observer) {
+                observer.disconnect();
+                observer = null;
+            }
+        });
     }
 
     if (document.readyState === "loading") {

@@ -4,8 +4,8 @@ function responsive_output_color_scheme( string $html ): string {
     $scheme = responsive_get_color_scheme();
 
     return $html
-        . ' data-responsive-scheme="' . $scheme . '"'
-        . ' style="color-scheme: ' . $scheme . ';"';
+           . ' data-responsive-scheme="' . $scheme . '"'
+           . ' style="color-scheme: ' . $scheme . ';"';
 }
 
 yourls_add_filter( 'html_language_attributes',
@@ -14,24 +14,24 @@ yourls_add_filter( 'html_language_attributes',
 function responsive_filter_form_select_attributes(
     string $html,
     string $name,
-    array $options = array(),
+    array $options = [],
     string $selected = '',
     bool $display = true,
 ): string {
-    $filter_defaults = array(
-        'search_in' => 'all',
-        'sort_by' => 'timestamp',
-        'sort_order' => 'desc',
+    $filter_defaults = [
+        'search_in'    => 'all',
+        'sort_by'      => 'timestamp',
+        'sort_order'   => 'desc',
         'click_filter' => 'more',
-        'date_filter' => 'before',
-    );
+        'date_filter'  => 'before',
+    ];
 
     if ( isset( $filter_defaults[ $name ] ) !== true ) {
         return $html;
     }
 
     $attributes = ' data-responsive-control="' . yourls_esc_attr( $name ) . '"'
-        . ' data-responsive-default="' . yourls_esc_attr( $filter_defaults[ $name ] ) . '"';
+                  . ' data-responsive-default="' . yourls_esc_attr( $filter_defaults[ $name ] ) . '"';
 
     $updated_html = preg_replace(
         '/<select\b/',
@@ -74,12 +74,12 @@ function responsive_table_row_action_array(
     array $actions,
     string $keyword,
 ): array {
-    $icons = array(
-        'stats' => 'bar_chart',
-        'share' => 'share',
-        'edit' => 'edit',
+    $icons = [
+        'stats'  => 'bar_chart',
+        'share'  => 'share',
+        'edit'   => 'edit',
         'delete' => 'delete_outline',
-    );
+    ];
 
     foreach ( $actions as $key => $action ) {
         if ( isset( $icons[ $key ] ) !== true ) {
@@ -94,9 +94,9 @@ function responsive_table_row_action_array(
         }
 
         $icon = '<span class="material-icons responsive-action-icon" aria-hidden="true">'
-            . $icons[ $key ] . '</span>';
+                . $icons[ $key ] . '</span>';
         $text = '<span class="responsive-sr-only">' . yourls_esc_html( $label )
-            . '</span>';
+                . '</span>';
 
         $actions[ $key ]['anchor'] = $icon . $text;
     }
@@ -123,51 +123,51 @@ function responsive_table_row_cell_array(
     if ( isset( $cells['keyword'] ) ) {
         $cells['keyword']['template']
             = '<a class="responsive-delete-metadata-link responsive-delete-metadata-shorturl"'
-            . ' href="%shorturl%" aria-hidden="true" tabindex="-1">%keyword_html%</a>'
-            . '<span class="responsive-link-row">'
-            . '<a class="responsive-shorturl-link" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
-            . '<span class="responsive-link-text">%keyword_html%</span>'
-            . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
-            . '</a>'
-            . '<button class="responsive-copy-link-button" type="button"'
-            . ' data-copy-text="%shorturl%"'
-            . ' data-copy-label="Copy short URL"'
-            . ' aria-label="Copy short URL"'
-            . ' title="Copy short URL">'
-            . '<span class="material-icons" aria-hidden="true">content_copy</span>'
-            . '</button>'
-            . '</span>';
+              . ' href="%shorturl%" aria-hidden="true" tabindex="-1">%keyword_html%</a>'
+              . '<span class="responsive-link-row">'
+              . '<a class="responsive-shorturl-link" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
+              . '<span class="responsive-link-text">%keyword_html%</span>'
+              . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
+              . '</a>'
+              . '<button class="responsive-copy-link-button" type="button"'
+              . ' data-copy-text="%shorturl%"'
+              . ' data-copy-label="Copy short URL"'
+              . ' aria-label="Copy short URL"'
+              . ' title="Copy short URL">'
+              . '<span class="material-icons" aria-hidden="true">content_copy</span>'
+              . '</button>'
+              . '</span>';
     }
 
     if ( isset( $cells['url'] ) ) {
-        $full_title = yourls_esc_html( $title );
-        $full_long_url = yourls_esc_html( urldecode( $url ) );
-        $cells['url']['title_html'] = $full_title;
+        $full_title                    = yourls_esc_html( $title );
+        $full_long_url                 = yourls_esc_html( urldecode( $url ) );
+        $cells['url']['title_html']    = $full_title;
         $cells['url']['long_url_html'] = $full_long_url;
 
         $cells['url']['template']
             = '<a class="responsive-delete-metadata-link responsive-delete-metadata-destination"'
-            . ' href="%long_url%" title="%title_attr%" aria-hidden="true" tabindex="-1">%title_html%</a>'
-            . '<span class="responsive-destination-section responsive-destination-section-url">'
-            . '<span class="responsive-destination-section-title">Destination URL</span>'
-            . '<small class="responsive-destination-raw">%warning%<span class="responsive-link-row">'
-            . '<a class="responsive-destination-raw-link" href="%long_url%" target="_blank" rel="noopener noreferrer">'
-            . '<span class="responsive-link-text">%long_url_html%</span>'
-            . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
-            . '</a>'
-            . '<button class="responsive-copy-link-button" type="button"'
-            . ' data-copy-text="%long_url%"'
-            . ' data-copy-label="Copy destination URL"'
-            . ' aria-label="Copy destination URL"'
-            . ' title="Copy destination URL">'
-            . '<span class="material-icons" aria-hidden="true">content_copy</span>'
-            . '</button>'
-            . '</span></small>'
-            . '</span>'
-            . '<span class="responsive-destination-section responsive-destination-section-title-wrap">'
-            . '<span class="responsive-destination-section-title">Title</span>'
-            . '<span class="responsive-destination-title" tabindex="0" title="%title_attr%">%title_html%</span>'
-            . '</span>';
+              . ' href="%long_url%" title="%title_attr%" aria-hidden="true" tabindex="-1">%title_html%</a>'
+              . '<span class="responsive-destination-section responsive-destination-section-url">'
+              . '<span class="responsive-destination-section-title">Destination URL</span>'
+              . '<small class="responsive-destination-raw">%warning%<span class="responsive-link-row">'
+              . '<a class="responsive-destination-raw-link" href="%long_url%" target="_blank" rel="noopener noreferrer">'
+              . '<span class="responsive-link-text">%long_url_html%</span>'
+              . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
+              . '</a>'
+              . '<button class="responsive-copy-link-button" type="button"'
+              . ' data-copy-text="%long_url%"'
+              . ' data-copy-label="Copy destination URL"'
+              . ' aria-label="Copy destination URL"'
+              . ' title="Copy destination URL">'
+              . '<span class="material-icons" aria-hidden="true">content_copy</span>'
+              . '</button>'
+              . '</span></small>'
+              . '</span>'
+              . '<span class="responsive-destination-section responsive-destination-section-title-wrap">'
+              . '<span class="responsive-destination-section-title">Title</span>'
+              . '<span class="responsive-destination-title" tabindex="0" title="%title_attr%">%title_html%</span>'
+              . '</span>';
     }
 
     return $cells;
@@ -275,3 +275,21 @@ function responsive_logout_link( string $html ): string {
 }
 
 yourls_add_filter( 'logout_link', 'responsive_logout_link' );
+
+function responsive_translate_labels(
+    string $translation,
+    string $text,
+    string $domain = 'default',
+): string {
+    if ( $text === 'Shorten The URL' ) {
+        return 'Shorten';
+    }
+
+    if ( $text === 'Delete confirmation' ) {
+        return 'Delete Link';
+    }
+
+    return $translation;
+}
+
+yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );

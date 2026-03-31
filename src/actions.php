@@ -25,9 +25,9 @@ function responsive_head(): void {
         <script>
         const RESPONSIVEUI = {
             pluginURL: '$url',
-            scheme: {       
+            scheme: {
                 current: '$scheme',
-                available: ['$light', '$dark']                
+                available: ['$light', '$dark']
             },
         }
         </script>
