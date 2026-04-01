@@ -67,7 +67,7 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
     echo '<rui-scroll-top></rui-scroll-top>';
 
     if ( $is_index ) {
-        echo '<rui-search-filters></rui-search-filters>';
+        echo '<rui-search></rui-search>';
     }
 
     if ( $is_infos ) {

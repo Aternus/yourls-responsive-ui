@@ -6,7 +6,7 @@ import { RuiInfosPage } from "./rui-infos-page.js";
 import { RuiNavControls } from "./rui-nav-controls.js";
 import { RuiPluginActions } from "./rui-plugin-actions.js";
 import { RuiScrollTop } from "./rui-scroll-top.js";
-import { RuiSearchFilters } from "./rui-search-filters.js";
+import { RuiSearch } from "./rui-search.js";
 
 export function registerAllElements() {
     customElements.define("rui-material-icon", RuiMaterialIcon);
@@ -17,5 +17,5 @@ export function registerAllElements() {
     customElements.define("rui-nav-controls", RuiNavControls);
     customElements.define("rui-plugin-actions", RuiPluginActions);
     customElements.define("rui-scroll-top", RuiScrollTop);
-    customElements.define("rui-search-filters", RuiSearchFilters);
+    customElements.define("rui-search", RuiSearch);
 }
