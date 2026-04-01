@@ -1,10 +1,6 @@
 import { createMaterialIcon, setMaterialIcon } from "./shared.js";
 
-export function ensureButtonDefaults(button) {
-    if (!(button instanceof HTMLElement)) {
-        return;
-    }
-
+function ensureButtonDefaults(button) {
     if (button.dataset.responsiveDefaultTitle) {
         return;
     }

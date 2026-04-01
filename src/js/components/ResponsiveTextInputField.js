@@ -21,10 +21,6 @@ export const ResponsiveTextInputField = defineComponent({
     emits: ["update:modelValue"],
     setup(_props, { emit }) {
         const updateValue = (event) => {
-            if (!(event.target instanceof HTMLInputElement)) {
-                return;
-            }
-
             emit("update:modelValue", event.target.value);
         };
 

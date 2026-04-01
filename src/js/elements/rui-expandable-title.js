@@ -40,9 +40,7 @@ export const RuiExpandableTitle = defineCustomElement(
             };
 
             onMounted(() => {
-                if (root.value instanceof HTMLElement) {
-                    root.value.setAttribute("tabindex", "0");
-                }
+                root.value?.setAttribute("tabindex", "0");
             });
 
             return {

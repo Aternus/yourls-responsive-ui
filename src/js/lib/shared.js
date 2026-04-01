@@ -28,10 +28,6 @@ export function createMaterialIcon(iconName, extraClass = "") {
 }
 
 export function setMaterialIcon(icon, iconName, extraClass = "") {
-    if (!(icon instanceof HTMLElement)) {
-        return;
-    }
-
     icon.className = `material-icons${extraClass ? ` ${extraClass}` : ""}`;
     icon.setAttribute("aria-hidden", "true");
     icon.textContent = iconName;

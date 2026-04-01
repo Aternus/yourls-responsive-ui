@@ -19,10 +19,6 @@ export const ResponsiveTextareaField = defineComponent({
     emits: ["update:modelValue"],
     setup(_props, { emit }) {
         const updateValue = (event) => {
-            if (!(event.target instanceof HTMLTextAreaElement)) {
-                return;
-            }
-
             emit("update:modelValue", event.target.value);
         };
 

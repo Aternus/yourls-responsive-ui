@@ -94,10 +94,6 @@ export function initDrawerManager() {
         dialog: ensureDrawer(),
     };
 
-    if (!(state.dialog instanceof HTMLDialogElement)) {
-        return;
-    }
-
     const unmountDrawerView = () => {
         render(null, state.dialog);
     };

@@ -198,14 +198,7 @@ export const RuiSearch = defineCustomElement(
             const filtersActive = ref(false);
 
             const mountField = (slot, control) => {
-                if (
-                    !(slot instanceof HTMLElement) ||
-                    !(control instanceof Element)
-                ) {
-                    return;
-                }
-
-                slot.append(control);
+                slot?.append(control);
             };
 
             const createIconButton = ({

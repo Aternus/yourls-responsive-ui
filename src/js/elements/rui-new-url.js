@@ -1,13 +1,5 @@
 import { defineCustomElement, onMounted, ref } from "vue";
 
-function moveField(slot, control) {
-    if (!(slot instanceof HTMLElement) || !(control instanceof Element)) {
-        return;
-    }
-
-    slot.append(control);
-}
-
 export const RuiNewUrl = defineCustomElement(
     {
         name: "RuiNewUrl",
@@ -43,8 +35,8 @@ export const RuiNewUrl = defineCustomElement(
                 container.dataset.responsiveNewUrlEnhanced = "true";
 
                 requestAnimationFrame(() => {
-                    moveField(formSlot.value, form);
-                    moveField(feedbackSlot.value, feedback);
+                    formSlot.value?.append(form);
+                    feedbackSlot.value?.append(feedback);
 
                     if (
                         legacyWrapper instanceof HTMLElement &&

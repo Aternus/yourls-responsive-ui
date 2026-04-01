@@ -24,11 +24,7 @@ export const ResponsiveActionButton = defineComponent({
     setup(_props, { emit }) {
         const handleClick = (event) => {
             event.preventDefault();
-
-            const target = event.currentTarget;
-            if (target instanceof HTMLButtonElement) {
-                emit("press", target);
-            }
+            emit("press", event.currentTarget);
         };
 
         return {
