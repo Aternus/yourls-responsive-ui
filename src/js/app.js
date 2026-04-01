@@ -2,29 +2,15 @@
 // Responsive UI
 ///////////////////////////////////////////////////////////
 
-import { createApp } from "vue";
-import { ResponsiveUIRoot } from "./components/ResponsiveUIRoot.js";
+import { registerAllElements } from "./elements/register.js";
+import { initDrawerManager } from "./lib/drawer-manager.js";
 
-let app = null;
-
-function mountResponsiveUI() {
-    if (app) {
-        return;
-    }
-
-    const mount = document.querySelector("#responsive-ui-vue-root");
-    if (!(mount instanceof HTMLElement)) {
-        return;
-    }
-
-    app = createApp(ResponsiveUIRoot);
-    app.mount(mount);
-}
+registerAllElements();
 
 if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountResponsiveUI, {
+    document.addEventListener("DOMContentLoaded", initDrawerManager, {
         once: true,
     });
 } else {
-    mountResponsiveUI();
+    initDrawerManager();
 }

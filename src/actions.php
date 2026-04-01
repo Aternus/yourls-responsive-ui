@@ -44,12 +44,39 @@ function responsive_head(): void {
 
 yourls_add_action( 'html_head', 'responsive_head' );
 
-function responsive_vue_root(): void {
+function responsive_hook_context( $hook_args ): string {
+    $context = is_array( $hook_args )
+        ? array_shift( $hook_args )
+        : $hook_args;
+
+    return is_string( $context ) ? $context : '';
+}
+
+function responsive_custom_elements_root( $hook_args = [] ): void {
     if ( yourls_is_valid_user() !== true ) {
         return;
     }
 
-    echo '<div id="responsive-ui-vue-root"></div>';
+    $context = responsive_hook_context( $hook_args );
+
+    $is_infos   = $context === 'infos';
+    $is_plugins = $context === 'plugins';
+    $is_index   = in_array( $context, [ 'index', 'bookmark' ], true );
+
+    echo '<rui-nav-controls></rui-nav-controls>';
+    echo '<rui-scroll-top></rui-scroll-top>';
+
+    if ( $is_index ) {
+        echo '<rui-search-filters></rui-search-filters>';
+    }
+
+    if ( $is_infos ) {
+        echo '<rui-infos-page></rui-infos-page>';
+    }
+
+    if ( $is_plugins ) {
+        echo '<rui-plugin-actions></rui-plugin-actions>';
+    }
 }
 
-yourls_add_action( 'html_logo', 'responsive_vue_root' );
+yourls_add_action( 'html_footer', 'responsive_custom_elements_root', 10, 1 );

@@ -129,13 +129,7 @@ function responsive_table_row_cell_array(
               . '<span class="responsive-link-text">%keyword_html%</span>'
               . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
-              . '<button class="responsive-copy-link-button" type="button"'
-              . ' data-copy-text="%shorturl%"'
-              . ' data-copy-label="Copy short URL"'
-              . ' aria-label="Copy short URL"'
-              . ' title="Copy short URL">'
-              . '<span class="material-icons" aria-hidden="true">content_copy</span>'
-              . '</button>'
+              . '<rui-copy-button copy-text="%shorturl%" copy-label="Copy short URL"></rui-copy-button>'
               . '</span>';
     }
 
@@ -155,18 +149,12 @@ function responsive_table_row_cell_array(
               . '<span class="responsive-link-text">%long_url_html%</span>'
               . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
-              . '<button class="responsive-copy-link-button" type="button"'
-              . ' data-copy-text="%long_url%"'
-              . ' data-copy-label="Copy destination URL"'
-              . ' aria-label="Copy destination URL"'
-              . ' title="Copy destination URL">'
-              . '<span class="material-icons" aria-hidden="true">content_copy</span>'
-              . '</button>'
+              . '<rui-copy-button copy-text="%long_url%" copy-label="Copy destination URL"></rui-copy-button>'
               . '</span></small>'
               . '</span>'
               . '<span class="responsive-destination-section responsive-destination-section-title-wrap">'
               . '<span class="responsive-destination-section-title">Title</span>'
-              . '<span class="responsive-destination-title" tabindex="0" title="%title_attr%">%title_html%</span>'
+              . '<rui-expandable-title title="%title_attr%">%title_html%</rui-expandable-title>'
               . '</span>';
     }
 
