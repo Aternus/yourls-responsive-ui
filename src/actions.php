@@ -44,6 +44,16 @@ function responsive_head(): void {
 
 yourls_add_action( 'html_head', 'responsive_head' );
 
+function responsive_addnew_custom_element(): void {
+    if ( yourls_is_valid_user() !== true ) {
+        return;
+    }
+
+    echo '<rui-new-url></rui-new-url>';
+}
+
+yourls_add_action( 'html_addnew', 'responsive_addnew_custom_element' );
+
 function responsive_hook_context( $hook_args ): string {
     $context = is_array( $hook_args )
         ? array_shift( $hook_args )

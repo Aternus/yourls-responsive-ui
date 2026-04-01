@@ -3,6 +3,14 @@
 @use "../internal/elevation" as *;
 @use "../internal/motion" as *;
 
+///////////////////////////////////////////////////////////
+// Custom Elements
+///////////////////////////////////////////////////////////
+
+rui-new-url {
+    display: block;
+}
+
 #new_url {
     text-align: revert;
     padding: 0.5rem 0.75rem;
