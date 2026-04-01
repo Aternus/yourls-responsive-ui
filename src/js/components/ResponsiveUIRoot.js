@@ -1,11 +1,6 @@
 import { defineComponent, onBeforeUnmount, onMounted } from "vue";
-import { initDeleteConfirmDialog } from "../lib/delete-confirm.js";
-import { initDesktopRowDrawers } from "../lib/desktop-drawers.js";
+import { initDrawerManager } from "../lib/drawer-manager.js";
 import { initInfosPage } from "../lib/infos-page.js";
-import {
-    initInlineCardEditing,
-    initInlineCardSharing,
-} from "../lib/inline-mobile.js";
 import {
     initPluginActionIcons,
     initPluginsFilterButton,
@@ -21,10 +16,7 @@ import { ResponsiveScrollTopControl } from "./ResponsiveScrollTopControl.js";
 const FEATURE_INITS = [
     initDestinationTitleExpansion,
     initRowLinkCopyButtons,
-    initDeleteConfirmDialog,
-    initInlineCardEditing,
-    initInlineCardSharing,
-    initDesktopRowDrawers,
+    initDrawerManager,
     initPluginsFilterButton,
     initPluginActionIcons,
     initSearchFilters,

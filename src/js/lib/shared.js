@@ -42,9 +42,6 @@ export function openShareWindow(
 
 //=== Shared Utilities ===//
 
-export const isMobile = () => window.matchMedia("(max-width: 767px)").matches;
-export const isDesktop = () => window.matchMedia("(min-width: 768px)").matches;
-
 function requireElement(element, label) {
     if (element instanceof HTMLElement) {
         return element;
