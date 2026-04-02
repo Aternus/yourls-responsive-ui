@@ -4,12 +4,12 @@ export const RuiTextInputField = defineCustomElement(
     {
         name: "RuiTextInputField",
         props: {
-            fieldClassName: { type: String, required: true },
             labelText: { type: String, required: true },
-            labelClassName: { type: String, required: true },
             controlId: { type: String, required: true },
             modelValue: { type: String, default: "" },
             controlType: { type: String, default: "text" },
+            controlClass: { type: String, default: "" },
+            autoFocus: { type: Boolean, default: false },
             placeholder: { type: String, default: "" },
             readOnly: { type: Boolean, default: false },
             ariaLabel: { type: String, default: "" },
@@ -27,17 +27,16 @@ export const RuiTextInputField = defineCustomElement(
         },
         template: `
             <rui-field
-                :class-name="fieldClassName"
                 :label-text="labelText"
-                :label-class="labelClassName"
                 :control-id="controlId"
             >
                 <input
                     :ref="controlRef || null"
                     :type="controlType"
-                    class="text"
+                    :class="['text', controlClass || null]"
                     :id="controlId"
                     :value="modelValue"
+                    :autofocus="autoFocus || null"
                     :placeholder="placeholder || null"
                     :readonly="readOnly"
                     :aria-label="ariaLabel || null"

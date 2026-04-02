@@ -51,22 +51,20 @@ export const RuiDeletePanel = defineCustomElement(
                         </li>
                     </ul>
                 </section>
-                <template #actions>
-                    <rui-action-button
-                        :icon-name="'delete'"
-                        :label="'Delete'"
-                        :variant-class="'is-destructive'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="confirmDelete"
-                    />
-                    <rui-action-button
-                        :icon-name="'close'"
-                        :label="'Cancel'"
-                        :variant-class="'is-tonal'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="cancelDelete"
-                    />
-                </template>
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-destructive"
+                    :icon-name="'delete'"
+                    :label="'Delete'"
+                    @press="confirmDelete"
+                />
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-tonal"
+                    :icon-name="'close'"
+                    :label="'Cancel'"
+                    @press="cancelDelete"
+                />
             </rui-drawer>
         `,
     },

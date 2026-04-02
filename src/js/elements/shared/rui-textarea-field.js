@@ -4,12 +4,11 @@ export const RuiTextareaField = defineCustomElement(
     {
         name: "RuiTextareaField",
         props: {
-            fieldClassName: { type: String, required: true },
             labelText: { type: String, required: true },
-            labelClassName: { type: String, required: true },
             controlId: { type: String, required: true },
             modelValue: { type: String, default: "" },
             rows: { type: Number, default: 3 },
+            autoFocus: { type: Boolean, default: false },
             ariaLabel: { type: String, default: "" },
             controlRef: { type: [Object, Function], default: null },
         },
@@ -25,9 +24,7 @@ export const RuiTextareaField = defineCustomElement(
         },
         template: `
             <rui-field
-                :class-name="fieldClassName"
                 :label-text="labelText"
-                :label-class="labelClassName"
                 :control-id="controlId"
             >
                 <textarea
@@ -35,6 +32,7 @@ export const RuiTextareaField = defineCustomElement(
                     class="text"
                     :id="controlId"
                     :rows="rows"
+                    :autofocus="autoFocus || null"
                     :aria-label="ariaLabel || null"
                     :value="modelValue"
                     @input="updateValue"

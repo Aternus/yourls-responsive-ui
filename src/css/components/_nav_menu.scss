@@ -95,7 +95,10 @@ nav {
     background: $menu_button_surface;
     color: $menu_button_on_surface;
 
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        background-color $motion-duration-short4 $motion-easing-standard,
+        color $motion-duration-short4 $motion-easing-standard,
+        box-shadow $motion-duration-short4 $motion-easing-standard;
 
     display: grid;
     place-items: center;
@@ -234,7 +237,11 @@ nav ul#admin_menu {
             color: $menu_button_on_surface;
             border-radius: $shape-corner-small;
 
-            transition: all $motion-duration-medium4 $motion-easing-standard;
+            transition:
+                background-color $motion-duration-medium4
+                    $motion-easing-standard,
+                color $motion-duration-medium4 $motion-easing-standard,
+                box-shadow $motion-duration-medium4 $motion-easing-standard;
         }
     }
 

@@ -7,10 +7,10 @@
 // Dialog
 ///////////////////////////////////////////////////////////
 
-dialog {
+dialog:not(.responsive-drawer) {
     @include md-elevation(5);
 
-    border: 0 none;
+    border: 0;
     border-radius: $shape-corner-medium;
     background: var(--brand-050);
     color: var(--brand-800);
@@ -21,13 +21,6 @@ dialog {
 
     &::backdrop {
         background: rgba(0, 0, 0, 0.5);
-    }
-
-    [name="dialog_title"] {
-        font-size: 1.25em;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: var(--brand-900);
     }
 
     .confirm-message {
@@ -69,7 +62,7 @@ dialog {
         input.primary {
             background: var(--error-500);
             color: var(--error-050);
-            border: 0 none;
+            border: 0;
 
             &:hover,
             &:active,
@@ -101,7 +94,10 @@ dialog {
 ///////////////////////////////////////////////////////////
 
 .responsive-drawer {
-    @include md-elevation(5);
+    --responsive-drawer-top-gap: max(1rem, env(safe-area-inset-top));
+    --responsive-drawer-max-height: calc(
+        100dvh - var(--responsive-drawer-top-gap)
+    );
 
     position: fixed;
     inset: auto 0 0;
@@ -110,29 +106,39 @@ dialog {
 
     width: min(44rem, 100vw);
     max-width: 100vw;
-    height: auto;
-    min-height: 20rem;
-    max-height: calc(100dvh - 0.5rem);
+    min-height: min(20rem, var(--responsive-drawer-max-height));
+    max-height: var(--responsive-drawer-max-height);
     padding: 0;
     overflow: hidden;
-    border: 1px solid var(--brand-300);
-    border-radius: $shape-corner-large $shape-corner-large 0 0;
-    background: var(--brand-050);
-    color: var(--brand-900);
-    isolation: isolate;
+    border: 0;
+    background: transparent;
 
     display: none;
 
     &[open] {
         display: grid;
         grid-template-rows: auto minmax(0, 1fr) auto;
-        animation: responsive-drawer-enter $motion-duration-medium2
-            $motion-easing-emphasized-decelerate both;
+    }
+
+    .responsive-drawer-shell {
+        @include md-elevation(5);
+
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        height: min(100%, var(--responsive-drawer-max-height));
+        max-height: var(--responsive-drawer-max-height);
+        min-height: 0;
+        overflow: hidden;
+        border: 1px solid var(--brand-300);
+        border-radius: $shape-corner-large $shape-corner-large 0 0;
+        background: var(--brand-050);
+        color: var(--brand-900);
+        isolation: isolate;
     }
 
     // Title Bar //
 
-    > div[name="dialog_title"] {
+    .responsive-drawer-titlebar {
         margin: 0;
         padding: 0.8rem 1rem;
         font-size: var(--type-size-title-sm);
@@ -168,13 +174,15 @@ dialog {
 
     // Content Area //
 
-    div.confirm-message {
-        width: auto;
-        height: auto;
+    .responsive-drawer-body {
         min-height: 0;
         margin: 0;
         padding: 1rem;
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
         text-align: left;
         background: var(--brand-050);
     }
@@ -191,7 +199,7 @@ dialog {
         grid-template-columns: auto minmax(0, 1fr);
         gap: 0.45rem 0.55rem;
         align-items: start;
-        margin: 0 0 0.8rem;
+        margin: 0;
         padding: 0.65rem 0.75rem;
         border-radius: $shape-corner-extra-small;
 
@@ -260,7 +268,8 @@ dialog {
         min-width: 0;
     }
 
-    .responsive-drawer-label {
+    .responsive-drawer-label,
+    .responsive-drawer-field .rui-field-label {
         display: block;
         margin: 0 0 0.25rem;
         font-size: 0.66rem;
@@ -289,6 +298,22 @@ dialog {
         &:active {
             border-color: var(--brand-400);
             background: var(--neutral-050);
+        }
+
+        &.responsive-url-value {
+            background: var(--brand-100);
+            border-color: var(--brand-200);
+
+            &:hover,
+            &:focus,
+            &:active {
+                border-color: var(--brand-200);
+                background: var(--brand-100);
+            }
+
+            &[readonly] {
+                cursor: default;
+            }
         }
     }
 
@@ -353,9 +378,7 @@ dialog {
 
     // Action Bar //
 
-    div.button-group {
-        width: auto;
-        height: auto;
+    .responsive-drawer-footer {
         margin: 0;
         padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
         display: flex;
@@ -446,34 +469,59 @@ dialog {
     // Responsive Breakpoints //
 
     @media (max-width: $breakpoint-md - 1px) {
+        --responsive-drawer-top-gap: max(1rem, env(safe-area-inset-top));
+
         width: 100vw;
         max-width: 100vw;
-        min-height: 22rem;
-        max-height: calc(100dvh - 0.25rem);
-        border-radius: $shape-corner-medium $shape-corner-medium 0 0;
+        min-height: min(22rem, var(--responsive-drawer-max-height));
+        max-height: var(--responsive-drawer-max-height);
 
-        div.confirm-message {
+        .responsive-drawer-shell {
+            border-radius: $shape-corner-medium $shape-corner-medium 0 0;
+            height: min(100%, var(--responsive-drawer-max-height));
+            max-height: var(--responsive-drawer-max-height);
+        }
+
+        .responsive-drawer-body {
             padding: 0.9rem;
         }
 
-        div.button-group {
+        .responsive-drawer-footer {
             padding: 0.75rem 0.9rem calc(0.75rem + env(safe-area-inset-bottom));
         }
     }
 
-    @media (min-width: $breakpoint-md) {
-        width: min(44rem, 100vw);
-        min-height: 20rem;
-    }
-}
+    // Transition Motion //
 
-@keyframes responsive-drawer-enter {
-    from {
+    .responsive-drawer-surface-enter-active,
+    .responsive-drawer-surface-leave-active {
+        will-change: transform, opacity;
+    }
+
+    .responsive-drawer-surface-enter-active {
+        transition:
+            transform $motion-duration-medium2
+                $motion-easing-emphasized-decelerate,
+            opacity $motion-duration-medium2
+                $motion-easing-emphasized-decelerate;
+    }
+
+    .responsive-drawer-surface-leave-active {
+        pointer-events: none;
+        transition:
+            transform $motion-duration-short4
+                $motion-easing-emphasized-accelerate,
+            opacity $motion-duration-short4 $motion-easing-emphasized-accelerate;
+    }
+
+    .responsive-drawer-surface-enter-from,
+    .responsive-drawer-surface-leave-to {
         transform: translateY(100%);
         opacity: 0;
     }
 
-    to {
+    .responsive-drawer-surface-enter-to,
+    .responsive-drawer-surface-leave-from {
         transform: translateY(0);
         opacity: 1;
     }

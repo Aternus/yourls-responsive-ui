@@ -5,7 +5,7 @@ import { setModeButtons } from "./row-action-buttons.js";
 let initialized = false;
 
 function ceDetail(event, index = 0) {
-    const detail = event.detail;
+    const detail = event?.detail;
     return Array.isArray(detail) ? detail[index] : detail;
 }
 
@@ -89,15 +89,27 @@ export function initDrawerManager() {
         return dialog;
     };
 
+    const ensureViewport = (dialog) => {
+        const existingViewport = dialog.querySelector(
+            "rui-row-drawer-viewport",
+        );
+        if (existingViewport instanceof HTMLElement) {
+            return existingViewport;
+        }
+
+        const viewport = document.createElement("rui-row-drawer-viewport");
+        dialog.replaceChildren(viewport);
+        return viewport;
+    };
+
     const state = {
         mode: "",
         id: "",
         dialog: ensureDrawer(),
+        viewport: null,
     };
 
-    const clearDrawerContent = () => {
-        state.dialog.textContent = "";
-    };
+    state.viewport = ensureViewport(state.dialog);
 
     const clearModeState = () => {
         if (state.id) {
@@ -111,19 +123,71 @@ export function initDrawerManager() {
         state.id = "";
     };
 
+    const resetViewportState = () => {
+        state.viewport.open = false;
+        state.viewport.mode = "";
+        state.viewport.data = null;
+    };
+
     const closeDrawer = () => {
+        if (state.viewport.open) {
+            state.viewport.open = false;
+            return;
+        }
+
         if (state.dialog.open) {
             state.dialog.close();
             return;
         }
 
-        clearDrawerContent();
+        resetViewportState();
         clearModeState();
     };
 
-    state.dialog.addEventListener("close", () => {
-        clearDrawerContent();
+    const finalizeDrawerClose = () => {
+        if (state.viewport.open) {
+            return;
+        }
+
+        if (state.dialog.open) {
+            state.dialog.close();
+            return;
+        }
+
+        resetViewportState();
         clearModeState();
+    };
+
+    state.viewport.addEventListener("request-close", () => {
+        closeDrawer();
+    });
+
+    state.viewport.addEventListener("after-leave", () => {
+        finalizeDrawerClose();
+    });
+
+    state.viewport.addEventListener("save-edit", (event) => {
+        const payload = ceDetail(event, 0);
+        const button = ceDetail(event, 1);
+        saveDrawerEdit(payload, button);
+    });
+
+    state.viewport.addEventListener("confirm-delete", () => {
+        handleDeleteConfirm();
+    });
+
+    state.viewport.addEventListener("cancel-delete", () => {
+        handleDeleteCancel();
+    });
+
+    state.dialog.addEventListener("close", () => {
+        resetViewportState();
+        clearModeState();
+    });
+
+    state.dialog.addEventListener("cancel", (event) => {
+        event.preventDefault();
+        closeDrawer();
     });
 
     // Edit Save //
@@ -299,58 +363,21 @@ export function initDrawerManager() {
         }
     };
 
-    // Render Panel //
-
-    const renderDrawerContent = (mode, data) => {
-        clearDrawerContent();
-
-        let panel;
-
-        if (mode === "edit") {
-            panel = document.createElement("rui-edit-panel");
-            panel.data = data;
-            panel.addEventListener("save-edit", (event) => {
-                const payload = ceDetail(event, 0);
-                const button = ceDetail(event, 1);
-                saveDrawerEdit(payload, button);
-            });
-            panel.addEventListener("close", () => {
-                closeDrawer();
-            });
-        } else if (mode === "share") {
-            panel = document.createElement("rui-share-panel");
-            panel.data = data;
-            panel.addEventListener("close", () => {
-                closeDrawer();
-            });
-        } else if (mode === "delete") {
-            panel = document.createElement("rui-delete-panel");
-            panel.data = data;
-            panel.addEventListener("confirm", () => {
-                handleDeleteConfirm();
-            });
-            panel.addEventListener("cancel", () => {
-                handleDeleteCancel();
-            });
-        } else {
-            return false;
-        }
-
-        state.dialog.appendChild(panel);
-        return true;
-    };
-
     // Open / Close //
 
     const showDrawer = (mode, id, data) => {
-        if (!renderDrawerContent(mode, data)) {
-            return false;
-        }
-
         state.mode = mode;
         state.id = String(id);
         setModeButtons(mode, state.id);
-        state.dialog.showModal();
+
+        state.viewport.mode = mode;
+        state.viewport.data = data;
+
+        if (!state.dialog.open) {
+            state.dialog.showModal();
+        }
+
+        state.viewport.open = true;
         return true;
     };
 
@@ -361,16 +388,12 @@ export function initDrawerManager() {
         }
 
         if (
-            state.dialog.open &&
+            state.viewport.open &&
             state.mode === mode &&
             state.id === String(id)
         ) {
             closeDrawer();
             return false;
-        }
-
-        if (state.dialog.open) {
-            closeDrawer();
         }
 
         if (mode === "edit") {

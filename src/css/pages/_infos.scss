@@ -1,6 +1,5 @@
 @use "../internal/variables" as *;
 @use "../internal/shape" as *;
-@use "../internal/elevation" as *;
 @use "../internal/motion" as *;
 
 ///////////////////////////////////////////////////////////
@@ -33,7 +32,7 @@
             margin: 0 0 0.75rem;
             padding-top: 0.75rem;
             padding-bottom: 0.75rem;
-            border: 0 none;
+            border: 0;
             border-radius: 0;
             background: none;
 
@@ -249,7 +248,7 @@
             align-items: center;
             gap: 0.35rem;
             padding: 0.62rem 0.9rem;
-            border: 0 none;
+            border: 0;
             border-radius: 999px;
             background: transparent;
             color: var(--brand-700);
@@ -280,7 +279,7 @@
 
         li.selected a,
         li a.selected {
-            border-bottom: 0 none;
+            border-bottom: 0;
             background: transparent;
         }
 
@@ -296,7 +295,7 @@
     #tabs > .tab {
         margin: 0 0 1.25rem;
         padding: 0;
-        border: 0 none;
+        border: 0;
         border-radius: 0;
         background: none;
         min-width: 0;
@@ -319,27 +318,25 @@
         }
     }
 
-    #stat_tab_stats table,
-    #stat_tab_location table,
-    #stat_tab_sources table {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0.9rem;
-        margin: 0;
-        table-layout: fixed;
-    }
+    :is(#stat_tab_stats, #stat_tab_location, #stat_tab_sources) {
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0.9rem;
+            margin: 0;
+            table-layout: fixed;
+        }
 
-    #stat_tab_stats td,
-    #stat_tab_location td,
-    #stat_tab_sources td {
-        padding: 1rem;
-        border: 1px solid var(--brand-200);
-        border-radius: $shape-corner-extra-small;
-        background: var(--brand-100);
-        vertical-align: top;
-        min-width: 0;
-        overflow-wrap: anywhere;
-        word-break: break-word;
+        td {
+            padding: 1rem;
+            border: 1px solid var(--brand-200);
+            border-radius: $shape-corner-extra-small;
+            background: var(--brand-100);
+            vertical-align: top;
+            min-width: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
     }
 
     #stats_lines {
@@ -392,7 +389,7 @@
         }
 
         li:last-child {
-            border-bottom: 0 none;
+            border-bottom: 0;
         }
 
         .historical_link {
@@ -489,34 +486,24 @@
     }
 
     @media (max-width: $breakpoint-md - 1px) {
-        #stat_tab_stats table,
-        #stat_tab_location table,
-        #stat_tab_sources table,
-        #stat_tab_stats tbody,
-        #stat_tab_location tbody,
-        #stat_tab_sources tbody,
-        #stat_tab_stats tr,
-        #stat_tab_location tr,
-        #stat_tab_sources tr,
-        #stat_tab_stats td,
-        #stat_tab_location td,
-        #stat_tab_sources td {
-            display: block;
-            width: 100%;
-        }
+        :is(#stat_tab_stats, #stat_tab_location, #stat_tab_sources) {
+            table,
+            tbody,
+            tr,
+            td {
+                display: block;
+                width: 100%;
+            }
 
-        #stat_tab_stats tr,
-        #stat_tab_location tr,
-        #stat_tab_sources tr {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.95rem;
-        }
+            tr {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 0.95rem;
+            }
 
-        #stat_tab_stats table,
-        #stat_tab_location table,
-        #stat_tab_sources table {
-            border-spacing: 0;
+            table {
+                border-spacing: 0;
+            }
         }
     }
 

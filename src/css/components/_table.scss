@@ -25,7 +25,7 @@ table.tblSorter {
     border-collapse: collapse;
 
     width: 100%;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
     text-align: left;
 
     thead,
@@ -70,13 +70,6 @@ table.tblSorter {
 
     // Row hover //
 
-    tbody tr.normal-row td,
-    tbody tr.alt-row td {
-        background-color: inherit;
-    }
-
-    tbody tr.normal-row:hover td,
-    tbody tr.alt-row:hover td,
     tbody tr:hover td {
         background-color: var(--brand-100);
     }
@@ -113,54 +106,8 @@ table.tblSorter {
         display: none !important;
     }
 
-    .responsive-shorturl-link,
-    .responsive-destination-raw-link {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.4rem;
-        flex: 1 1 auto;
-        width: 100%;
-        max-width: 100%;
-        box-sizing: border-box;
-        min-width: 0;
-        font-family: var(--font-family-mono);
-        font-size: 0.85rem;
-        font-weight: 400;
-        line-height: 1.15;
-        color: var(--brand-800);
-        background: var(--brand-100);
-        border: 1px solid var(--brand-200);
-        border-radius: $shape-corner-extra-small;
-        padding-inline: 0.85rem;
-        text-decoration: none;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-
-        .responsive-link-text {
-            display: block;
-            flex: 1 1 auto;
-            min-width: 0;
-            padding-block: 0.65rem;
-            line-height: 2;
-            overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-gutter: stable;
-            text-overflow: clip;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .responsive-link-icon {
-            flex: 0 0 auto;
-            font-size: 0.92rem;
-            line-height: 1;
-            color: var(--brand-600);
-        }
-    }
-
     @media (max-width: $breakpoint-md - 1px) {
-        border: 0 none;
+        border: 0;
         background: none;
 
         thead {
@@ -197,7 +144,7 @@ table.tblSorter {
 
             td {
                 display: block;
-                border: 0 none;
+                border: 0;
                 padding: 0;
                 min-width: 0;
 
@@ -323,7 +270,7 @@ table.tblSorter {
                 &.actions {
                     grid-area: actions;
                     background: transparent;
-                    border: 0 none;
+                    border: 0;
                     border-left: 1px solid var(--brand-200);
                     border-radius: 0;
                     padding: 0.2rem 0 0.2rem 0.4rem;
@@ -368,7 +315,7 @@ table.tblSorter {
 
             th {
                 display: block;
-                border: 0 none;
+                border: 0;
                 padding: 0;
             }
         }
@@ -495,14 +442,17 @@ td.actions .button {
         float: none;
         background-color: var(--brand-500);
         color: var(--brand-050);
-        border: 0 none;
+        border: 0;
         border-radius: $shape-corner-extra-small;
 
-        transition: all $motion-duration-short4 $motion-easing-standard;
+        transition:
+            background-color $motion-duration-short4 $motion-easing-standard,
+            color $motion-duration-short4 $motion-easing-standard,
+            box-shadow $motion-duration-short4 $motion-easing-standard;
 
         &:active {
             @include md-elevation(1);
-            border: 0 none;
+            border: 0;
         }
 
         // Remove icon backgrounds on mobile
@@ -557,7 +507,10 @@ td.actions .button {
         border: 1px solid var(--brand-200);
         border-radius: $shape-corner-extra-small;
 
-        transition: all $motion-duration-short4 $motion-easing-standard;
+        transition:
+            background-color $motion-duration-short4 $motion-easing-standard,
+            border-color $motion-duration-short4 $motion-easing-standard,
+            color $motion-duration-short4 $motion-easing-standard;
 
         &:hover {
             background-color: var(--brand-100);
@@ -600,8 +553,7 @@ tr.edit-row td {
     max-width: min(calc(var(--spacing) * 100), 100%);
     text-align: left;
     font-size: 1rem;
-    margin: 0 auto;
-    margin-bottom: 1rem;
+    margin: 0 auto 1rem;
 }
 
 #filter_options {
@@ -666,7 +618,11 @@ tr.edit-row td {
     font-size: var(--type-size-label);
     font-weight: 700;
     cursor: pointer;
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        border-color $motion-duration-short4 $motion-easing-standard,
+        background-color $motion-duration-short4 $motion-easing-standard,
+        color $motion-duration-short4 $motion-easing-standard,
+        box-shadow $motion-duration-short4 $motion-easing-standard;
 
     .material-icons {
         font-size: 1rem;
@@ -726,14 +682,14 @@ tr.edit-row td {
 
 .responsive-search-filter-drawer {
     width: min(calc(var(--spacing) * 136), 100vw);
-    min-height: 20rem;
-    max-height: calc(100dvh - 0.25rem);
+    min-height: min(20rem, var(--responsive-drawer-max-height));
+    max-height: var(--responsive-drawer-max-height);
 
     &::backdrop {
         background: color-mix(in srgb, var(--neutral-950) 45%, transparent);
     }
 
-    div.confirm-message {
+    .responsive-drawer-body {
         padding: 0;
     }
 }
@@ -817,11 +773,13 @@ tr.edit-row td {
     }
 }
 
-.responsive-filter-group.is-scope,
-.responsive-filter-group.is-perpage,
-.responsive-filter-group.is-sort,
-.responsive-filter-group.is-clicks,
-.responsive-filter-group.is-date {
+.responsive-filter-group:is(
+    .is-scope,
+    .is-perpage,
+    .is-sort,
+    .is-clicks,
+    .is-date
+) {
     .responsive-filter-group-controls {
         input.text,
         select {
@@ -830,11 +788,13 @@ tr.edit-row td {
     }
 }
 
-.responsive-filter-group.is-scope,
-.responsive-filter-group.is-sort,
-.responsive-filter-group.is-date,
-.responsive-filter-group.is-perpage,
-.responsive-filter-group.is-clicks {
+.responsive-filter-group:is(
+    .is-scope,
+    .is-sort,
+    .is-date,
+    .is-perpage,
+    .is-clicks
+) {
     display: grid;
     gap: 0.45rem 0.75rem;
     align-items: start;
@@ -850,8 +810,7 @@ tr.edit-row td {
     }
 }
 
-.responsive-filter-group.is-perpage,
-.responsive-filter-group.is-clicks {
+.responsive-filter-group:is(.is-perpage, .is-clicks) {
     grid-template-columns: minmax(0, 65%) minmax(35%, 1fr);
 }
 
@@ -871,20 +830,14 @@ tr.edit-row td {
     }
 }
 
-.responsive-filter-group.is-scope,
-.responsive-filter-group.is-sort,
-.responsive-filter-group.is-date {
+.responsive-filter-group:is(.is-scope, .is-sort, .is-date) {
     grid-template-columns: minmax(0, 50%) minmax(50%, 1fr);
 }
 
-.responsive-filter-group.is-date {
-    .responsive-filter-group-controls {
-        #date_and {
-            align-self: center;
-            color: var(--brand-500);
-            padding: 0 0.15rem;
-        }
-    }
+.responsive-filter-group.is-date #date_and {
+    align-self: center;
+    color: var(--brand-500);
+    padding: 0 0.15rem;
 }
 
 ///////////////////////////////////////////////////////////

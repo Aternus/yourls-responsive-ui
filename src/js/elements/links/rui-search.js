@@ -1,4 +1,11 @@
-import { defineCustomElement, onBeforeUnmount, onMounted, ref } from "vue";
+import {
+    defineCustomElement,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    watch,
+} from "vue";
 
 function isSelectAtDefault(selectControl) {
     if (!(selectControl instanceof HTMLSelectElement)) {
@@ -195,6 +202,7 @@ export const RuiSearch = defineCustomElement(
 
             const ready = ref(false);
             const drawerOpen = ref(false);
+            const drawerContentVisible = ref(false);
             const filtersActive = ref(false);
 
             const mountField = (slot, control) => {
@@ -223,24 +231,10 @@ export const RuiSearch = defineCustomElement(
             };
 
             const openDrawer = () => {
-                const dialog = drawerDialog.value;
-                if (!(dialog instanceof HTMLDialogElement)) {
-                    return;
-                }
-
-                if (!dialog.open) {
-                    dialog.showModal();
-                }
-
                 drawerOpen.value = true;
             };
 
             const closeDrawer = () => {
-                const dialog = drawerDialog.value;
-                if (dialog instanceof HTMLDialogElement && dialog.open) {
-                    dialog.close();
-                }
-
                 drawerOpen.value = false;
             };
 
@@ -265,8 +259,51 @@ export const RuiSearch = defineCustomElement(
                 window.parent.location.href = "index.php";
             };
 
+            const requestDrawerClose = () => {
+                drawerOpen.value = false;
+            };
+
+            const handleDrawerAfterLeave = () => {
+                const dialog = drawerDialog.value;
+                if (
+                    !(dialog instanceof HTMLDialogElement) ||
+                    drawerOpen.value
+                ) {
+                    return;
+                }
+
+                if (dialog.open) {
+                    dialog.close();
+                }
+            };
+
+            const handleDrawerDialogClose = () => {
+                drawerOpen.value = false;
+                drawerContentVisible.value = false;
+            };
+
             let removeSearchEnterListener = null;
             let removeDateSubmitListener = null;
+
+            watch(drawerOpen, async (isOpen) => {
+                const dialog = drawerDialog.value;
+                if (!(dialog instanceof HTMLDialogElement)) {
+                    drawerContentVisible.value = isOpen;
+                    return;
+                }
+
+                if (isOpen) {
+                    if (!dialog.open) {
+                        dialog.showModal();
+                    }
+
+                    await nextTick();
+                    drawerContentVisible.value = true;
+                    return;
+                }
+
+                drawerContentVisible.value = false;
+            });
 
             onMounted(() => {
                 const filterFormContainer =
@@ -464,6 +501,7 @@ export const RuiSearch = defineCustomElement(
             return {
                 ready,
                 drawerOpen,
+                drawerContentVisible,
                 filtersActive,
                 searchSlot,
                 searchButtonSlot,
@@ -474,6 +512,9 @@ export const RuiSearch = defineCustomElement(
                 dateSlot,
                 drawerDialog,
                 closeDrawer,
+                requestDrawerClose,
+                handleDrawerAfterLeave,
+                handleDrawerDialogClose,
                 openDrawer,
                 toggleDrawer,
                 submitFilters,
@@ -504,79 +545,86 @@ export const RuiSearch = defineCustomElement(
                     id="responsive-filter-drawer"
                     ref="drawerDialog"
                     class="responsive-drawer responsive-search-filter-drawer"
-                    @close="drawerOpen = false"
-                    @cancel="drawerOpen = false"
+                    @close="handleDrawerDialogClose"
+                    @cancel.prevent="requestDrawerClose"
                 >
-                    <div name="dialog_title">
-                        <div class="responsive-drawer-heading">
-                            <div class="responsive-drawer-heading-text">
-                                <span class="responsive-drawer-heading-title">Filters</span>
+                    <Transition
+                        name="responsive-drawer-surface"
+                        @after-leave="handleDrawerAfterLeave"
+                    >
+                        <div v-show="drawerContentVisible" class="responsive-drawer-shell">
+                            <div class="responsive-drawer-titlebar">
+                                <div class="responsive-drawer-heading">
+                                    <div class="responsive-drawer-heading-text">
+                                        <span class="responsive-drawer-heading-title">Filters</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="confirm-message responsive-drawer-body">
+                                <section class="responsive-drawer-content responsive-filter-drawer-body">
+                                    <section class="responsive-filter-group is-scope">
+                                        <p class="responsive-filter-group-title">In field</p>
+                                        <div ref="scopeSlot" class="responsive-filter-group-controls"></div>
+                                    </section>
+                                    <div class="responsive-filter-divider" aria-hidden="true"></div>
+                                    <section class="responsive-filter-group is-sort">
+                                        <p class="responsive-filter-group-title">Sort</p>
+                                        <div ref="sortSlot" class="responsive-filter-group-controls"></div>
+                                    </section>
+                                    <section class="responsive-filter-group is-perpage">
+                                        <div class="responsive-filter-group-heading-row is-stacked">
+                                            <p class="responsive-filter-group-title">Rows</p>
+                                            <p class="responsive-filter-group-hint">Results per page</p>
+                                        </div>
+                                        <div ref="rowsSlot" class="responsive-filter-group-controls"></div>
+                                    </section>
+                                    <section class="responsive-filter-group is-clicks">
+                                        <div class="responsive-filter-group-heading-row is-stacked">
+                                            <p class="responsive-filter-group-title">Clicks</p>
+                                            <p class="responsive-filter-group-hint">Show links with more or less clicks</p>
+                                        </div>
+                                        <div ref="clicksSlot" class="responsive-filter-group-controls"></div>
+                                    </section>
+                                    <section class="responsive-filter-group is-date">
+                                        <div class="responsive-filter-group-heading-row">
+                                            <p class="responsive-filter-group-title">Date</p>
+                                            <p class="responsive-filter-group-hint">Filter by creation date</p>
+                                        </div>
+                                        <div ref="dateSlot" class="responsive-filter-group-controls"></div>
+                                    </section>
+                                </section>
+                            </div>
+                            <div class="button-group responsive-drawer-actions responsive-drawer-footer responsive-filter-drawer-actions">
+                                <button
+                                    type="button"
+                                    class="button responsive-drawer-button is-primary responsive-filter-submit-button"
+                                    aria-label="Apply filters"
+                                    title="Apply filters"
+                                    @click="submitFilters"
+                                >
+                                    <span class="material-icons" aria-hidden="true">check</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button responsive-drawer-button is-tonal responsive-filter-clear-button"
+                                    aria-label="Clear filters"
+                                    title="Clear filters"
+                                    @click="clearFilters"
+                                >
+                                    <span class="material-icons" aria-hidden="true">filter_alt_off</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button responsive-drawer-button is-tonal responsive-filter-close-button"
+                                    aria-label="Close"
+                                    title="Close"
+                                    @click="closeDrawer"
+                                >
+                                    <span class="material-icons" aria-hidden="true">close</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <div class="confirm-message">
-                        <section class="responsive-drawer-content responsive-filter-drawer-body">
-                            <section class="responsive-filter-group is-scope">
-                                <p class="responsive-filter-group-title">In field</p>
-                                <div ref="scopeSlot" class="responsive-filter-group-controls"></div>
-                            </section>
-                            <div class="responsive-filter-divider" aria-hidden="true"></div>
-                            <section class="responsive-filter-group is-sort">
-                                <p class="responsive-filter-group-title">Sort</p>
-                                <div ref="sortSlot" class="responsive-filter-group-controls"></div>
-                            </section>
-                            <section class="responsive-filter-group is-perpage">
-                                <div class="responsive-filter-group-heading-row is-stacked">
-                                    <p class="responsive-filter-group-title">Rows</p>
-                                    <p class="responsive-filter-group-hint">Results per page</p>
-                                </div>
-                                <div ref="rowsSlot" class="responsive-filter-group-controls"></div>
-                            </section>
-                            <section class="responsive-filter-group is-clicks">
-                                <div class="responsive-filter-group-heading-row is-stacked">
-                                    <p class="responsive-filter-group-title">Clicks</p>
-                                    <p class="responsive-filter-group-hint">Show links with more or less clicks</p>
-                                </div>
-                                <div ref="clicksSlot" class="responsive-filter-group-controls"></div>
-                            </section>
-                            <section class="responsive-filter-group is-date">
-                                <div class="responsive-filter-group-heading-row">
-                                    <p class="responsive-filter-group-title">Date</p>
-                                    <p class="responsive-filter-group-hint">Filter by creation date</p>
-                                </div>
-                                <div ref="dateSlot" class="responsive-filter-group-controls"></div>
-                            </section>
-                        </section>
-                    </div>
-                    <div class="button-group responsive-drawer-actions responsive-filter-drawer-actions">
-                        <button
-                            type="button"
-                            class="button responsive-drawer-button is-primary responsive-filter-submit-button"
-                            aria-label="Apply filters"
-                            title="Apply filters"
-                            @click="submitFilters"
-                        >
-                            <span class="material-icons" aria-hidden="true">check</span>
-                        </button>
-                        <button
-                            type="button"
-                            class="button responsive-drawer-button is-tonal responsive-filter-clear-button"
-                            aria-label="Clear filters"
-                            title="Clear filters"
-                            @click="clearFilters"
-                        >
-                            <span class="material-icons" aria-hidden="true">filter_alt_off</span>
-                        </button>
-                        <button
-                            type="button"
-                            class="button responsive-drawer-button is-tonal responsive-filter-close-button"
-                            aria-label="Close"
-                            title="Close"
-                            @click="closeDrawer"
-                        >
-                            <span class="material-icons" aria-hidden="true">close</span>
-                        </button>
-                    </div>
+                    </Transition>
                 </dialog>
             </section>
         `,

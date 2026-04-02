@@ -1,7 +1,6 @@
 import { defineCustomElement, ref } from "vue";
 import { copyToClipboard, openShareWindow } from "../../lib/shared.js";
 import { useCopyFeedback } from "../../composables/useCopyFeedback.js";
-import { usePrimaryControlFocus } from "../../composables/usePrimaryControlFocus.js";
 
 function buildShareMessage(data) {
     const title = typeof data.title === "string" ? data.title.trim() : "";
@@ -21,13 +20,11 @@ export const RuiSharePanel = defineCustomElement(
         setup(props, { emit }) {
             const shortUrl = ref(String(props.data.shortUrl ?? ""));
             const message = ref(buildShareMessage(props.data));
-            const primaryControl = ref(null);
             const {
                 iconName: copyIconName,
                 label: copyLabel,
                 markCopied,
             } = useCopyFeedback();
-            usePrimaryControlFocus(primaryControl);
 
             const drawerId = String(props.data.id ?? "");
 
@@ -65,7 +62,6 @@ export const RuiSharePanel = defineCustomElement(
             return {
                 shortUrl,
                 message,
-                primaryControl,
                 copyIconName,
                 copyLabel,
                 drawerId,
@@ -89,59 +85,56 @@ export const RuiSharePanel = defineCustomElement(
                         :data-id="drawerId"
                     >
                         <rui-text-input-field
-                            :field-class-name="'responsive-drawer-field'"
+                            class="responsive-drawer-field"
                             :label-text="'Short URL'"
-                            :label-class-name="'responsive-drawer-label'"
-                            :control-id="\`responsive-drawer-share-shorturl-\${drawerId}\`"
+                            :control-id="'responsive-drawer-share-shorturl-' + drawerId"
                             :model-value="shortUrl"
+                            :control-class="'responsive-url-value'"
                             :read-only="true"
                             :aria-label="'Short URL to share'"
-                            :control-ref="primaryControl"
                         />
                         <rui-textarea-field
-                            :field-class-name="'responsive-drawer-field'"
+                            class="responsive-drawer-field"
                             :label-text="'Message'"
-                            :label-class-name="'responsive-drawer-label'"
-                            :control-id="\`responsive-drawer-share-message-\${drawerId}\`"
+                            :control-id="'responsive-drawer-share-message-' + drawerId"
                             :model-value="message"
                             :rows="3"
+                            :auto-focus="true"
                             :aria-label="'Share message'"
                             @update:model-value="message = $event"
                         />
                     </section>
                 </section>
-                <template #actions>
-                    <rui-action-button
-                        :icon-name="copyIconName"
-                        :label="copyLabel"
-                        :variant-class="'is-primary'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="copyShortUrl"
-                    />
-                    <rui-action-button
-                        :icon-name="'fa-x-twitter'"
-                        :icon-library="'brand'"
-                        :label="'Share on Twitter'"
-                        :variant-class="'is-tonal'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="shareOnTwitter"
-                    />
-                    <rui-action-button
-                        :icon-name="'fa-facebook-f'"
-                        :icon-library="'brand'"
-                        :label="'Share on Facebook'"
-                        :variant-class="'is-tonal'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="shareOnFacebook"
-                    />
-                    <rui-action-button
-                        :icon-name="'close'"
-                        :label="'Close share mode'"
-                        :variant-class="'is-tonal'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="closeDrawer"
-                    />
-                </template>
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-primary"
+                    :icon-name="copyIconName"
+                    :label="copyLabel"
+                    @press="copyShortUrl"
+                />
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-tonal"
+                    :icon-name="'fa-x-twitter'"
+                    :icon-library="'brand'"
+                    :label="'Share on Twitter'"
+                    @press="shareOnTwitter"
+                />
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-tonal"
+                    :icon-name="'fa-facebook-f'"
+                    :icon-library="'brand'"
+                    :label="'Share on Facebook'"
+                    @press="shareOnFacebook"
+                />
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-tonal"
+                    :icon-name="'close'"
+                    :label="'Close share mode'"
+                    @press="closeDrawer"
+                />
             </rui-drawer>
         `,
     },

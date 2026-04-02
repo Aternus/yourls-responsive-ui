@@ -1,17 +1,29 @@
+///////////////////////////////////////////////////////////
+// Theme
+///////////////////////////////////////////////////////////
+
 @use "palette";
 @use "style";
 
+///////////////////////////////////////////////////////////
+// Components
+///////////////////////////////////////////////////////////
+
+@use "components/bookmarklet";
+@use "components/datepicker";
+@use "components/dialog";
 @use "components/nav_menu";
 @use "components/new_url";
-@use "components/table";
-@use "components/bookmarklet";
 @use "components/notify_bar";
-@use "components/dialog";
-@use "components/datepicker";
+@use "components/table";
 
-@use "pages/login";
+///////////////////////////////////////////////////////////
+// Pages
+///////////////////////////////////////////////////////////
+
 @use "pages/index";
 @use "pages/infos";
-@use "pages/tools";
+@use "pages/login";
 @use "pages/plugins";
 @use "pages/responsive_settings";
+@use "pages/tools";

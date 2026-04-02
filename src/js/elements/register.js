@@ -10,6 +10,7 @@ import { RuiSearch } from "./links/rui-search.js";
 import { RuiNewUrl } from "./links/rui-new-url.js";
 import { RuiDrawer } from "./links/rui-drawer.js";
 import { RuiDrawerIntro } from "./links/rui-drawer-intro.js";
+import { RuiRowDrawerViewport } from "./links/rui-row-drawer-viewport.js";
 import { RuiEditPanel } from "./links/rui-edit-panel.js";
 import { RuiSharePanel } from "./links/rui-share-panel.js";
 import { RuiDeletePanel } from "./links/rui-delete-panel.js";
@@ -40,6 +41,7 @@ export function registerAllElements() {
     define("rui-new-url", RuiNewUrl);
     define("rui-drawer", RuiDrawer);
     define("rui-drawer-intro", RuiDrawerIntro);
+    define("rui-row-drawer-viewport", RuiRowDrawerViewport);
     define("rui-edit-panel", RuiEditPanel);
     define("rui-share-panel", RuiSharePanel);
     define("rui-delete-panel", RuiDeletePanel);

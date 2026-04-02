@@ -21,7 +21,7 @@
 
     padding: 1rem;
 
-    border-bottom: 0 none;
+    border-bottom: 0;
     border-radius: 0;
 
     opacity: 1;
@@ -60,7 +60,9 @@ a.notify-bar-close {
     background: var(--neutral-700);
     color: var(--neutral-050);
 
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        background-color $motion-duration-short4 $motion-easing-standard,
+        box-shadow $motion-duration-short4 $motion-easing-standard;
 
     &:hover,
     &:active,

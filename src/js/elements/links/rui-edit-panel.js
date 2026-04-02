@@ -1,5 +1,4 @@
 import { defineCustomElement, ref } from "vue";
-import { usePrimaryControlFocus } from "../../composables/usePrimaryControlFocus.js";
 
 export const RuiEditPanel = defineCustomElement(
     {
@@ -12,8 +11,6 @@ export const RuiEditPanel = defineCustomElement(
             const shortUrl = ref(String(props.data.shortUrl ?? ""));
             const destinationUrl = ref(String(props.data.destinationUrl ?? ""));
             const title = ref(String(props.data.title ?? ""));
-            const primaryControl = ref(null);
-            usePrimaryControlFocus(primaryControl);
 
             const drawerId = String(props.data.id ?? "");
 
@@ -40,7 +37,6 @@ export const RuiEditPanel = defineCustomElement(
                 shortUrl,
                 destinationUrl,
                 title,
-                primaryControl,
                 drawerId,
                 closeDrawer,
                 saveEdit,
@@ -60,51 +56,46 @@ export const RuiEditPanel = defineCustomElement(
                         :data-id="drawerId"
                     >
                         <rui-text-input-field
-                            :field-class-name="'responsive-drawer-field'"
+                            class="responsive-drawer-field"
                             :label-text="'Short URL'"
-                            :label-class-name="'responsive-drawer-label'"
-                            :control-id="\`responsive-drawer-keyword-\${drawerId}\`"
+                            :control-id="'responsive-drawer-keyword-' + drawerId"
                             :model-value="shortUrl"
+                            :auto-focus="true"
                             :aria-label="'Short URL'"
-                            :control-ref="primaryControl"
                             @update:model-value="shortUrl = $event"
                         />
                         <rui-text-input-field
-                            :field-class-name="'responsive-drawer-field'"
+                            class="responsive-drawer-field"
                             :label-text="'Destination URL'"
-                            :label-class-name="'responsive-drawer-label'"
-                            :control-id="\`responsive-drawer-url-\${drawerId}\`"
+                            :control-id="'responsive-drawer-url-' + drawerId"
                             :model-value="destinationUrl"
                             :aria-label="'Destination URL'"
                             @update:model-value="destinationUrl = $event"
                         />
                         <rui-text-input-field
-                            :field-class-name="'responsive-drawer-field'"
+                            class="responsive-drawer-field"
                             :label-text="'Title'"
-                            :label-class-name="'responsive-drawer-label'"
-                            :control-id="\`responsive-drawer-title-input-\${drawerId}\`"
+                            :control-id="'responsive-drawer-title-input-' + drawerId"
                             :model-value="title"
                             :aria-label="'Title'"
                             @update:model-value="title = $event"
                         />
                     </section>
                 </section>
-                <template #actions>
-                    <rui-action-button
-                        :icon-name="'save'"
-                        :label="'Save'"
-                        :variant-class="'is-primary'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="saveEdit"
-                    />
-                    <rui-action-button
-                        :icon-name="'close'"
-                        :label="'Cancel'"
-                        :variant-class="'is-tonal'"
-                        :class-name="'responsive-drawer-button'"
-                        @press="closeDrawer"
-                    />
-                </template>
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-primary"
+                    :icon-name="'save'"
+                    :label="'Save'"
+                    @press="saveEdit"
+                />
+                <rui-action-button
+                    slot="actions"
+                    class="responsive-drawer-button is-tonal"
+                    :icon-name="'close'"
+                    :label="'Cancel'"
+                    @press="closeDrawer"
+                />
             </rui-drawer>
         `,
     },

@@ -95,7 +95,7 @@ textarea {
     padding: 0;
     margin: 0;
     text-align: revert;
-    border: 0 none;
+    border: 0;
     border-radius: 0;
     background: none;
 
@@ -115,6 +115,79 @@ a {
         color: var(--brand-900);
         text-decoration: none;
     }
+}
+
+///////////////////////////////////////////////////////////
+// URL Value Surface
+///////////////////////////////////////////////////////////
+
+.responsive-url-value {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+    font-family: var(--font-family-mono);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--brand-800);
+    background: var(--brand-100);
+    border: 1px solid var(--brand-200);
+    border-radius: $shape-corner-extra-small;
+}
+
+a.responsive-url-value {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.4rem;
+    flex: 1 1 auto;
+    line-height: 1.15;
+    padding-inline: 0.85rem;
+    text-decoration: none;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+
+    &,
+    &:link,
+    &:visited,
+    &:hover,
+    &:active {
+        color: var(--brand-800);
+        text-decoration: none;
+    }
+}
+
+a.responsive-url-value .responsive-link-text {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-block: 0.65rem;
+    line-height: 2;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-gutter: stable;
+    text-overflow: clip;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+a.responsive-url-value .responsive-link-icon {
+    flex: 0 0 auto;
+    font-size: 0.92rem;
+    line-height: 1;
+    color: var(--brand-600);
+}
+
+input.responsive-url-value {
+    display: block;
+    margin: 0;
+    padding: 0.65rem 0.85rem;
+    line-height: 2;
+    text-overflow: clip;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 tt,
@@ -260,7 +333,7 @@ code {
         padding: 0;
         margin: 0;
         max-width: revert;
-        border: 0 none;
+        border: 0;
         border-radius: 0;
         background: none;
 
@@ -278,7 +351,7 @@ code {
     width: 100%;
     margin: 0;
     padding: 0.75rem 1rem;
-    border: 0 none;
+    border: 0;
     border-radius: $shape-corner-extra-small;
 
     background: var(--secondary-100);
@@ -299,7 +372,7 @@ code {
 
 .notice {
     width: 100%;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1rem;
     padding: 0.75rem 1rem;
     border: 1px solid var(--brand-200);
     background: var(--brand-050);
@@ -358,7 +431,10 @@ input.text {
     border: 1px solid var(--tertiary-300);
     border-radius: $shape-corner-extra-small;
 
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        border-color $motion-duration-short4 $motion-easing-standard,
+        background-color $motion-duration-short4 $motion-easing-standard,
+        color $motion-duration-short4 $motion-easing-standard;
 
     &:hover,
     &:active,
@@ -395,7 +471,11 @@ a.button {
 
     cursor: pointer;
 
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        background-color $motion-duration-short4 $motion-easing-standard,
+        border-color $motion-duration-short4 $motion-easing-standard,
+        color $motion-duration-short4 $motion-easing-standard,
+        box-shadow $motion-duration-short4 $motion-easing-standard;
 
     &:hover,
     &:active,
@@ -446,7 +526,10 @@ textarea {
     border: 1px solid var(--tertiary-300);
     border-radius: $shape-corner-extra-small;
 
-    transition: all $motion-duration-short4 $motion-easing-standard;
+    transition:
+        border-color $motion-duration-short4 $motion-easing-standard,
+        background-color $motion-duration-short4 $motion-easing-standard,
+        color $motion-duration-short4 $motion-easing-standard;
 
     &:hover,
     &:active,

@@ -31,7 +31,11 @@
         text-indent: 0 !important;
         line-height: 1;
 
-        transition: all $motion-duration-short4 $motion-easing-standard;
+        transition:
+            background-color $motion-duration-short4 $motion-easing-standard,
+            border-color $motion-duration-short4 $motion-easing-standard,
+            color $motion-duration-short4 $motion-easing-standard,
+            box-shadow $motion-duration-short4 $motion-easing-standard;
 
         &:hover,
         &:active,
@@ -65,7 +69,11 @@
         font-weight: 700;
         text-decoration: none;
 
-        transition: all $motion-duration-short4 $motion-easing-standard;
+        transition:
+            background-color $motion-duration-short4 $motion-easing-standard,
+            border-color $motion-duration-short4 $motion-easing-standard,
+            color $motion-duration-short4 $motion-easing-standard,
+            box-shadow $motion-duration-short4 $motion-easing-standard;
 
         &:hover,
         &:active,
@@ -84,7 +92,7 @@
 
     #main_table {
         @media (max-width: $breakpoint-md - 1px) {
-            border: 0 none;
+            border: 0;
             background: none;
 
             thead {
@@ -111,7 +119,7 @@
 
                 td {
                     display: block;
-                    border: 0 none;
+                    border: 0;
                     border-bottom: 1px solid var(--brand-100);
                     padding: 0.5rem 1rem;
 
@@ -138,7 +146,7 @@
                         content: "Author";
                     }
                     &.plugin_actions {
-                        border-bottom: 0 none;
+                        border-bottom: 0;
                         background: var(--brand-100);
                         padding: 0.75rem 1rem;
                     }
