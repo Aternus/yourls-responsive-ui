@@ -1,12 +1,13 @@
-import { h, render } from "vue";
 import { replaceRowFromHtml } from "./shared.js";
 import { getRowData } from "./row-data.js";
 import { setModeButtons } from "./row-action-buttons.js";
-import { ResponsiveEditPanel } from "../components/ResponsiveEditPanel.js";
-import { ResponsiveSharePanel } from "../components/ResponsiveSharePanel.js";
-import { ResponsiveDeletePanel } from "../components/ResponsiveDeletePanel.js";
 
 let initialized = false;
+
+function ceDetail(event, index = 0) {
+    const detail = event.detail;
+    return Array.isArray(detail) ? detail[index] : detail;
+}
 
 export function initDrawerManager() {
     if (initialized) {
@@ -94,8 +95,8 @@ export function initDrawerManager() {
         dialog: ensureDrawer(),
     };
 
-    const unmountDrawerView = () => {
-        render(null, state.dialog);
+    const clearDrawerContent = () => {
+        state.dialog.textContent = "";
     };
 
     const clearModeState = () => {
@@ -116,12 +117,12 @@ export function initDrawerManager() {
             return;
         }
 
-        unmountDrawerView();
+        clearDrawerContent();
         clearModeState();
     };
 
     state.dialog.addEventListener("close", () => {
-        unmountDrawerView();
+        clearDrawerContent();
         clearModeState();
     });
 
@@ -301,42 +302,42 @@ export function initDrawerManager() {
     // Render Panel //
 
     const renderDrawerContent = (mode, data) => {
+        clearDrawerContent();
+
+        let panel;
+
         if (mode === "edit") {
-            render(
-                h(ResponsiveEditPanel, {
-                    data,
-                    onClose: closeDrawer,
-                    onSaveEdit: saveDrawerEdit,
-                }),
-                state.dialog,
-            );
-            return true;
+            panel = document.createElement("rui-edit-panel");
+            panel.data = data;
+            panel.addEventListener("save-edit", (event) => {
+                const payload = ceDetail(event, 0);
+                const button = ceDetail(event, 1);
+                saveDrawerEdit(payload, button);
+            });
+            panel.addEventListener("close", () => {
+                closeDrawer();
+            });
+        } else if (mode === "share") {
+            panel = document.createElement("rui-share-panel");
+            panel.data = data;
+            panel.addEventListener("close", () => {
+                closeDrawer();
+            });
+        } else if (mode === "delete") {
+            panel = document.createElement("rui-delete-panel");
+            panel.data = data;
+            panel.addEventListener("confirm", () => {
+                handleDeleteConfirm();
+            });
+            panel.addEventListener("cancel", () => {
+                handleDeleteCancel();
+            });
+        } else {
+            return false;
         }
 
-        if (mode === "share") {
-            render(
-                h(ResponsiveSharePanel, {
-                    data,
-                    onClose: closeDrawer,
-                }),
-                state.dialog,
-            );
-            return true;
-        }
-
-        if (mode === "delete") {
-            render(
-                h(ResponsiveDeletePanel, {
-                    data,
-                    onConfirm: handleDeleteConfirm,
-                    onCancel: handleDeleteCancel,
-                }),
-                state.dialog,
-            );
-            return true;
-        }
-
-        return false;
+        state.dialog.appendChild(panel);
+        return true;
     };
 
     // Open / Close //

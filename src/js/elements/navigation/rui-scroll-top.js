@@ -5,8 +5,8 @@ import {
     onMounted,
     ref,
 } from "vue";
-import { useMediaQuery } from "../composables/useMediaQuery.js";
-import { useRafScheduler } from "../composables/useRafScheduler.js";
+import { useMediaQuery } from "../../composables/useMediaQuery.js";
+import { useRafScheduler } from "../../composables/useRafScheduler.js";
 
 export const RuiScrollTop = defineCustomElement(
     {

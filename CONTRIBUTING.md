@@ -11,10 +11,10 @@
 ### Local HTTPS Setup
 
 1. Install [mkcert](https://github.com/FiloSottile/mkcert)
-2. Change into the ssl directory: `cd {projectRoot}/.dev/ssl`
-3. Using `mkcert`, generate a certificate and a key: `mkcert localhost "*.localhost"`
-4. Rename certificate: `mv localhost+1.pem localhost.crt`
-5. Rename key: `mv localhost+1-key.pem localhost.key`
+2. Change into the ssl directory: `cd docker/web/ssl`
+3. Using `mkcert`, generate a certificate and a key: `mkcert 10.0.0.102`
+4. Rename certificate: `mv 10.0.0.102.pem 10.0.0.102.crt`
+5. Rename key: `mv 10.0.0.102-key.pem 10.0.0.102.key`
 
 ### Using Docker
 
@@ -26,8 +26,8 @@ To build and run the environment:
 docker compose up --build
 ```
 
-Ensure that all necessary configuration files are in place (e.g., `php.ini`,
-`.dev/ssl/localhost.crt`).
+Ensure that all necessary configuration files are in place (e.g., `docker/web/php.ini`,
+`docker/web/ssl/localhost.crt`).
 
 ## Useful Commands
 
@@ -39,6 +39,6 @@ docker exec -it yourls-responsive-ui-web-1 bash
 
 ## Accessing the Admin Panel
 
-- URL: `https://localhost/admin`
+- URL: `https://10.0.0.102/admin`
 - Username: `root`
 - Password: `root`

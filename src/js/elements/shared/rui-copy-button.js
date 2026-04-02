@@ -1,5 +1,5 @@
 import { defineCustomElement, ref } from "vue";
-import { copyToClipboard } from "../lib/shared.js";
+import { copyToClipboard } from "../../lib/shared.js";
 
 export const RuiCopyButton = defineCustomElement(
     {
