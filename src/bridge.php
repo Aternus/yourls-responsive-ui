@@ -14,21 +14,22 @@ define( 'RESPONSIVE_BRIDGE_END', '// END yourls-responsive-ui managed bridge' );
 /////////////////////////////////////////////////
 
 function responsive_bridge_block(): string {
-	$bootstrap_path = "YOURLS_USERDIR . '/plugins/yourls-responsive-ui/bootstrap.php'";
+	$begin = RESPONSIVE_BRIDGE_BEGIN;
+	$end   = RESPONSIVE_BRIDGE_END;
 
-	$block = RESPONSIVE_BRIDGE_BEGIN . "\n";
-	$block .= "if (\n";
-	$block .= "    !defined('YOURLS_RESPONSIVE_UI_DISABLE')\n";
-	$block .= "    && !file_exists(YOURLS_USERDIR . '/yourls-responsive-ui.disable')\n";
-	$block .= ") {\n";
-	$block .= "    \$responsive_bootstrap = {$bootstrap_path};\n";
-	$block .= "    if (file_exists(\$responsive_bootstrap)) {\n";
-	$block .= "        require_once \$responsive_bootstrap;\n";
-	$block .= "    }\n";
-	$block .= "}\n";
-	$block .= RESPONSIVE_BRIDGE_END;
-
-	return $block;
+	return <<<BRIDGE
+{$begin}
+if (
+    !defined('YOURLS_RESPONSIVE_UI_DISABLE')
+    && !file_exists(YOURLS_USERDIR . '/yourls-responsive-ui.disable')
+) {
+    \$responsive_bootstrap = YOURLS_USERDIR . '/plugins/yourls-responsive-ui/bootstrap.php';
+    if (file_exists(\$responsive_bootstrap)) {
+        require_once \$responsive_bootstrap;
+    }
+}
+{$end}
+BRIDGE;
 }
 
 // Bridge installation (activate/update)
