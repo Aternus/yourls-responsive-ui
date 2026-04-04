@@ -14,12 +14,12 @@ export const RuiInfosPage = defineCustomElement(
                 !(body instanceof HTMLBodyElement) ||
                 !(wrap instanceof HTMLElement) ||
                 !body.classList.contains("infos") ||
-                body.dataset.responsiveInfosEnhanced === "true"
+                body.dataset.ruiInfosEnhanced === "true"
             ) {
                 return;
             }
 
-            body.dataset.responsiveInfosEnhanced = "true";
+            body.dataset.ruiInfosEnhanced = "true";
 
             this.installTabIcons(wrap);
             const scheduleChartsScale = this.installChartScaling(wrap);
@@ -41,7 +41,7 @@ export const RuiInfosPage = defineCustomElement(
                     .forEach((anchor) => {
                         if (
                             !(anchor instanceof HTMLAnchorElement) ||
-                            anchor.querySelector(".responsive-infos-tab-icon")
+                            anchor.querySelector(".rui-infos__tab-icon")
                         ) {
                             return;
                         }
@@ -56,7 +56,7 @@ export const RuiInfosPage = defineCustomElement(
                         const icon =
                             document.createElement("rui-material-icon");
                         icon.setAttribute("name", iconName);
-                        icon.setAttribute("class", "responsive-infos-tab-icon");
+                        icon.setAttribute("class", "rui-infos__tab-icon");
                         anchor.prepend(icon);
                     });
             },
@@ -76,7 +76,7 @@ export const RuiInfosPage = defineCustomElement(
                 const setActiveAnchor = (activeAnchor) => {
                     tabAnchors.forEach((anchor) => {
                         anchor.classList.toggle(
-                            "is-responsive-active",
+                            "is-rui-active",
                             anchor === activeAnchor,
                         );
                     });
@@ -106,7 +106,7 @@ export const RuiInfosPage = defineCustomElement(
                     }
 
                     const explicitActive = tabsHeader.querySelector(
-                        "li > a.is-responsive-active",
+                        "li > a.is-rui-active",
                     );
                     if (explicitActive instanceof HTMLAnchorElement) {
                         return explicitActive;
@@ -119,10 +119,7 @@ export const RuiInfosPage = defineCustomElement(
                     const selected = resolveActiveAnchor();
 
                     if (!(selected instanceof HTMLElement)) {
-                        tabsHeader.style.setProperty(
-                            "--responsive-pill-width",
-                            "0px",
-                        );
+                        tabsHeader.style.setProperty("--rui-pill-width", "0px");
                         return;
                     }
 
@@ -135,11 +132,11 @@ export const RuiInfosPage = defineCustomElement(
                         headerRect.left +
                         tabsHeader.scrollLeft;
                     tabsHeader.style.setProperty(
-                        "--responsive-pill-left",
+                        "--rui-pill-left",
                         `${left}px`,
                     );
                     tabsHeader.style.setProperty(
-                        "--responsive-pill-width",
+                        "--rui-pill-width",
                         `${selected.offsetWidth}px`,
                     );
                 };
@@ -320,9 +317,7 @@ export const RuiInfosPage = defineCustomElement(
                         return;
                     }
 
-                    aggregateAnchor.classList.add(
-                        "responsive-infos-aggregate-link",
-                    );
+                    aggregateAnchor.classList.add("rui-infos__aggregate-link");
                     aggregateAnchor.setAttribute(
                         "aria-label",
                         aggregateAnchor.getAttribute("title") ||
@@ -338,7 +333,7 @@ export const RuiInfosPage = defineCustomElement(
                     }
 
                     const row = heading.querySelector(
-                        ":scope > .responsive-infos-link-row",
+                        ":scope > .rui-infos__link-row",
                     );
                     if (
                         row instanceof HTMLElement &&
@@ -356,7 +351,7 @@ export const RuiInfosPage = defineCustomElement(
 
                 if (
                     anchor.parentElement?.classList.contains(
-                        "responsive-infos-link-row",
+                        "rui-infos__link-row",
                     )
                 ) {
                     return;
@@ -373,18 +368,18 @@ export const RuiInfosPage = defineCustomElement(
 
                 anchor.setAttribute("target", "_blank");
                 anchor.setAttribute("rel", "noopener noreferrer");
-                anchor.classList.add("responsive-infos-raw-link");
+                anchor.classList.add("rui-infos__raw-link");
 
                 const rawText = anchor.textContent ?? "";
                 anchor.textContent = "";
 
                 const text = document.createElement("span");
-                text.className = "responsive-link-text";
+                text.className = "rui-link-row__text";
                 text.textContent = rawText.trim();
 
                 const linkIcon = document.createElement("rui-material-icon");
                 linkIcon.setAttribute("name", "open_in_new");
-                linkIcon.setAttribute("class", "responsive-link-icon");
+                linkIcon.setAttribute("class", "rui-link-row__icon");
 
                 anchor.append(text, linkIcon);
 
@@ -393,7 +388,7 @@ export const RuiInfosPage = defineCustomElement(
                 copyButton.setAttribute("copy-label", `Copy ${label}`);
 
                 const row = document.createElement("span");
-                row.className = "responsive-infos-link-row";
+                row.className = "rui-infos__link-row";
                 const placeholder = document.createElement("span");
                 anchor.replaceWith(placeholder);
                 row.append(anchor, copyButton);

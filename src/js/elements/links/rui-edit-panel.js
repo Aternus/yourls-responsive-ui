@@ -44,7 +44,7 @@ export const RuiEditPanel = defineCustomElement(
         },
         template: `
             <rui-drawer title="Edit Link">
-                <section class="responsive-drawer-content">
+                <section class="rui-drawer__content">
                     <rui-drawer-intro
                         icon="edit"
                         title="Edit the link details below."
@@ -52,30 +52,30 @@ export const RuiEditPanel = defineCustomElement(
                         variant="brand"
                     />
                     <section
-                        class="responsive-drawer-editor"
+                        class="rui-drawer__editor"
                         :data-id="drawerId"
                     >
                         <rui-text-input-field
-                            class="responsive-drawer-field"
+                            class="rui-drawer__field"
                             :label-text="'Short URL'"
-                            :control-id="'responsive-drawer-keyword-' + drawerId"
+                            :control-id="'rui-drawer-keyword-' + drawerId"
                             :model-value="shortUrl"
                             :auto-focus="true"
                             :aria-label="'Short URL'"
                             @update:model-value="shortUrl = $event"
                         />
                         <rui-text-input-field
-                            class="responsive-drawer-field"
+                            class="rui-drawer__field"
                             :label-text="'Destination URL'"
-                            :control-id="'responsive-drawer-url-' + drawerId"
+                            :control-id="'rui-drawer-url-' + drawerId"
                             :model-value="destinationUrl"
                             :aria-label="'Destination URL'"
                             @update:model-value="destinationUrl = $event"
                         />
                         <rui-text-input-field
-                            class="responsive-drawer-field"
+                            class="rui-drawer__field"
                             :label-text="'Title'"
-                            :control-id="'responsive-drawer-title-input-' + drawerId"
+                            :control-id="'rui-drawer-title-input-' + drawerId"
                             :model-value="title"
                             :aria-label="'Title'"
                             @update:model-value="title = $event"
@@ -84,14 +84,14 @@ export const RuiEditPanel = defineCustomElement(
                 </section>
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-primary"
+                    class="rui-drawer__button rui-drawer__button--primary"
                     :icon-name="'save'"
                     :label="'Save'"
                     @press="saveEdit"
                 />
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-tonal"
+                    class="rui-drawer__button rui-drawer__button--tonal"
                     :icon-name="'close'"
                     :label="'Cancel'"
                     @press="closeDrawer"

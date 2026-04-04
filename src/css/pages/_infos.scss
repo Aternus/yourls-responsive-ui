@@ -52,16 +52,16 @@
                 flex: 0 0 auto;
             }
 
-            .responsive-infos-link-row {
+            .rui-infos__link-row {
                 display: flex;
-                --responsive-copy-button-size: var(--button-height-section);
+                --rui-copy-button-size: var(--button-height-section);
                 align-items: stretch;
                 gap: 0.35rem;
                 width: 100%;
                 min-width: 0;
             }
 
-            .responsive-infos-raw-link {
+            .rui-infos__raw-link {
                 display: inline-flex;
                 align-items: center;
                 justify-content: space-between;
@@ -81,7 +81,7 @@
                 overflow: hidden;
                 flex: 1 1 auto;
 
-                .responsive-link-text {
+                .rui-link-row__text {
                     display: block;
                     flex: 1 1 auto;
                     min-width: 0;
@@ -94,7 +94,7 @@
                     -webkit-overflow-scrolling: touch;
                 }
 
-                .responsive-link-icon {
+                .rui-link-row__icon {
                     flex: 0 0 auto;
                     font-size: 0.92rem;
                     line-height: 1;
@@ -110,9 +110,9 @@
                 }
             }
 
-            .responsive-infos-copy-button {
-                width: var(--responsive-copy-button-size);
-                min-width: var(--responsive-copy-button-size);
+            .rui-infos__copy-button {
+                width: var(--rui-copy-button-size);
+                min-width: var(--rui-copy-button-size);
                 min-height: var(--button-height-section);
                 margin: 0;
                 padding: 0;
@@ -150,9 +150,9 @@
                 }
             }
 
-            .responsive-infos-aggregate-link {
-                width: var(--responsive-copy-button-size);
-                min-width: var(--responsive-copy-button-size);
+            .rui-infos__aggregate-link {
+                width: var(--rui-copy-button-size);
+                min-width: var(--rui-copy-button-size);
                 min-height: var(--button-height-section);
                 margin: 0;
                 padding: 0;
@@ -196,9 +196,9 @@
     }
 
     #tabs ul#headers {
-        --responsive-pill-inset: 0.22rem;
-        --responsive-pill-left: var(--responsive-pill-inset);
-        --responsive-pill-width: 0;
+        --rui-pill-inset: 0.22rem;
+        --rui-pill-left: var(--rui-pill-inset);
+        --rui-pill-width: 0;
         position: relative;
         display: flex !important;
         flex-wrap: nowrap;
@@ -206,7 +206,7 @@
         width: 100%;
         gap: 0.18rem;
         margin: 0 0 1rem;
-        padding: var(--responsive-pill-inset);
+        padding: var(--rui-pill-inset);
         border: 1px solid var(--brand-200);
         border-radius: 999px;
         background: var(--brand-100);
@@ -223,10 +223,10 @@
         &::before {
             content: "";
             position: absolute;
-            top: var(--responsive-pill-inset);
-            bottom: var(--responsive-pill-inset);
-            left: var(--responsive-pill-left);
-            width: var(--responsive-pill-width);
+            top: var(--rui-pill-inset);
+            bottom: var(--rui-pill-inset);
+            left: var(--rui-pill-left);
+            width: var(--rui-pill-width);
             border-radius: 999px;
             background: var(--brand-500);
             transition:
@@ -256,7 +256,7 @@
             text-decoration: none;
             transition: color $motion-duration-short4 $motion-easing-standard;
 
-            .responsive-infos-tab-icon {
+            .rui-infos__tab-icon {
                 font-size: 1rem;
                 line-height: 1;
                 color: var(--brand-600);
@@ -283,10 +283,10 @@
             background: transparent;
         }
 
-        li a.is-responsive-active {
+        li a.is-rui-active {
             color: var(--brand-050);
 
-            .responsive-infos-tab-icon {
+            .rui-infos__tab-icon {
                 color: currentcolor;
             }
         }

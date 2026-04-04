@@ -2,7 +2,8 @@
 title: 'Hook-first BEM markup and Vue-native refactor for YOURLS Responsive UI'
 type: 'refactor'
 created: '2026-04-04T23:58:00+03:00'
-status: 'ready-for-dev'
+status: 'done'
+baseline_commit: 'b7fc991'
 context:
   - 'AGENTS.md'
 ---
@@ -69,17 +70,17 @@ context:
 ## Tasks & Acceptance
 
 **Execution:**
-- [ ] `src/filters.php` -- define BEM-oriented markup contract using `table_add_row_action_array`, `table_add_row_cell_array`, `action_links`, and related table hooks; replace plugin-owned inline `onclick` behavior with `data-rui-action` attributes -- makes server HTML deterministic for JS/CSS and enables delegated native handlers.
-- [ ] `src/actions.php` -- inject explicit `RESPONSIVEUI` runtime config (`ajaxUrl`, context, flags) and keep CE roots context-aware -- removes hidden global coupling.
-- [ ] `src/js/lib/api.js` + `src/js/lib/drawer-manager.js` -- replace `jq.getJSON`/global patch calls with `fetch` helper and native request lifecycle; define helper contract (`same-origin` credentials, query serialization, timeout/abort, JSON parse fallback for nonce/error text responses) -- removes jQuery AJAX debt and ambiguous error handling.
-- [ ] `src/js/lib/drawer-manager.js` + `src/js/lib/row-data.js` -- swap global function overrides for delegated click handling on BEM/data-action selectors; preserve nonce lifecycle (`edit-link_*` for display, `edit-save_*` for save) -- removes monkey-patched `window.*` entrypoints and CSRF drift.
-- [ ] `src/js/lib/feedback.js` + `src/js/lib/shared.js` -- replace stripped core helpers (`feedback`, `add_loading`, `end_loading`, `end_disable`) with plugin-native equivalents -- avoids silent UX regressions.
-- [ ] `src/js/lib/counters.js` + `src/js/lib/drawer-manager.js` -- replace stripped counter helpers (`decrement_counter`, `decrease_total_clicks`) with deterministic DOM-based recompute/update logic -- keeps tracking summary consistent after add/delete.
-- [ ] `src/js/lib/search-query.js` + `src/js/elements/links/rui-search.js` -- preserve legacy URL-search compatibility by splitting protocol/slashes/rest before submit and restoring server-expected fields -- avoids query parsing regressions.
-- [ ] `src/js/elements/links/rui-search.js` -- delete jQuery datepicker disable logic and keep native date handling only -- makes CE behavior framework-native.
-- [ ] `src/js/elements/links/rui-new-url.js` + `src/filters.php` (`shunt_html_addnew`) -- make add-new flow fully plugin-owned (markup + behavior), and remove reliance on legacy inline `onclick="add_link()"`/core `add_link` function -- enforces decoupled ownership for creation flow.
-- [ ] `src/sanitizer.php` -- keep sanitizer as a required isolation layer that strips original YOURLS assets/scripts so core UI code never competes with plugin code -- preserves deterministic frontend ownership.
-- [ ] `src/css/components/_table.scss`, `src/css/components/_new_url.scss`, `src/css/components/_dialog.scss`, `src/css/components/_nav_menu.scss`, `src/css/pages/_index.scss` -- migrate to BEM selectors directly (breaking change, no compatibility alias layer) -- completes CSS contract alignment.
+- [x] `src/filters.php` -- define BEM-oriented markup contract using `table_add_row_action_array`, `table_add_row_cell_array`, `action_links`, and related table hooks; replace plugin-owned inline `onclick` behavior with `data-rui-action` attributes -- makes server HTML deterministic for JS/CSS and enables delegated native handlers.
+- [x] `src/actions.php` -- inject explicit `RESPONSIVEUI` runtime config (`ajaxUrl`, context, flags) and keep CE roots context-aware -- removes hidden global coupling.
+- [x] `src/js/lib/api.js` + `src/js/lib/drawer-manager.js` -- replace `jq.getJSON`/global patch calls with `fetch` helper and native request lifecycle; define helper contract (`same-origin` credentials, query serialization, timeout/abort, JSON parse fallback for nonce/error text responses) -- removes jQuery AJAX debt and ambiguous error handling.
+- [x] `src/js/lib/drawer-manager.js` + `src/js/lib/row-data.js` -- swap global function overrides for delegated click handling on BEM/data-action selectors; preserve nonce lifecycle (`edit-link_*` for display, `edit-save_*` for save) -- removes monkey-patched `window.*` entrypoints and CSRF drift.
+- [x] `src/js/lib/feedback.js` + `src/js/lib/shared.js` -- replace stripped core helpers (`feedback`, `add_loading`, `end_loading`, `end_disable`) with plugin-native equivalents -- avoids silent UX regressions.
+- [x] `src/js/lib/counters.js` + `src/js/lib/drawer-manager.js` -- replace stripped counter helpers (`decrement_counter`, `decrease_total_clicks`) with deterministic DOM-based recompute/update logic -- keeps tracking summary consistent after add/delete.
+- [x] `src/js/lib/search-query.js` + `src/js/elements/links/rui-search.js` -- preserve legacy URL-search compatibility by splitting protocol/slashes/rest before submit and restoring server-expected fields -- avoids query parsing regressions.
+- [x] `src/js/elements/links/rui-search.js` -- delete jQuery datepicker disable logic and keep native date handling only -- makes CE behavior framework-native.
+- [x] `src/js/elements/links/rui-new-url.js` + `src/filters.php` (`shunt_html_addnew`) -- make add-new flow fully plugin-owned (markup + behavior), and remove reliance on legacy inline `onclick="add_link()"`/core `add_link` function -- enforces decoupled ownership for creation flow.
+- [x] `src/sanitizer.php` -- keep sanitizer as a required isolation layer that strips original YOURLS assets/scripts so core UI code never competes with plugin code -- preserves deterministic frontend ownership.
+- [x] `src/css/components/_table.scss`, `src/css/components/_new_url.scss`, `src/css/components/_dialog.scss`, `src/css/components/_nav_menu.scss`, `src/css/pages/_index.scss` -- migrate to BEM selectors directly (breaking change, no compatibility alias layer) -- completes CSS contract alignment.
 
 **Acceptance Criteria:**
 - Given index/plugins/infos pages, when rendered, then plugin-owned interactive markup uses BEM selectors consistently.
@@ -162,3 +163,71 @@ context:
 - `/admin/index.php`: verify invalid nonce behavior surfaces a controlled failure message without JS exceptions.
 - `/admin/index.php`: verify counter and `#nourl_found` behavior after repeated add/delete cycles.
 - `/admin/index.php`: verify URL search with full `https://...` value still returns expected filtered rows.
+
+## Suggested Review Order
+
+**Hook-level markup contract (server-side)**
+
+- Shunt filter makes add-new form fully plugin-owned with nonce and no inline handlers
+  [`filters.php:327`](../../src/filters.php#L327)
+
+- Data-action attributes injected into action links via `action_links` filter
+  [`filters.php:119`](../../src/filters.php#L119)
+
+- Row action array empties `onclick` to prevent inline handler output
+  [`filters.php:73`](../../src/filters.php#L73)
+
+- Runtime config (`ajaxUrl`, context, flags) injected via page context detection
+  [`actions.php:11`](../../src/actions.php#L11)
+
+**Fetch/event contract (jQuery removal)**
+
+- Native `fetch` helper with timeout, abort, and JSON/text fallback — never rejects
+  [`api.js:14`](../../src/js/lib/api.js#L14)
+
+- Delegated click handler on table replaces all `window.*` global overrides
+  [`drawer-manager.js:387`](../../src/js/lib/drawer-manager.js#L387)
+
+- Plugin-owned add-URL submission replaces core `add_link`
+  [`rui-new-url.js:60`](../../src/js/elements/links/rui-new-url.js#L60)
+
+- Search protocol stripping wired into filter submit flow
+  [`rui-search.js:376`](../../src/js/elements/links/rui-search.js#L376)
+
+**Plugin-owned helpers (stripped core replacements)**
+
+- Feedback, loading, and disable helpers replace stripped YOURLS globals
+  [`feedback.js:24`](../../src/js/lib/feedback.js#L24)
+
+- DOM-based counter recompute replaces `decrement_counter`/`decrease_total_clicks`
+  [`counters.js:12`](../../src/js/lib/counters.js#L12)
+
+- Protocol split helper preserves legacy URL-search compatibility
+  [`search-query.js:14`](../../src/js/lib/search-query.js#L14)
+
+**Row data and action button selectors (BEM alignment)**
+
+- Row data extraction updated to BEM selectors
+  [`row-data.js:14`](../../src/js/lib/row-data.js#L14)
+
+- Action button visual helpers use BEM icon/label selectors
+  [`row-action-buttons.js:21`](../../src/js/lib/row-action-buttons.js#L21)
+
+**Delete flow**
+
+- Delete confirm with CSS fade-out, counter recompute, and strict equality check
+  [`drawer-manager.js:274`](../../src/js/lib/drawer-manager.js#L274)
+
+**CSS BEM migration**
+
+- Drawer CSS vars and selectors renamed from `responsive-*` to `rui-*`
+  [`_dialog.scss:96`](../../src/css/components/_dialog.scss#L96)
+
+- Table/search layout selectors migrated to BEM
+  [`_table.scss:1`](../../src/css/components/_table.scss#L1)
+
+- Nav menu controls renamed to BEM
+  [`_nav_menu.scss:1`](../../src/css/components/_nav_menu.scss#L1)
+
+- Global utility selectors (`rui-sr-only`, `rui-url-value`, scheme attr) updated
+  [`_style.scss:1`](../../src/css/_style.scss#L1)

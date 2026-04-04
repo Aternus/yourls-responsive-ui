@@ -1,6 +1,13 @@
+///////////////////////////////////////////////////////////
+// Drawer Manager
+///////////////////////////////////////////////////////////
+
 import { replaceRowFromHtml } from "./shared.js";
 import { getRowData } from "./row-data.js";
 import { setModeButtons } from "./row-action-buttons.js";
+import { apiRequest } from "./api.js";
+import { showFeedback, addLoading, endLoading } from "./feedback.js";
+import { recomputeTotalLinks, recomputeTotalClicks } from "./counters.js";
 
 let initialized = false;
 
@@ -15,9 +22,7 @@ export function initDrawerManager() {
     }
 
     const table = document.querySelector("#main_table");
-    const jq = window.jQuery;
-
-    if (!(table instanceof HTMLElement) || typeof jq !== "function") {
+    if (!(table instanceof HTMLElement)) {
         return;
     }
 
@@ -77,14 +82,14 @@ export function initDrawerManager() {
     };
 
     const ensureDrawer = () => {
-        let dialog = document.querySelector("#responsive-row-drawer");
+        let dialog = document.querySelector("#rui-row-drawer");
         if (dialog instanceof HTMLDialogElement) {
             return dialog;
         }
 
         dialog = document.createElement("dialog");
-        dialog.id = "responsive-row-drawer";
-        dialog.className = "responsive-drawer responsive-row-drawer";
+        dialog.id = "rui-row-drawer";
+        dialog.className = "rui-drawer rui-drawer--row";
         document.body.append(dialog);
         return dialog;
     };
@@ -114,9 +119,7 @@ export function initDrawerManager() {
     const clearModeState = () => {
         if (state.id) {
             setModeButtons("", state.id);
-            if (typeof window.end_disable === "function") {
-                window.end_disable(`#actions-${state.id} .button`);
-            }
+            endLoading(`#actions-${state.id} .button`);
         }
 
         state.mode = "";
@@ -198,91 +201,72 @@ export function initDrawerManager() {
             return;
         }
 
-        if (
-            saveButton instanceof HTMLButtonElement &&
-            typeof window.add_loading === "function"
-        ) {
-            window.add_loading(saveButton);
+        if (saveButton instanceof HTMLButtonElement) {
+            addLoading(saveButton);
         }
 
-        jq.getJSON(
-            window.ajaxurl,
-            {
-                action: "edit_save",
-                url: payload.destinationUrl,
-                id: payload.id,
-                keyword: payload.keyword,
-                newkeyword: normalizeKeywordFromInput(
-                    payload.shortUrl,
-                    payload.keyword,
-                ),
-                title: payload.title,
-                nonce: payload.nonce,
-            },
-            (response) => {
-                if (response?.status === "success") {
-                    const rowReplaced = replaceRowFromHtml(
-                        payload.id,
-                        response?.row_html,
-                    );
+        apiRequest({
+            action: "edit_save",
+            url: payload.destinationUrl,
+            id: payload.id,
+            keyword: payload.keyword,
+            newkeyword: normalizeKeywordFromInput(
+                payload.shortUrl,
+                payload.keyword,
+            ),
+            title: payload.title,
+            nonce: payload.nonce,
+        }).then((response) => {
+            if (response?.status === "success") {
+                const rowReplaced = replaceRowFromHtml(
+                    payload.id,
+                    response?.row_html,
+                );
 
-                    closeDrawer();
-                    jq("#main_table tbody").trigger("update");
+                closeDrawer();
 
-                    if (!rowReplaced) {
-                        window.location.reload();
-                        return;
-                    }
+                if (!rowReplaced) {
+                    window.location.reload();
+                    return;
                 }
+            }
 
-                if (typeof window.feedback === "function") {
-                    window.feedback(response?.message, response?.status);
-                }
+            if (response?.message) {
+                showFeedback(response.message, response.status);
+            }
 
-                if (
-                    saveButton instanceof HTMLButtonElement &&
-                    typeof window.end_loading === "function"
-                ) {
-                    window.end_loading(saveButton);
-                }
-            },
-        );
+            if (saveButton instanceof HTMLButtonElement) {
+                endLoading(saveButton);
+            }
+        });
     };
 
     // Edit Nonce Fetch //
 
     const fetchEditSaveNonce = (data, callback) => {
-        if (typeof window.add_loading === "function") {
-            window.add_loading(`#actions-${data.id} .button`);
-        }
+        addLoading(`#actions-${data.id} .button`);
 
-        jq.getJSON(
-            window.ajaxurl,
-            {
-                action: "edit_display",
-                keyword: data.keyword,
-                nonce: data.nonce,
-                id: data.id,
-            },
-            (response) => {
-                if (typeof window.end_loading === "function") {
-                    window.end_loading(`#actions-${data.id} .button`);
-                }
+        apiRequest({
+            action: "edit_display",
+            keyword: data.keyword,
+            nonce: data.nonce,
+            id: data.id,
+        }).then((response) => {
+            endLoading(`#actions-${data.id} .button`);
 
-                if (!response?.html) {
-                    return;
-                }
+            if (!response?.html) {
+                return;
+            }
 
-                const temp = document.createElement("div");
-                temp.innerHTML = response.html;
-                const nonceInput = temp.querySelector(`#nonce_${data.id}`);
-                if (nonceInput instanceof HTMLInputElement) {
-                    data.nonce = nonceInput.value;
-                }
+            const temp = document.createElement("div");
+            temp.innerHTML = response.html;
+            const nonceInput = temp.querySelector(`#nonce_${data.id}`);
+            if (nonceInput instanceof HTMLInputElement) {
+                data.nonce = nonceInput.value;
+            }
 
-                callback(data);
-            },
-        );
+            callback(data);
+        });
     };
 
     // Delete Handlers //
@@ -313,46 +297,32 @@ export function initDrawerManager() {
                   })()
                 : "";
 
-        jq.getJSON(
-            window.ajaxurl,
-            {
-                action: "delete",
-                keyword,
-                nonce,
-                id,
-            },
-            (data) => {
-                if (data.success == 1) {
-                    jq(`#id-${id}`).fadeOut(function () {
-                        jq(this).remove();
-                        if (jq("#main_table tbody tr").length === 1) {
-                            jq("#nourl_found").css("display", "");
-                        }
-
-                        if (typeof window.zebra_table === "function") {
-                            window.zebra_table();
-                        }
-                    });
-
-                    if (typeof window.decrement_counter === "function") {
-                        window.decrement_counter();
-                    }
-
-                    if (typeof window.decrease_total_clicks === "function") {
-                        window.decrease_total_clicks(id);
-                    }
-                } else {
-                    if (typeof window.feedback === "function") {
-                        window.feedback(
-                            "something wrong happened while deleting!",
-                            "fail",
-                        );
-                    }
+        apiRequest({
+            action: "delete",
+            keyword,
+            nonce,
+            id,
+        }).then((data) => {
+            if (data.success === 1 || data.success === "1") {
+                const row = document.querySelector(`#id-${id}`);
+                if (row instanceof HTMLElement) {
+                    row.style.transition = "opacity 0.3s ease";
+                    row.style.opacity = "0";
+                    setTimeout(() => {
+                        row.remove();
+                        recomputeTotalLinks();
+                        recomputeTotalClicks();
+                    }, 300);
                 }
+            } else {
+                showFeedback(
+                    "something wrong happened while deleting!",
+                    "fail",
+                );
+            }
 
-                closeDrawer();
-            },
-        );
+            closeDrawer();
+        });
     };
 
     const handleDeleteCancel = () => {
@@ -406,52 +376,52 @@ export function initDrawerManager() {
         return showDrawer(mode, id, data);
     };
 
-    // YOURLS Global Overrides //
+    // Delegated Click Handler //
 
-    window.edit_link_display = function (id) {
-        return openDrawer("edit", id);
+    const extractIdFromElement = (el) => {
+        const id = el.id || "";
+        const match = id.match(/-(\d+)$/);
+        return match ? match[1] : "";
     };
 
-    window.edit_link_hide = function (id) {
-        if (state.mode === "edit" && state.id === String(id)) {
-            closeDrawer();
-            return true;
+    table.addEventListener("click", (event) => {
+        const target = event.target;
+        const actionEl = target.closest("[data-rui-action]");
+        if (!actionEl) {
+            return;
         }
 
-        return true;
-    };
-
-    const originalEditLinkSave = window.edit_link_save;
-    window.edit_link_save = function (id) {
-        if (state.mode !== "edit" || state.id !== String(id)) {
-            return typeof originalEditLinkSave === "function"
-                ? originalEditLinkSave(id)
-                : false;
+        const action = actionEl.dataset.ruiAction;
+        const id = extractIdFromElement(actionEl);
+        if (!id) {
+            return;
         }
 
-        const saveButton = state.dialog.querySelector(
-            ".responsive-drawer-actions .responsive-drawer-button.is-primary",
-        );
-        if (saveButton instanceof HTMLButtonElement) {
-            saveButton.click();
-            return true;
+        event.preventDefault();
+
+        if (action === "stats") {
+            const href = actionEl.getAttribute("href");
+            if (href) {
+                window.open(href, "_blank", "noopener,noreferrer");
+            }
+            return;
         }
 
-        return false;
-    };
-
-    window.toggle_share = function (id) {
-        return openDrawer("share", id);
-    };
-
-    window.remove_link = function (id) {
-        if (jq(`#delete-button-${id}`).hasClass("disabled")) {
-            return false;
+        if (action === "edit") {
+            openDrawer("edit", id);
+            return;
         }
 
-        return openDrawer("delete", id);
-    };
+        if (action === "share") {
+            openDrawer("share", id);
+            return;
+        }
 
-    window.remove_link_confirmed = handleDeleteConfirm;
-    window.remove_link_canceled = handleDeleteCancel;
+        if (action === "delete") {
+            if (actionEl.classList.contains("disabled")) {
+                return;
+            }
+            openDrawer("delete", id);
+        }
+    });
 }

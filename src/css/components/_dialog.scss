@@ -7,7 +7,7 @@
 // Dialog
 ///////////////////////////////////////////////////////////
 
-dialog:not(.responsive-drawer) {
+dialog:not(.rui-drawer) {
     @include md-elevation(5);
 
     border: 0;
@@ -93,11 +93,9 @@ dialog:not(.responsive-drawer) {
 // Shared Drawer Base
 ///////////////////////////////////////////////////////////
 
-.responsive-drawer {
-    --responsive-drawer-top-gap: max(1rem, env(safe-area-inset-top));
-    --responsive-drawer-max-height: calc(
-        100dvh - var(--responsive-drawer-top-gap)
-    );
+.rui-drawer {
+    --rui-drawer-top-gap: max(1rem, env(safe-area-inset-top));
+    --rui-drawer-max-height: calc(100dvh - var(--rui-drawer-top-gap));
 
     position: fixed;
     inset: auto 0 0;
@@ -106,8 +104,8 @@ dialog:not(.responsive-drawer) {
 
     width: min(44rem, 100vw);
     max-width: 100vw;
-    min-height: min(20rem, var(--responsive-drawer-max-height));
-    max-height: var(--responsive-drawer-max-height);
+    min-height: min(20rem, var(--rui-drawer-max-height));
+    max-height: var(--rui-drawer-max-height);
     padding: 0;
     overflow: hidden;
     border: 0;
@@ -120,13 +118,13 @@ dialog:not(.responsive-drawer) {
         grid-template-rows: auto minmax(0, 1fr) auto;
     }
 
-    .responsive-drawer-shell {
+    .rui-drawer__shell {
         @include md-elevation(5);
 
         display: grid;
         grid-template-rows: auto minmax(0, 1fr) auto;
-        height: min(100%, var(--responsive-drawer-max-height));
-        max-height: var(--responsive-drawer-max-height);
+        height: min(100%, var(--rui-drawer-max-height));
+        max-height: var(--rui-drawer-max-height);
         min-height: 0;
         overflow: hidden;
         border: 1px solid var(--brand-300);
@@ -138,7 +136,7 @@ dialog:not(.responsive-drawer) {
 
     // Title Bar //
 
-    .responsive-drawer-titlebar {
+    .rui-drawer__titlebar {
         margin: 0;
         padding: 0.8rem 1rem;
         font-size: var(--type-size-title-sm);
@@ -151,7 +149,7 @@ dialog:not(.responsive-drawer) {
         border-start-end-radius: 0;
     }
 
-    .responsive-drawer-heading {
+    .rui-drawer__heading {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         justify-items: center;
@@ -159,13 +157,13 @@ dialog:not(.responsive-drawer) {
         gap: 0.25rem;
     }
 
-    .responsive-drawer-heading-text {
+    .rui-drawer__heading-text {
         display: grid;
         gap: 0.1rem;
         justify-items: center;
     }
 
-    .responsive-drawer-heading-title {
+    .rui-drawer__heading-title {
         font-size: var(--type-size-title-sm);
         font-weight: 700;
         line-height: 1.15;
@@ -174,7 +172,7 @@ dialog:not(.responsive-drawer) {
 
     // Content Area //
 
-    .responsive-drawer-body {
+    .rui-drawer__body {
         min-height: 0;
         margin: 0;
         padding: 1rem;
@@ -187,14 +185,14 @@ dialog:not(.responsive-drawer) {
         background: var(--brand-050);
     }
 
-    .responsive-drawer-content {
+    .rui-drawer__content {
         display: grid;
         gap: 0.65rem;
     }
 
     // Intro Callout //
 
-    .responsive-drawer-intro {
+    .rui-drawer__intro {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
         gap: 0.45rem 0.55rem;
@@ -214,7 +212,7 @@ dialog:not(.responsive-drawer) {
         }
     }
 
-    .responsive-drawer-intro-icon {
+    .rui-drawer__intro-icon {
         grid-row: 1 / span 2;
         font-size: 1rem;
         line-height: 1;
@@ -229,8 +227,8 @@ dialog:not(.responsive-drawer) {
         }
     }
 
-    .responsive-drawer-intro-title,
-    .responsive-drawer-intro-meta {
+    .rui-drawer__intro-title,
+    .rui-drawer__intro-meta {
         margin: 0;
         font-size: var(--type-size-label);
         line-height: 1.35;
@@ -238,7 +236,7 @@ dialog:not(.responsive-drawer) {
         letter-spacing: normal;
     }
 
-    .responsive-drawer-intro-title {
+    .rui-drawer__intro-title {
         font-weight: 600;
 
         .is-brand > & {
@@ -250,26 +248,26 @@ dialog:not(.responsive-drawer) {
         }
     }
 
-    .responsive-drawer-intro-meta {
+    .rui-drawer__intro-meta {
         font-weight: 500;
         color: var(--brand-700);
     }
 
     // Fields & Labels //
 
-    .responsive-drawer-editor,
-    .responsive-drawer-share {
+    .rui-drawer__editor,
+    .rui-drawer__share {
         display: grid;
         gap: 0.65rem;
         min-width: 0;
     }
 
-    .responsive-drawer-field {
+    .rui-drawer__field {
         min-width: 0;
     }
 
-    .responsive-drawer-label,
-    .responsive-drawer-field .rui-field-label {
+    .rui-drawer__label,
+    .rui-drawer__field .rui-field-label {
         display: block;
         margin: 0 0 0.25rem;
         font-size: 0.66rem;
@@ -279,7 +277,7 @@ dialog:not(.responsive-drawer) {
         color: var(--brand-500);
     }
 
-    .responsive-drawer-field .text {
+    .rui-drawer__field .text {
         width: 100%;
         min-width: 0;
         box-sizing: border-box;
@@ -300,7 +298,7 @@ dialog:not(.responsive-drawer) {
             background: var(--neutral-050);
         }
 
-        &.responsive-url-value {
+        &.rui-url-value {
             background: var(--brand-100);
             border-color: var(--brand-200);
 
@@ -317,7 +315,7 @@ dialog:not(.responsive-drawer) {
         }
     }
 
-    .responsive-drawer-field textarea.text {
+    .rui-drawer__field textarea.text {
         min-height: 5.5rem;
         resize: vertical;
         line-height: 1.4;
@@ -325,7 +323,7 @@ dialog:not(.responsive-drawer) {
 
     // Read-only Value Display //
 
-    .responsive-drawer-value {
+    .rui-drawer__value {
         display: block;
         width: 100%;
         min-width: 0;
@@ -345,14 +343,14 @@ dialog:not(.responsive-drawer) {
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
 
-        &.is-mono {
+        &.rui-drawer__value--mono {
             font-family: var(--font-family-mono);
         }
     }
 
     // Delete List //
 
-    .responsive-drawer-delete-list {
+    .rui-drawer__delete-list {
         list-style: none;
         padding: 0;
         margin: 0;
@@ -363,13 +361,13 @@ dialog:not(.responsive-drawer) {
         min-width: 0;
     }
 
-    .responsive-drawer-delete-item {
+    .rui-drawer__delete-item {
         margin: 0;
         padding: 0;
         min-width: 0;
     }
 
-    .responsive-drawer-delete-section {
+    .rui-drawer__delete-section {
         display: block;
         width: 100%;
         min-width: 0;
@@ -378,7 +376,7 @@ dialog:not(.responsive-drawer) {
 
     // Action Bar //
 
-    .responsive-drawer-footer {
+    .rui-drawer__footer {
         margin: 0;
         padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
         display: flex;
@@ -395,7 +393,7 @@ dialog:not(.responsive-drawer) {
 
     // Drawer Buttons //
 
-    .responsive-drawer-button {
+    .rui-drawer__button {
         width: var(--button-height-icon);
         height: var(--button-height-icon);
         min-height: var(--button-height-icon);
@@ -414,13 +412,13 @@ dialog:not(.responsive-drawer) {
             border-color $motion-duration-short4 $motion-easing-standard;
 
         .material-icons,
-        .responsive-brand-icon {
+        .rui-brand-icon {
             font-size: 1rem;
             line-height: 1;
             pointer-events: none;
         }
 
-        &.is-primary {
+        &.rui-drawer__button--primary {
             background: var(--brand-600);
             color: var(--brand-050);
             border-color: var(--brand-600);
@@ -433,7 +431,7 @@ dialog:not(.responsive-drawer) {
             }
         }
 
-        &.is-destructive {
+        &.rui-drawer__button--destructive {
             background: var(--error-500);
             color: var(--error-050);
             border-color: var(--error-500);
@@ -446,7 +444,7 @@ dialog:not(.responsive-drawer) {
             }
         }
 
-        &.is-tonal {
+        &.rui-drawer__button--tonal {
             background: var(--brand-050);
             color: var(--brand-700);
             border-color: var(--brand-300);
@@ -469,36 +467,36 @@ dialog:not(.responsive-drawer) {
     // Responsive Breakpoints //
 
     @media (max-width: $breakpoint-md - 1px) {
-        --responsive-drawer-top-gap: max(1rem, env(safe-area-inset-top));
+        --rui-drawer-top-gap: max(1rem, env(safe-area-inset-top));
 
         width: 100vw;
         max-width: 100vw;
-        min-height: min(22rem, var(--responsive-drawer-max-height));
-        max-height: var(--responsive-drawer-max-height);
+        min-height: min(22rem, var(--rui-drawer-max-height));
+        max-height: var(--rui-drawer-max-height);
 
-        .responsive-drawer-shell {
+        .rui-drawer__shell {
             border-radius: $shape-corner-medium $shape-corner-medium 0 0;
-            height: min(100%, var(--responsive-drawer-max-height));
-            max-height: var(--responsive-drawer-max-height);
+            height: min(100%, var(--rui-drawer-max-height));
+            max-height: var(--rui-drawer-max-height);
         }
 
-        .responsive-drawer-body {
+        .rui-drawer__body {
             padding: 0.9rem;
         }
 
-        .responsive-drawer-footer {
+        .rui-drawer__footer {
             padding: 0.75rem 0.9rem calc(0.75rem + env(safe-area-inset-bottom));
         }
     }
 
     // Transition Motion //
 
-    .responsive-drawer-surface-enter-active,
-    .responsive-drawer-surface-leave-active {
+    .rui-drawer-surface-enter-active,
+    .rui-drawer-surface-leave-active {
         will-change: transform, opacity;
     }
 
-    .responsive-drawer-surface-enter-active {
+    .rui-drawer-surface-enter-active {
         transition:
             transform $motion-duration-medium2
                 $motion-easing-emphasized-decelerate,
@@ -506,7 +504,7 @@ dialog:not(.responsive-drawer) {
                 $motion-easing-emphasized-decelerate;
     }
 
-    .responsive-drawer-surface-leave-active {
+    .rui-drawer-surface-leave-active {
         pointer-events: none;
         transition:
             transform $motion-duration-short4
@@ -514,14 +512,14 @@ dialog:not(.responsive-drawer) {
             opacity $motion-duration-short4 $motion-easing-emphasized-accelerate;
     }
 
-    .responsive-drawer-surface-enter-from,
-    .responsive-drawer-surface-leave-to {
+    .rui-drawer-surface-enter-from,
+    .rui-drawer-surface-leave-to {
         transform: translateY(100%);
         opacity: 0;
     }
 
-    .responsive-drawer-surface-enter-to,
-    .responsive-drawer-surface-leave-from {
+    .rui-drawer-surface-enter-to,
+    .rui-drawer-surface-leave-from {
         transform: translateY(0);
         opacity: 1;
     }

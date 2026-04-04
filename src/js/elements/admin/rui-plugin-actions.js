@@ -41,7 +41,7 @@ export const RuiPluginActions = defineCustomElement(
                 pluginActions.querySelectorAll("a").forEach((button) => {
                     if (
                         !(button instanceof HTMLElement) ||
-                        button.querySelector(".responsive-action-icon")
+                        button.querySelector(".rui-links-table__action-icon")
                     ) {
                         return;
                     }
@@ -57,7 +57,7 @@ export const RuiPluginActions = defineCustomElement(
 
                     const icon = document.createElement("rui-material-icon");
                     icon.setAttribute("name", iconName);
-                    icon.setAttribute("class", "responsive-action-icon");
+                    icon.setAttribute("class", "rui-links-table__action-icon");
                     button.prepend(icon);
                 });
             },

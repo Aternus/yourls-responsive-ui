@@ -39,7 +39,7 @@ export const RuiNavControls = defineCustomElement(
             watch(
                 isOpen,
                 (open) => {
-                    document.body.classList.toggle("responsive-nav-open", open);
+                    document.body.classList.toggle("rui-nav--open", open);
                 },
                 { immediate: true },
             );
@@ -58,7 +58,7 @@ export const RuiNavControls = defineCustomElement(
             });
 
             onBeforeUnmount(() => {
-                document.body.classList.remove("responsive-nav-open");
+                document.body.classList.remove("rui-nav--open");
                 document.removeEventListener("keydown", handleDocumentKeydown);
 
                 if (navElement.value instanceof HTMLElement) {
@@ -80,7 +80,7 @@ export const RuiNavControls = defineCustomElement(
             <template v-if="navElement">
                 <button
                     type="button"
-                    class="nav_menu_button"
+                    class="rui-nav__button"
                     aria-controls="admin_menu"
                     :aria-expanded="isOpen ? 'true' : 'false'"
                     aria-label="Toggle navigation menu"
@@ -88,16 +88,16 @@ export const RuiNavControls = defineCustomElement(
                 >
                     <rui-material-icon
                         name="menu"
-                        class="nav_menu_icon nav_menu_icon_open"
+                        class="rui-nav__icon rui-nav__icon--open"
                     />
                     <rui-material-icon
                         name="close"
-                        class="nav_menu_icon nav_menu_icon_close"
+                        class="rui-nav__icon rui-nav__icon--close"
                     />
                 </button>
                 <button
                     type="button"
-                    class="nav_menu_overlay"
+                    class="rui-nav__overlay"
                     aria-hidden="true"
                     tabindex="-1"
                     @click="closeMenu"

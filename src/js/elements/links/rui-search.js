@@ -6,13 +6,14 @@ import {
     ref,
     watch,
 } from "vue";
+import { stripSearchProtocol } from "../../lib/search-query.js";
 
 function isSelectAtDefault(selectControl) {
     if (!(selectControl instanceof HTMLSelectElement)) {
         return true;
     }
 
-    const defaultValue = selectControl.dataset.responsiveDefault ?? "";
+    const defaultValue = selectControl.dataset.ruiDefault ?? "";
     return selectControl.value === defaultValue;
 }
 
@@ -144,20 +145,6 @@ function isoDateToUs(value) {
     return `${month}/${day}/${year}`;
 }
 
-function disableLegacyDatepicker(input) {
-    const jq = window.jQuery;
-    if (
-        typeof jq !== "function" ||
-        !(input instanceof HTMLInputElement) ||
-        typeof jq.fn?.simpleDatepicker === "undefined"
-    ) {
-        return;
-    }
-
-    jq(input).off("click");
-    jq.removeData(input, "simpleDatepicker");
-}
-
 function prepareNativeDateInput(input) {
     if (!(input instanceof HTMLInputElement)) {
         return;
@@ -169,8 +156,6 @@ function prepareNativeDateInput(input) {
     if (isoValue !== "") {
         input.value = isoValue;
     }
-
-    disableLegacyDatepicker(input);
 }
 
 function normalizeNativeDateForSubmit(input) {
@@ -312,7 +297,7 @@ export const RuiSearch = defineCustomElement(
                 if (
                     filterFormContainer instanceof HTMLElement &&
                     mainTable instanceof HTMLElement &&
-                    filterFormContainer.dataset.responsivePinnedTop !== "true"
+                    filterFormContainer.dataset.ruiPinnedTop !== "true"
                 ) {
                     const tableParent = mainTable.parentElement;
                     if (tableParent instanceof HTMLElement) {
@@ -320,8 +305,7 @@ export const RuiSearch = defineCustomElement(
                             filterFormContainer,
                             mainTable,
                         );
-                        filterFormContainer.dataset.responsivePinnedTop =
-                            "true";
+                        filterFormContainer.dataset.ruiPinnedTop = "true";
                     }
                 }
 
@@ -331,7 +315,7 @@ export const RuiSearch = defineCustomElement(
                 if (
                     !(filterForm instanceof HTMLFormElement) ||
                     !(filterOptions instanceof HTMLElement) ||
-                    filterOptions.dataset.responsiveEnhanced === "true"
+                    filterOptions.dataset.ruiEnhanced === "true"
                 ) {
                     return;
                 }
@@ -352,7 +336,7 @@ export const RuiSearch = defineCustomElement(
                 drawerOpen.value = false;
                 ready.value = true;
 
-                filterOptions.dataset.responsiveEnhanced = "true";
+                filterOptions.dataset.ruiEnhanced = "true";
 
                 // Wait for template to render before moving controls
                 requestAnimationFrame(() => {
@@ -388,6 +372,11 @@ export const RuiSearch = defineCustomElement(
                     prepareNativeDateInput(controls.dateSecond);
 
                     const handleDateSubmit = () => {
+                        if (controls.search instanceof HTMLInputElement) {
+                            controls.search.value = stripSearchProtocol(
+                                controls.search.value,
+                            );
+                        }
                         normalizeNativeDateForSubmit(controls.dateFirst);
                         normalizeNativeDateForSubmit(controls.dateSecond);
                     };
@@ -412,7 +401,7 @@ export const RuiSearch = defineCustomElement(
                         const searchButton = createIconButton({
                             type: "submit",
                             className:
-                                "button primary responsive-search-submit-button",
+                                "button primary rui-search__submit-button",
                             icon: "search",
                             label: "Search",
                         });
@@ -448,7 +437,7 @@ export const RuiSearch = defineCustomElement(
                         const fallbackSearchButton = createIconButton({
                             type: "button",
                             className:
-                                "button primary responsive-search-submit-button",
+                                "button primary rui-search__submit-button",
                             icon: "search",
                             label: "Search",
                         });
@@ -522,18 +511,18 @@ export const RuiSearch = defineCustomElement(
             };
         },
         template: `
-            <section v-if="ready" class="responsive-search-surface">
-                <div class="responsive-search-row">
-                    <div ref="searchSlot" class="responsive-search-input-slot"></div>
-                    <div ref="searchButtonSlot" class="responsive-search-submit-slot"></div>
+            <section v-if="ready" class="rui-search__surface">
+                <div class="rui-search__row">
+                    <div ref="searchSlot" class="rui-search__input-slot"></div>
+                    <div ref="searchButtonSlot" class="rui-search__submit-slot"></div>
                     <button
                         type="button"
-                        class="responsive-search-drawer-toggle"
+                        class="rui-search__toggle"
                         :class="{ 'is-active': filtersActive || drawerOpen }"
                         title="Filters"
                         aria-label="Filters"
                         :aria-expanded="drawerOpen ? 'true' : 'false'"
-                        aria-controls="responsive-filter-drawer"
+                        aria-controls="rui-filter-drawer"
                         @click="toggleDrawer"
                     >
                         <span class="material-icons" aria-hidden="true">
@@ -542,62 +531,62 @@ export const RuiSearch = defineCustomElement(
                     </button>
                 </div>
                 <dialog
-                    id="responsive-filter-drawer"
+                    id="rui-filter-drawer"
                     ref="drawerDialog"
-                    class="responsive-drawer responsive-search-filter-drawer"
+                    class="rui-drawer rui-search__filter-drawer"
                     @close="handleDrawerDialogClose"
                     @cancel.prevent="requestDrawerClose"
                 >
                     <Transition
-                        name="responsive-drawer-surface"
+                        name="rui-drawer-surface"
                         @after-leave="handleDrawerAfterLeave"
                     >
-                        <div v-show="drawerContentVisible" class="responsive-drawer-shell">
-                            <div class="responsive-drawer-titlebar">
-                                <div class="responsive-drawer-heading">
-                                    <div class="responsive-drawer-heading-text">
-                                        <span class="responsive-drawer-heading-title">Filters</span>
+                        <div v-show="drawerContentVisible" class="rui-drawer__shell">
+                            <div class="rui-drawer__titlebar">
+                                <div class="rui-drawer__heading">
+                                    <div class="rui-drawer__heading-text">
+                                        <span class="rui-drawer__heading-title">Filters</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="confirm-message responsive-drawer-body">
-                                <section class="responsive-drawer-content responsive-filter-drawer-body">
-                                    <section class="responsive-filter-group is-scope">
-                                        <p class="responsive-filter-group-title">In field</p>
-                                        <div ref="scopeSlot" class="responsive-filter-group-controls"></div>
+                            <div class="confirm-message rui-drawer__body">
+                                <section class="rui-drawer__content rui-search__filter-body">
+                                    <section class="rui-search__filter-group is-scope">
+                                        <p class="rui-search__filter-group-title">In field</p>
+                                        <div ref="scopeSlot" class="rui-search__filter-controls"></div>
                                     </section>
-                                    <div class="responsive-filter-divider" aria-hidden="true"></div>
-                                    <section class="responsive-filter-group is-sort">
-                                        <p class="responsive-filter-group-title">Sort</p>
-                                        <div ref="sortSlot" class="responsive-filter-group-controls"></div>
+                                    <div class="rui-search__filter-divider" aria-hidden="true"></div>
+                                    <section class="rui-search__filter-group is-sort">
+                                        <p class="rui-search__filter-group-title">Sort</p>
+                                        <div ref="sortSlot" class="rui-search__filter-controls"></div>
                                     </section>
-                                    <section class="responsive-filter-group is-perpage">
-                                        <div class="responsive-filter-group-heading-row is-stacked">
-                                            <p class="responsive-filter-group-title">Rows</p>
-                                            <p class="responsive-filter-group-hint">Results per page</p>
+                                    <section class="rui-search__filter-group is-perpage">
+                                        <div class="rui-search__filter-heading is-stacked">
+                                            <p class="rui-search__filter-group-title">Rows</p>
+                                            <p class="rui-search__filter-group-hint">Results per page</p>
                                         </div>
-                                        <div ref="rowsSlot" class="responsive-filter-group-controls"></div>
+                                        <div ref="rowsSlot" class="rui-search__filter-controls"></div>
                                     </section>
-                                    <section class="responsive-filter-group is-clicks">
-                                        <div class="responsive-filter-group-heading-row is-stacked">
-                                            <p class="responsive-filter-group-title">Clicks</p>
-                                            <p class="responsive-filter-group-hint">Show links with more or less clicks</p>
+                                    <section class="rui-search__filter-group is-clicks">
+                                        <div class="rui-search__filter-heading is-stacked">
+                                            <p class="rui-search__filter-group-title">Clicks</p>
+                                            <p class="rui-search__filter-group-hint">Show links with more or less clicks</p>
                                         </div>
-                                        <div ref="clicksSlot" class="responsive-filter-group-controls"></div>
+                                        <div ref="clicksSlot" class="rui-search__filter-controls"></div>
                                     </section>
-                                    <section class="responsive-filter-group is-date">
-                                        <div class="responsive-filter-group-heading-row">
-                                            <p class="responsive-filter-group-title">Date</p>
-                                            <p class="responsive-filter-group-hint">Filter by creation date</p>
+                                    <section class="rui-search__filter-group is-date">
+                                        <div class="rui-search__filter-heading">
+                                            <p class="rui-search__filter-group-title">Date</p>
+                                            <p class="rui-search__filter-group-hint">Filter by creation date</p>
                                         </div>
-                                        <div ref="dateSlot" class="responsive-filter-group-controls"></div>
+                                        <div ref="dateSlot" class="rui-search__filter-controls"></div>
                                     </section>
                                 </section>
                             </div>
-                            <div class="button-group responsive-drawer-actions responsive-drawer-footer responsive-filter-drawer-actions">
+                            <div class="button-group rui-drawer__actions rui-drawer__footer rui-search__filter-actions">
                                 <button
                                     type="button"
-                                    class="button responsive-drawer-button is-primary responsive-filter-submit-button"
+                                    class="button rui-drawer__button rui-drawer__button--primary rui-search__filter-submit"
                                     aria-label="Apply filters"
                                     title="Apply filters"
                                     @click="submitFilters"
@@ -606,7 +595,7 @@ export const RuiSearch = defineCustomElement(
                                 </button>
                                 <button
                                     type="button"
-                                    class="button responsive-drawer-button is-tonal responsive-filter-clear-button"
+                                    class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-clear"
                                     aria-label="Clear filters"
                                     title="Clear filters"
                                     @click="clearFilters"
@@ -615,7 +604,7 @@ export const RuiSearch = defineCustomElement(
                                 </button>
                                 <button
                                     type="button"
-                                    class="button responsive-drawer-button is-tonal responsive-filter-close-button"
+                                    class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-close"
                                     aria-label="Close"
                                     title="Close"
                                     @click="closeDrawer"

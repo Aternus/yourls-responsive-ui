@@ -73,7 +73,7 @@ export const RuiSharePanel = defineCustomElement(
         },
         template: `
             <rui-drawer title="Share Link">
-                <section class="responsive-drawer-content">
+                <section class="rui-drawer__content">
                     <rui-drawer-intro
                         icon="share"
                         title="Share this link or copy it to clipboard."
@@ -81,22 +81,22 @@ export const RuiSharePanel = defineCustomElement(
                         variant="brand"
                     />
                     <section
-                        class="responsive-drawer-share"
+                        class="rui-drawer__share"
                         :data-id="drawerId"
                     >
                         <rui-text-input-field
-                            class="responsive-drawer-field"
+                            class="rui-drawer__field"
                             :label-text="'Short URL'"
-                            :control-id="'responsive-drawer-share-shorturl-' + drawerId"
+                            :control-id="'rui-drawer-share-shorturl-' + drawerId"
                             :model-value="shortUrl"
-                            :control-class="'responsive-url-value'"
+                            :control-class="'rui-url-value'"
                             :read-only="true"
                             :aria-label="'Short URL to share'"
                         />
                         <rui-textarea-field
-                            class="responsive-drawer-field"
+                            class="rui-drawer__field"
                             :label-text="'Message'"
-                            :control-id="'responsive-drawer-share-message-' + drawerId"
+                            :control-id="'rui-drawer-share-message-' + drawerId"
                             :model-value="message"
                             :rows="3"
                             :auto-focus="true"
@@ -107,14 +107,14 @@ export const RuiSharePanel = defineCustomElement(
                 </section>
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-primary"
+                    class="rui-drawer__button rui-drawer__button--primary"
                     :icon-name="copyIconName"
                     :label="copyLabel"
                     @press="copyShortUrl"
                 />
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-tonal"
+                    class="rui-drawer__button rui-drawer__button--tonal"
                     :icon-name="'fa-x-twitter'"
                     :icon-library="'brand'"
                     :label="'Share on Twitter'"
@@ -122,7 +122,7 @@ export const RuiSharePanel = defineCustomElement(
                 />
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-tonal"
+                    class="rui-drawer__button rui-drawer__button--tonal"
                     :icon-name="'fa-facebook-f'"
                     :icon-library="'brand'"
                     :label="'Share on Facebook'"
@@ -130,7 +130,7 @@ export const RuiSharePanel = defineCustomElement(
                 />
                 <rui-action-button
                     slot="actions"
-                    class="responsive-drawer-button is-tonal"
+                    class="rui-drawer__button rui-drawer__button--tonal"
                     :icon-name="'close'"
                     :label="'Close share mode'"
                     @press="closeDrawer"

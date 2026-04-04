@@ -4,7 +4,7 @@ function responsive_output_color_scheme( string $html ): string {
     $scheme = responsive_get_color_scheme();
 
     return $html
-           . ' data-responsive-scheme="' . $scheme . '"'
+           . ' data-rui-scheme="' . $scheme . '"'
            . ' style="color-scheme: ' . $scheme . ';"';
 }
 
@@ -30,8 +30,8 @@ function responsive_filter_form_select_attributes(
         return $html;
     }
 
-    $attributes = ' data-responsive-control="' . yourls_esc_attr( $name ) . '"'
-                  . ' data-responsive-default="' . yourls_esc_attr( $filter_defaults[ $name ] ) . '"';
+    $attributes = ' data-rui-control="' . yourls_esc_attr( $name ) . '"'
+                  . ' data-rui-default="' . yourls_esc_attr( $filter_defaults[ $name ] ) . '"';
 
     $updated_html = preg_replace(
         '/<select\b/',
@@ -93,12 +93,17 @@ function responsive_table_row_action_array(
             $label = strip_tags( html_entity_decode( (string) $action['anchor'] ) );
         }
 
-        $icon = '<span class="material-icons responsive-action-icon" aria-hidden="true">'
+        $icon = '<span class="material-icons rui-links-table__action-icon" aria-hidden="true">'
                 . $icons[ $key ] . '</span>';
-        $text = '<span class="responsive-sr-only">' . yourls_esc_html( $label )
+        $text = '<span class="rui-sr-only">' . yourls_esc_html( $label )
                 . '</span>';
 
         $actions[ $key ]['anchor'] = $icon . $text;
+
+        // Remove inline onclick — behavior is delegated via data-rui-action.
+        if ( isset( $actions[ $key ]['onclick'] ) ) {
+            $actions[ $key ]['onclick'] = '';
+        }
     }
 
     return $actions;
@@ -107,6 +112,43 @@ function responsive_table_row_action_array(
 yourls_add_filter(
     'table_add_row_action_array',
     'responsive_table_row_action_array',
+    10,
+    2,
+);
+
+function responsive_action_links_add_data_attributes(
+    string $action_links,
+    string $keyword,
+): string {
+    $action_map = [
+        'stats-button'  => 'stats',
+        'share-button'  => 'share',
+        'edit-button'   => 'edit',
+        'delete-button' => 'delete',
+    ];
+
+    foreach ( $action_map as $id_prefix => $action_name ) {
+        $pattern = '/(<a\b[^>]*\bid=["\']' . preg_quote( $id_prefix, '/' ) . '-[^"\']*["\'])/i';
+        $action_links = preg_replace(
+            $pattern,
+            '$1 data-rui-action="' . $action_name . '"',
+            $action_links,
+        );
+    }
+
+    // Strip any remaining onclick attributes from action links.
+    $stripped = preg_replace(
+        '/\s*onclick="[^"]*"/i',
+        '',
+        $action_links,
+    );
+
+    return is_string( $stripped ) ? $stripped : $action_links;
+}
+
+yourls_add_filter(
+    'action_links',
+    'responsive_action_links_add_data_attributes',
     10,
     2,
 );
@@ -122,12 +164,12 @@ function responsive_table_row_cell_array(
 ): array {
     if ( isset( $cells['keyword'] ) ) {
         $cells['keyword']['template']
-            = '<a class="responsive-delete-metadata-link responsive-delete-metadata-shorturl"'
+            = '<a class="rui-links-table__metadata-link rui-links-table__metadata-link--shorturl"'
               . ' href="%shorturl%" aria-hidden="true" tabindex="-1">%keyword_html%</a>'
-              . '<span class="responsive-link-row">'
-              . '<a class="responsive-shorturl-link responsive-url-value" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
-              . '<span class="responsive-link-text">%keyword_html%</span>'
-              . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
+              . '<span class="rui-link-row">'
+              . '<a class="rui-links-table__shorturl-link rui-url-value" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
+              . '<span class="rui-link-row__text">%keyword_html%</span>'
+              . '<span class="material-icons rui-link-row__icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
               . '<rui-copy-button copy-text="%shorturl%" copy-label="Copy short URL"></rui-copy-button>'
               . '</span>';
@@ -140,20 +182,20 @@ function responsive_table_row_cell_array(
         $cells['url']['long_url_html'] = $full_long_url;
 
         $cells['url']['template']
-            = '<a class="responsive-delete-metadata-link responsive-delete-metadata-destination"'
+            = '<a class="rui-links-table__metadata-link rui-links-table__metadata-link--destination"'
               . ' href="%long_url%" title="%title_attr%" aria-hidden="true" tabindex="-1">%title_html%</a>'
-              . '<span class="responsive-destination-section responsive-destination-section-url">'
-              . '<span class="responsive-destination-section-title">Destination URL</span>'
-              . '<small class="responsive-destination-raw">%warning%<span class="responsive-link-row">'
-              . '<a class="responsive-destination-raw-link responsive-url-value" href="%long_url%" target="_blank" rel="noopener noreferrer">'
-              . '<span class="responsive-link-text">%long_url_html%</span>'
-              . '<span class="material-icons responsive-link-icon" aria-hidden="true">open_in_new</span>'
+              . '<span class="rui-links-table__destination rui-links-table__destination--url">'
+              . '<span class="rui-links-table__destination-label">Destination URL</span>'
+              . '<small class="rui-links-table__destination-raw">%warning%<span class="rui-link-row">'
+              . '<a class="rui-links-table__destination-link rui-url-value" href="%long_url%" target="_blank" rel="noopener noreferrer">'
+              . '<span class="rui-link-row__text">%long_url_html%</span>'
+              . '<span class="material-icons rui-link-row__icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
               . '<rui-copy-button copy-text="%long_url%" copy-label="Copy destination URL"></rui-copy-button>'
               . '</span></small>'
               . '</span>'
-              . '<span class="responsive-destination-section responsive-destination-section-title-wrap">'
-              . '<span class="responsive-destination-section-title">Title</span>'
+              . '<span class="rui-links-table__destination rui-links-table__destination--title">'
+              . '<span class="rui-links-table__destination-label">Title</span>'
               . '<rui-expandable-title title="%title_attr%">%title_html%</rui-expandable-title>'
               . '</span>';
     }
@@ -277,3 +319,54 @@ function responsive_translate_labels(
 }
 
 yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );
+
+///////////////////////////////////////////////////////////
+// Shunt: Add-New Form
+///////////////////////////////////////////////////////////
+
+function responsive_shunt_html_addnew( $false ): string {
+    if ( yourls_is_valid_user() !== true ) {
+        return '';
+    }
+
+    $nonce = yourls_create_nonce( 'add_url' );
+    $site  = yourls_get_yourls_site();
+
+    return <<<HTML
+    <div id="new_url">
+        <rui-new-url></rui-new-url>
+        <div id="new_url_form_wrap">
+            <form id="new_url_form" action="" method="post">
+                <input type="hidden" name="nonce" value="{$nonce}" />
+                <input type="url" id="add-url" name="url" placeholder="Paste the URL to shorten" class="text" required />
+                <input type="text" id="add-keyword" name="keyword" placeholder="Optional custom short URL" class="text" value="" />
+                <input type="submit" id="add-button" name="add-button" value="Shorten" class="button primary" />
+            </form>
+        </div>
+        <div id="feedback" role="status" aria-live="polite" style="display:none"></div>
+        <div id="shareboxes" style="display:none">
+            <div id="copybox">
+                <label for="copylink">Short URL</label>
+                <input id="copylink" class="text" type="text" readonly />
+                <small>
+                    <span id="origlink"></span> -
+                    <span id="statlink"></span>
+                </small>
+            </div>
+            <div id="sharebox">
+                <div id="tweet">
+                    <span id="charcount"></span>
+                    <textarea id="tweet_body" rows="2"></textarea>
+                </div>
+                <div id="share_links">
+                    <a id="share_tw" href="#">Twitter</a>
+                    <a id="share_fb" href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="yourls-site" value="{$site}" />
+    </div>
+    HTML;
+}
+
+yourls_add_filter( 'shunt_html_addnew', 'responsive_shunt_html_addnew' );

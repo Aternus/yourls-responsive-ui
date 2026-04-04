@@ -1,21 +1,20 @@
 import { createMaterialIcon, setMaterialIcon } from "./shared.js";
 
 function ensureButtonDefaults(button) {
-    if (button.dataset.responsiveDefaultTitle) {
+    if (button.dataset.ruiDefaultTitle) {
         return;
     }
 
-    const icon = button.querySelector(".responsive-action-icon");
-    const srLabel = button.querySelector(".responsive-sr-only");
+    const icon = button.querySelector(".rui-links-table__action-icon");
+    const srLabel = button.querySelector(".rui-sr-only");
     const title = button.getAttribute("title") ?? "";
     const label = srLabel?.textContent?.trim() ?? title;
 
-    button.dataset.responsiveDefaultTitle = title;
-    button.dataset.responsiveDefaultLabel = label;
+    button.dataset.ruiDefaultTitle = title;
+    button.dataset.ruiDefaultLabel = label;
     if (icon instanceof HTMLElement) {
-        button.dataset.responsiveDefaultIcon = icon.className;
-        button.dataset.responsiveDefaultIconName =
-            icon.textContent?.trim() ?? "";
+        button.dataset.ruiDefaultIcon = icon.className;
+        button.dataset.ruiDefaultIconName = icon.textContent?.trim() ?? "";
     }
 }
 
@@ -26,18 +25,18 @@ export function setActionButtonVisual(button, iconName, title, label) {
 
     ensureButtonDefaults(button);
 
-    let icon = button.querySelector(".responsive-action-icon");
+    let icon = button.querySelector(".rui-links-table__action-icon");
     if (!(icon instanceof HTMLElement)) {
-        icon = createMaterialIcon(iconName, "responsive-action-icon");
+        icon = createMaterialIcon(iconName, "rui-links-table__action-icon");
         button.prepend(icon);
     } else {
-        setMaterialIcon(icon, iconName, "responsive-action-icon");
+        setMaterialIcon(icon, iconName, "rui-links-table__action-icon");
     }
 
     button.setAttribute("title", title);
     button.setAttribute("aria-label", title);
 
-    const srLabel = button.querySelector(".responsive-sr-only");
+    const srLabel = button.querySelector(".rui-sr-only");
     if (srLabel instanceof HTMLElement) {
         srLabel.textContent = label;
     }
@@ -48,12 +47,12 @@ export function restoreActionButtonVisual(button) {
         return;
     }
 
-    const defaultTitle = button.dataset.responsiveDefaultTitle ?? "";
-    const defaultLabel = button.dataset.responsiveDefaultLabel ?? defaultTitle;
-    const defaultIcon = button.dataset.responsiveDefaultIcon ?? "";
-    const defaultIconName = button.dataset.responsiveDefaultIconName ?? "";
-    const icon = button.querySelector(".responsive-action-icon");
-    const srLabel = button.querySelector(".responsive-sr-only");
+    const defaultTitle = button.dataset.ruiDefaultTitle ?? "";
+    const defaultLabel = button.dataset.ruiDefaultLabel ?? defaultTitle;
+    const defaultIcon = button.dataset.ruiDefaultIcon ?? "";
+    const defaultIconName = button.dataset.ruiDefaultIconName ?? "";
+    const icon = button.querySelector(".rui-links-table__action-icon");
+    const srLabel = button.querySelector(".rui-sr-only");
 
     if (defaultTitle) {
         button.setAttribute("title", defaultTitle);

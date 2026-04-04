@@ -7,17 +7,17 @@ export const RuiDrawer = defineCustomElement(
             title: { type: String, required: true },
         },
         template: `
-            <div class="responsive-drawer-titlebar">
-                <div class="responsive-drawer-heading">
-                    <div class="responsive-drawer-heading-text">
-                        <span class="responsive-drawer-heading-title">{{ title }}</span>
+            <div class="rui-drawer__titlebar">
+                <div class="rui-drawer__heading">
+                    <div class="rui-drawer__heading-text">
+                        <span class="rui-drawer__heading-title">{{ title }}</span>
                     </div>
                 </div>
             </div>
-            <div class="confirm-message responsive-drawer-body">
+            <div class="confirm-message rui-drawer__body">
                 <slot />
             </div>
-            <div class="button-group responsive-drawer-actions responsive-drawer-footer">
+            <div class="button-group rui-drawer__actions rui-drawer__footer">
                 <slot name="actions" />
             </div>
         `,

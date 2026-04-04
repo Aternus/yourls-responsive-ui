@@ -34,7 +34,7 @@ export const RuiActionButton = defineCustomElement(
                 <rui-brand-icon
                     v-if="iconLibrary === 'brand'"
                     :name="iconName"
-                    class="responsive-brand-icon"
+                    class="rui-brand-icon"
                 />
                 <rui-material-icon
                     v-else

@@ -69,14 +69,14 @@ export const RuiRowDrawerViewport = defineCustomElement(
         },
         template: `
             <Transition
-                name="responsive-drawer-surface"
+                name="rui-drawer-surface"
                 @after-enter="handleAfterEnter"
                 @after-leave="handleAfterLeave"
             >
                 <div
                     v-if="open && data && mode"
                     ref="shellRef"
-                    class="responsive-drawer-shell"
+                    class="rui-drawer__shell"
                 >
                     <rui-edit-panel
                         v-if="mode === 'edit'"

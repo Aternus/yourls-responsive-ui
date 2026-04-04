@@ -36,11 +36,11 @@ $normal_line_height: 1.618;
     --button-padding-row: 0.4rem 0.65rem;
 }
 
-html[data-responsive-scheme="light"] {
+html[data-rui-scheme="light"] {
     color-scheme: light;
 }
 
-html[data-responsive-scheme="dark"] {
+html[data-rui-scheme="dark"] {
     color-scheme: dark;
 }
 
@@ -118,7 +118,7 @@ a {
 // URL Value Surface
 ///////////////////////////////////////////////////////////
 
-.responsive-url-value {
+.rui-url-value {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -132,7 +132,7 @@ a {
     border-radius: $shape-corner-extra-small;
 }
 
-a.responsive-url-value {
+a.rui-url-value {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -154,7 +154,7 @@ a.responsive-url-value {
     }
 }
 
-a.responsive-url-value .responsive-link-text {
+a.rui-url-value .rui-link-row__text {
     display: block;
     flex: 1 1 auto;
     min-width: 0;
@@ -168,14 +168,14 @@ a.responsive-url-value .responsive-link-text {
     -webkit-overflow-scrolling: touch;
 }
 
-a.responsive-url-value .responsive-link-icon {
+a.rui-url-value .rui-link-row__icon {
     flex: 0 0 auto;
     font-size: 0.92rem;
     line-height: 1;
     color: var(--brand-600);
 }
 
-input.responsive-url-value {
+input.rui-url-value {
     display: block;
     margin: 0;
     padding: 0.65rem 0.85rem;
@@ -194,7 +194,7 @@ code {
     padding: 0.1rem 0.2rem;
 }
 
-.responsive-sr-only {
+.rui-sr-only {
     position: absolute !important;
     width: 1px;
     height: 1px;

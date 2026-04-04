@@ -18,7 +18,7 @@ export const RuiExpandableTitle = defineCustomElement(
 
                 table
                     .querySelectorAll(
-                        "rui-expandable-title .responsive-destination-title.is-expanded",
+                        "rui-expandable-title .rui-links-table__title.is-expanded",
                     )
                     .forEach((node) => {
                         if (node !== root.value) {
@@ -53,7 +53,7 @@ export const RuiExpandableTitle = defineCustomElement(
         template: `
             <span
                 ref="root"
-                class="responsive-destination-title"
+                class="rui-links-table__title"
                 :class="{ 'is-expanded': isExpanded }"
                 :title="title"
                 role="button"

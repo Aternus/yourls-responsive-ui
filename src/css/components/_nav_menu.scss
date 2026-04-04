@@ -32,7 +32,7 @@ nav {
 
     transform: translateX(100%);
 
-    body.responsive-nav-open & {
+    body.rui-nav--open & {
         transform: translateX(0);
     }
 }
@@ -41,7 +41,7 @@ nav {
 // Nav Overlay
 ///////////////////////////////////////////////////////////
 
-.nav_menu_overlay {
+.rui-nav__overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -61,13 +61,13 @@ nav {
 
 // Keep drawer controls full-viewport/fixed, not constrained by #wrap desktop width.
 #wrap > nav[role="navigation"],
-#wrap > .nav_menu_button,
-#wrap > .nav_menu_overlay {
+#wrap > .rui-nav__button,
+#wrap > .rui-nav__overlay {
     max-width: none;
     margin: 0;
 }
 
-.nav_menu_button {
+.rui-nav__button {
     @include md-elevation(3);
 
     &:hover,
@@ -103,7 +103,7 @@ nav {
     display: grid;
     place-items: center;
 
-    .nav_menu_icon {
+    .rui-nav__icon {
         position: absolute;
         font-size: 1.5rem;
         line-height: 1;
@@ -113,7 +113,7 @@ nav {
             opacity $motion-duration-medium4 $motion-easing-standard;
     }
 
-    .nav_menu_icon_close {
+    .rui-nav__icon--close {
         opacity: 0;
         transform: scale(0.75) rotate(-90deg);
     }
@@ -123,7 +123,7 @@ nav {
 // Scroll To Top Button
 ///////////////////////////////////////////////////////////
 
-.responsive-scroll-top-button {
+.rui-scroll-top__button {
     @include md-elevation(2);
 
     position: fixed;
@@ -183,19 +183,19 @@ nav {
     }
 }
 
-.nav_menu_button[aria-expanded="true"] {
-    .nav_menu_icon_open {
+.rui-nav__button[aria-expanded="true"] {
+    .rui-nav__icon--open {
         opacity: 0;
         transform: scale(0.75) rotate(90deg);
     }
 
-    .nav_menu_icon_close {
+    .rui-nav__icon--close {
         opacity: 1;
         transform: scale(1) rotate(0deg);
     }
 }
 
-body.responsive-nav-open .nav_menu_overlay {
+body.rui-nav--open .rui-nav__overlay {
     opacity: 1;
     pointer-events: auto;
 }

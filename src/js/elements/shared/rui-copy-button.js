@@ -46,7 +46,7 @@ export const RuiCopyButton = defineCustomElement(
         template: `
             <button
                 type="button"
-                class="responsive-copy-link-button"
+                class="rui-copy-button__trigger"
                 :class="{ 'is-copied': isCopied }"
                 :aria-label="ariaLabel"
                 :title="ariaLabel"

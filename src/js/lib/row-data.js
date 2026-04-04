@@ -18,16 +18,14 @@ export function getRowData(id) {
     }
 
     const shortLink =
-        row.querySelector(`#keyword-${id} a.responsive-shorturl-link`) ??
+        row.querySelector(`#keyword-${id} a.rui-links-table__shorturl-link`) ??
         row.querySelector(
-            `#keyword-${id} a:not(.responsive-delete-metadata-link)`,
+            `#keyword-${id} a:not(.rui-links-table__metadata-link)`,
         );
     const destinationLink =
-        row.querySelector(`#url-${id} a.responsive-destination-raw-link`) ??
-        row.querySelector(`#url-${id} a:not(.responsive-delete-metadata-link)`);
-    const titleNode = row.querySelector(
-        `#url-${id} .responsive-destination-title`,
-    );
+        row.querySelector(`#url-${id} a.rui-links-table__destination-link`) ??
+        row.querySelector(`#url-${id} a:not(.rui-links-table__metadata-link)`);
+    const titleNode = row.querySelector(`#url-${id} .rui-links-table__title`);
     const keywordInput = document.querySelector(`#keyword_${id}`);
     const editButton = document.querySelector(`#edit-button-${id}`);
 

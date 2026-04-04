@@ -57,7 +57,7 @@ export const RuiScrollTop = defineCustomElement(
             <button
                 type="button"
                 :class="{
-                    'responsive-scroll-top-button': true,
+                    'rui-scroll-top__button': true,
                     'is-visible': isVisible,
                 }"
                 :hidden="!isVisible"
