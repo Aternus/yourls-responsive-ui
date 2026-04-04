@@ -26,7 +26,7 @@ function responsive_filter_form_select_attributes(
         'date_filter'  => 'before',
     ];
 
-    if ( isset( $filter_defaults[ $name ] ) !== true ) {
+    if ( ! isset( $filter_defaults[ $name ] ) ) {
         return $html;
     }
 
@@ -82,7 +82,7 @@ function responsive_table_row_action_array(
     ];
 
     foreach ( $actions as $key => $action ) {
-        if ( isset( $icons[ $key ] ) !== true ) {
+        if ( ! isset( $icons[ $key ] ) ) {
             continue;
         }
 
@@ -171,7 +171,7 @@ yourls_add_filter(
 function responsive_extract_row_number_from_id( string $id ): int {
     $digits = preg_replace( '/\D+/', '', $id );
 
-    if ( is_string( $digits ) !== true || $digits === '' ) {
+    if ( ! is_string( $digits ) || $digits === '' ) {
         return 1;
     }
 
@@ -214,7 +214,7 @@ function responsive_edit_link_add_row_html(
     }
 
     $link = yourls_get_keyword_infos( $effective_keyword, false );
-    if ( is_array( $link ) !== true ) {
+    if ( ! is_array( $link ) ) {
         return $response;
     }
 
@@ -269,15 +269,11 @@ function responsive_translate_labels(
     string $text,
     string $domain = 'default',
 ): string {
-    if ( $text === 'Shorten The URL' ) {
-        return 'Shorten';
-    }
-
-    if ( $text === 'Delete confirmation' ) {
-        return 'Delete Link';
-    }
-
-    return $translation;
+    return match ( $text ) {
+        'Shorten The URL'    => 'Shorten',
+        'Delete confirmation' => 'Delete Link',
+        default               => $translation,
+    };
 }
 
 yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );

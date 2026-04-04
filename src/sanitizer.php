@@ -205,12 +205,7 @@ function responsive_strip_inline_infos( string $html ): string {
 				return true;
 			}
 
-			$has_yourls_graph_id = preg_match( '~\bid=(["\'])yourls_graph[^"\']*\1~i', $attrs ) === 1;
-			if ( $has_yourls_graph_id ) {
-				return true;
-			}
-
-			return false;
+			return preg_match( '~\bid=(["\'])yourls_graph[^"\']*\1~i', $attrs ) === 1;
 		}
 	);
 }
@@ -239,6 +234,20 @@ function responsive_strip_inline_login( string $html ): string {
 			return preg_match( '~^\$\([\'"]#username[\'"]\)\.focus\(\);\s*$~', $normalized ) === 1;
 		}
 	);
+}
+
+function responsive_strip_google_jsapi_src( string $html ): string {
+	$updated = preg_replace_callback(
+		'~<script\b[^>]*\bsrc=(["\'])([^"\']+)\1[^>]*>\s*</script>\s*~i',
+		static function ( array $matches ): string {
+			$src = html_entity_decode( $matches[2], ENT_QUOTES );
+
+			return responsive_is_google_jsapi_src( $src ) ? '' : $matches[0];
+		},
+		$html
+	);
+
+	return is_string( $updated ) ? $updated : $html;
 }
 
 function responsive_strip_inline_plugins( string $html ): string {
@@ -276,42 +285,14 @@ function responsive_sanitize_html_output( string $html ): string {
 	// Detect page context for inline stripping
 	$context = responsive_detect_body_context( $output );
 
-	// Apply context-specific inline stripping
-	if ( $context === 'bookmark' ) {
-		$output = responsive_strip_inline_bookmark( $output );
-	}
-
-	if ( $context === 'infos' ) {
-		$output = responsive_strip_inline_infos( $output );
-
-		// Strip Google JSAPI only in infos context (charts loader)
-		$output = preg_replace_callback(
-			'~<script\b[^>]*\bsrc=(["\'])([^"\']+)\1[^>]*>\s*</script>\s*~i',
-			static function ( array $matches ): string {
-				$src = html_entity_decode( $matches[2], ENT_QUOTES );
-
-				if ( responsive_is_google_jsapi_src( $src ) ) {
-					return '';
-				}
-
-				return $matches[0];
-			},
-			$output
-		);
-		$output = is_string( $output ) ? $output : $html;
-	}
-
-	if ( $context === 'index' ) {
-		$output = responsive_strip_inline_index( $output );
-	}
-
-	if ( $context === 'login' ) {
-		$output = responsive_strip_inline_login( $output );
-	}
-
-	if ( $context === 'plugins' ) {
-		$output = responsive_strip_inline_plugins( $output );
-	}
+	$output = match ( $context ) {
+		'bookmark' => responsive_strip_inline_bookmark( $output ),
+		'infos'    => responsive_strip_google_jsapi_src( responsive_strip_inline_infos( $output ) ),
+		'index'    => responsive_strip_inline_index( $output ),
+		'login'    => responsive_strip_inline_login( $output ),
+		'plugins'  => responsive_strip_inline_plugins( $output ),
+		default    => $output,
+	};
 
 	return $output;
 }
@@ -321,21 +302,12 @@ function responsive_sanitize_html_output( string $html ): string {
 ///////////////////////////////////////////////////////////
 
 function responsive_begin_output_sanitizer( $context = '', $title = '' ): void {
-	// Skip non-HTML responses
-	if ( function_exists( 'yourls_is_API' ) && yourls_is_API() ) {
-		return;
-	}
-
-	if ( function_exists( 'yourls_is_Ajax' ) && yourls_is_Ajax() ) {
-		return;
-	}
-
-	if ( function_exists( 'yourls_is_GO' ) && yourls_is_GO() ) {
-		return;
-	}
-
-	// Prevent double-buffering
-	if ( isset( $GLOBALS['responsive_output_sanitizer_active'] ) ) {
+	if (
+		isset( $GLOBALS['responsive_output_sanitizer_active'] )
+		|| ( function_exists( 'yourls_is_API' ) && yourls_is_API() )
+		|| ( function_exists( 'yourls_is_Ajax' ) && yourls_is_Ajax() )
+		|| ( function_exists( 'yourls_is_GO' ) && yourls_is_GO() )
+	) {
 		return;
 	}
 

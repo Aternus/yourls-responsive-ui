@@ -69,22 +69,18 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
 
     $context = responsive_hook_context( $hook_args );
 
-    $is_infos   = $context === 'infos';
-    $is_plugins = $context === 'plugins';
-    $is_index   = in_array( $context, [ 'index', 'bookmark' ], true );
-
     echo '<rui-nav-controls></rui-nav-controls>';
     echo '<rui-scroll-top></rui-scroll-top>';
 
-    if ( $is_index ) {
+    if ( in_array( $context, [ 'index', 'bookmark' ], true ) ) {
         echo '<rui-search></rui-search>';
     }
 
-    if ( $is_infos ) {
+    if ( $context === 'infos' ) {
         echo '<rui-infos-page></rui-infos-page>';
     }
 
-    if ( $is_plugins ) {
+    if ( $context === 'plugins' ) {
         echo '<rui-plugin-actions></rui-plugin-actions>';
     }
 }
