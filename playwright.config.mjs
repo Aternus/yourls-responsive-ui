@@ -9,7 +9,7 @@ export default defineConfig({
     },
     reporter: "list",
     use: {
-        baseURL: "https://10.0.0.102",
+        baseURL: "https://localhost",
         ignoreHTTPSErrors: true,
         trace: "on-first-retry",
     },

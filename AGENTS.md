@@ -7,9 +7,9 @@ To run the project, you need to execute the following commands:
 1. Backend: `docker compose up`
 2. Frontend: `npm run dev`
 
-You can access the project at `https://10.0.0.102/admin/index.php` with the default credentials: `root` / `root`.
+You can access the project at `https://localhost/admin/index.php` with the default credentials: `root` / `root`.
 
-You will need to use cURL to access `10.0.0.102`.
+You will need to use cURL to access `localhost`.
 
 Assume Backend & Frontend are running.
 

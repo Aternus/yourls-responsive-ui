@@ -12,9 +12,9 @@
 
 1. Install [mkcert](https://github.com/FiloSottile/mkcert)
 2. Change into the ssl directory: `cd docker/web/ssl`
-3. Using `mkcert`, generate a certificate and a key: `mkcert 10.0.0.102`
-4. Rename certificate: `mv 10.0.0.102.pem 10.0.0.102.crt`
-5. Rename key: `mv 10.0.0.102-key.pem 10.0.0.102.key`
+3. Using `mkcert`, generate a certificate and a key: `mkcert localhost`
+4. Rename certificate: `mv localhost.pem localhost.crt`
+5. Rename key: `mv localhost-key.pem localhost.key`
 
 ### Using Docker
 
@@ -39,6 +39,6 @@ docker exec -it yourls-responsive-ui-web-1 bash
 
 ## Accessing the Admin Panel
 
-- URL: `https://10.0.0.102/admin`
+- URL: `https://localhost/admin`
 - Username: `root`
 - Password: `root`
