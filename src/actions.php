@@ -19,8 +19,6 @@ function responsive_head(): void {
     $dark  = RESPONSIVE_SCHEME_DARK;
     echo <<<HEAD
         <meta name="color-scheme" content="$scheme">
-        <link rel="stylesheet" href="https://unpkg.com/animate.css@4/animate.min.css">
-        <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@7/css/all.min.css">
         <link rel="stylesheet" href="$css">
         <script>
         const RESPONSIVEUI = {
@@ -34,7 +32,7 @@ function responsive_head(): void {
         <script type="importmap">
         {
             "imports": {
-                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+                "vue": "https://unpkg.com/vue@3.5.32/dist/vue.esm-browser.js"
             }
         }
         </script>
