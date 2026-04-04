@@ -24,13 +24,27 @@ BRIDGE;
 
 function responsive_bridge_install(): bool {
 	$cache_file = YOURLS_USERDIR . '/cache.php';
-	$block      = responsive_bridge_block();
 
 	if ( file_exists( $cache_file ) ) {
 		$content = file_get_contents( $cache_file );
 
 		if ( $content === false ) {
 			return false;
+		}
+
+		$has_begin = strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) !== false;
+		$has_end   = strpos( $content, RESPONSIVE_BRIDGE_END ) !== false;
+
+		// Both markers present — nothing to do
+		if ( $has_begin && $has_end ) {
+			return true;
+		}
+
+		// Remove dangling partial marker
+		if ( $has_begin ) {
+			$content = substr( $content, 0, strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) );
+		} elseif ( $has_end ) {
+			$content = substr( $content, strpos( $content, RESPONSIVE_BRIDGE_END ) + strlen( RESPONSIVE_BRIDGE_END ) );
 		}
 	} else {
 		$content = "<?php\n";
@@ -40,22 +54,7 @@ function responsive_bridge_install(): bool {
 		$content = "<?php\n" . $content;
 	}
 
-	$begin_pos = strpos( $content, RESPONSIVE_BRIDGE_BEGIN );
-	$end_pos   = strpos( $content, RESPONSIVE_BRIDGE_END );
-
-	if ( $begin_pos !== false && $end_pos !== false ) {
-		$before  = substr( $content, 0, $begin_pos );
-		$after   = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
-		$content = $before . $block . $after;
-	} else {
-		if ( $begin_pos !== false ) {
-			$content = substr( $content, 0, $begin_pos );
-		} elseif ( $end_pos !== false ) {
-			$content = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
-		}
-
-		$content = rtrim( $content ) . "\n\n" . $block . "\n";
-	}
+	$content = rtrim( $content ) . "\n\n" . responsive_bridge_block() . "\n";
 
 	return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 }
