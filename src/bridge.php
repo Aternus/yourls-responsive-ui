@@ -32,15 +32,22 @@ function responsive_bridge_install(): bool {
 			return false;
 		}
 
+		$block     = responsive_bridge_block();
 		$has_begin = strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) !== false;
 		$has_end   = strpos( $content, RESPONSIVE_BRIDGE_END ) !== false;
 
-		// Both markers present — nothing to do
 		if ( $has_begin && $has_end ) {
-			return true;
+			if ( strpos( $content, $block ) !== false ) {
+				return true;
+			}
+
+			$before  = substr( $content, 0, strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) );
+			$after   = substr( $content, strpos( $content, RESPONSIVE_BRIDGE_END ) + strlen( RESPONSIVE_BRIDGE_END ) );
+			$content = $before . $block . $after;
+
+			return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 		}
 
-		// Remove dangling partial marker
 		if ( $has_begin ) {
 			$content = substr( $content, 0, strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) );
 		} elseif ( $has_end ) {
