@@ -1,17 +1,7 @@
 <?php
 
-///////////////////////////////////////////////////////////
-// Cache Bridge Lifecycle Manager
-///////////////////////////////////////////////////////////
-
-// Marker constants
-/////////////////////////////////////////////////
-
 define( 'RESPONSIVE_BRIDGE_BEGIN', '// BEGIN yourls-responsive-ui managed bridge' );
 define( 'RESPONSIVE_BRIDGE_END', '// END yourls-responsive-ui managed bridge' );
-
-// Bridge block content
-/////////////////////////////////////////////////
 
 function responsive_bridge_block(): string {
 	$begin = RESPONSIVE_BRIDGE_BEGIN;
@@ -32,9 +22,6 @@ if (
 BRIDGE;
 }
 
-// Bridge installation (idempotent)
-/////////////////////////////////////////////////
-
 function responsive_bridge_install(): bool {
 	$cache_file = YOURLS_USERDIR . '/cache.php';
 	$block      = responsive_bridge_block();
@@ -49,7 +36,6 @@ function responsive_bridge_install(): bool {
 		$content = "<?php\n";
 	}
 
-	// Ensure PHP open tag is present
 	if ( strpos( $content, '<?php' ) === false && strpos( $content, '<?' ) === false ) {
 		$content = "<?php\n" . $content;
 	}
@@ -58,12 +44,10 @@ function responsive_bridge_install(): bool {
 	$end_pos   = strpos( $content, RESPONSIVE_BRIDGE_END );
 
 	if ( $begin_pos !== false && $end_pos !== false ) {
-		// Replace existing block in-place
 		$before  = substr( $content, 0, $begin_pos );
 		$after   = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
 		$content = $before . $block . $after;
 	} else {
-		// Remove dangling partial marker if present
 		if ( $begin_pos !== false ) {
 			$content = substr( $content, 0, $begin_pos );
 		} elseif ( $end_pos !== false ) {
@@ -75,9 +59,6 @@ function responsive_bridge_install(): bool {
 
 	return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 }
-
-// Bridge removal (deactivate)
-/////////////////////////////////////////////////
 
 function responsive_bridge_remove(): bool {
 	$cache_file = YOURLS_USERDIR . '/cache.php';
