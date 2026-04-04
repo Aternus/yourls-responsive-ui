@@ -19,4 +19,4 @@ require_once __DIR__ . '/src/bridge.php';
 responsive_bridge_install();
 
 // Lifecycle hooks
-yourls_add_action( 'deactivated_yourls-responsive-ui/plugin.php', 'responsive_deactivate' );
+yourls_add_action( 'deactivated_yourls-responsive-ui/plugin.php', 'responsive_bridge_remove' );

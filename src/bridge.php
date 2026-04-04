@@ -109,18 +109,3 @@ function responsive_bridge_remove(): bool {
 
 	return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 }
-
-// Deactivation hook
-/////////////////////////////////////////////////
-
-function responsive_deactivate(): void {
-	if ( ! responsive_bridge_remove() ) {
-		$cache_path = YOURLS_USERDIR . '/cache.php';
-
-		if ( function_exists( 'yourls_add_notice' ) ) {
-			yourls_add_notice(
-				"Responsive UI: Could not remove cache bridge from <code>{$cache_path}</code>. Remove the managed block manually."
-			);
-		}
-	}
-}
