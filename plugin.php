@@ -15,5 +15,3 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
 require_once __DIR__ . '/src/bridge.php';
 
 responsive_bridge_install();
-
-yourls_add_action( 'deactivated_yourls-responsive-ui/plugin.php', 'responsive_bridge_remove' );
