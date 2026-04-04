@@ -32,14 +32,13 @@ if (
 BRIDGE;
 }
 
-// Bridge installation (activate/update)
+// Bridge installation (idempotent)
 /////////////////////////////////////////////////
 
 function responsive_bridge_install(): bool {
 	$cache_file = YOURLS_USERDIR . '/cache.php';
 	$block      = responsive_bridge_block();
 
-	// Read existing content or start fresh
 	if ( file_exists( $cache_file ) ) {
 		$content = file_get_contents( $cache_file );
 
@@ -55,34 +54,29 @@ function responsive_bridge_install(): bool {
 		$content = "<?php\n" . $content;
 	}
 
-	// Check for existing marker block
 	$begin_pos = strpos( $content, RESPONSIVE_BRIDGE_BEGIN );
 	$end_pos   = strpos( $content, RESPONSIVE_BRIDGE_END );
 
 	if ( $begin_pos !== false && $end_pos !== false ) {
-		// Replace existing block in-place (idempotent update)
+		// Replace existing block in-place
 		$before  = substr( $content, 0, $begin_pos );
 		$after   = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
 		$content = $before . $block . $after;
-	} elseif ( $begin_pos !== false || $end_pos !== false ) {
-		// Partial marker corruption — remove dangling marker before appending
+	} else {
+		// Remove dangling partial marker if present
 		if ( $begin_pos !== false ) {
 			$content = substr( $content, 0, $begin_pos );
 		} elseif ( $end_pos !== false ) {
 			$content = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
 		}
-		$content = rtrim( $content ) . "\n\n" . $block . "\n";
-	} else {
-		// Append block
+
 		$content = rtrim( $content ) . "\n\n" . $block . "\n";
 	}
 
-	$written = file_put_contents( $cache_file, $content, LOCK_EX );
-
-	return $written !== false;
+	return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 }
 
-// Bridge removal (deactivate/uninstall)
+// Bridge removal (deactivate)
 /////////////////////////////////////////////////
 
 function responsive_bridge_remove(): bool {
@@ -102,38 +96,18 @@ function responsive_bridge_remove(): bool {
 	$end_pos   = strpos( $content, RESPONSIVE_BRIDGE_END );
 
 	if ( $begin_pos === false || $end_pos === false ) {
-		// No marker block found — nothing to remove
 		return true;
 	}
 
-	$before = substr( $content, 0, $begin_pos );
-	$after  = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
-
-	// Clean up extra blank lines at the join point, guarantee newline separator
+	$before  = substr( $content, 0, $begin_pos );
+	$after   = substr( $content, $end_pos + strlen( RESPONSIVE_BRIDGE_END ) );
 	$content = rtrim( $before ) . "\n" . ltrim( $after );
 
-	// If only the PHP tag remains, keep it clean
 	if ( trim( $content ) === '<?php' ) {
 		$content = "<?php\n";
 	}
 
-	$written = file_put_contents( $cache_file, $content, LOCK_EX );
-
-	return $written !== false;
-}
-
-// Activation hook
-/////////////////////////////////////////////////
-
-function responsive_activate(): void {
-	if ( ! responsive_bridge_install() ) {
-		$cache_path = YOURLS_USERDIR . '/cache.php';
-		yourls_die(
-			"Responsive UI: Failed to install cache bridge. Ensure <code>{$cache_path}</code> is writable.",
-			'Plugin Activation Failed',
-			403
-		);
-	}
+	return file_put_contents( $cache_file, $content, LOCK_EX ) !== false;
 }
 
 // Deactivation hook
@@ -149,11 +123,4 @@ function responsive_deactivate(): void {
 			);
 		}
 	}
-}
-
-// Uninstall hook
-/////////////////////////////////////////////////
-
-function responsive_uninstall(): void {
-	responsive_bridge_remove();
 }
