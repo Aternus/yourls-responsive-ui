@@ -8,15 +8,12 @@
     Author URI: https://atern.us/
 */
 
-// No direct call
 if ( ! defined( 'YOURLS_ABSPATH' ) ) {
     die();
 }
 
 require_once __DIR__ . '/src/bridge.php';
 
-// Ensure cache bridge exists on every load (idempotent)
 responsive_bridge_install();
 
-// Lifecycle hooks
 yourls_add_action( 'deactivated_yourls-responsive-ui/plugin.php', 'responsive_bridge_remove' );

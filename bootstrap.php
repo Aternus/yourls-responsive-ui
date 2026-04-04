@@ -1,13 +1,5 @@
 <?php
 
-///////////////////////////////////////////////////////////
-// Runtime Bootstrap
-///////////////////////////////////////////////////////////
-
-// Loaded by cache.php bridge for all admin flows
-// (including upgrade/install where plugins are not loaded).
-
-// No direct call
 if ( ! defined( 'YOURLS_ABSPATH' ) ) {
 	die();
 }
