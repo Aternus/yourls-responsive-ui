@@ -185,9 +185,9 @@ function responsive_strip_inline_bookmark( string $html ): string {
 	return responsive_strip_inline_script_blocks_matching(
 		$html,
 		static function ( string $attrs, string $body ): bool {
-			return strpos( $body, '$(document).ready' ) !== false
-				&& strpos( $body, 'feedback(' ) !== false
-				&& strpos( $body, 'init_clipboard()' ) !== false;
+			return str_contains( $body, '$(document).ready' )
+				&& str_contains( $body, 'feedback(' )
+				&& str_contains( $body, 'init_clipboard()' );
 		}
 	);
 }
@@ -197,10 +197,10 @@ function responsive_strip_inline_infos( string $html ): string {
 		$html,
 		static function ( string $attrs, string $body ): bool {
 			if (
-				strpos( $body, 'google.load(' ) !== false
-				&& strpos( $body, 'visualization' ) !== false
-				&& strpos( $body, 'corechart' ) !== false
-				&& strpos( $body, 'geochart' ) !== false
+				str_contains( $body, 'google.load(' )
+				&& str_contains( $body, 'visualization' )
+				&& str_contains( $body, 'corechart' )
+				&& str_contains( $body, 'geochart' )
 			) {
 				return true;
 			}
@@ -219,10 +219,10 @@ function responsive_strip_inline_index( string $html ): string {
 	return responsive_strip_inline_script_blocks_matching(
 		$html,
 		static function ( string $attrs, string $body ): bool {
-			return strpos( $body, 'var l10n_cal_month =' ) !== false
-				&& strpos( $body, 'var l10n_cal_days =' ) !== false
-				&& strpos( $body, 'var l10n_cal_today =' ) !== false
-				&& strpos( $body, 'var l10n_cal_close =' ) !== false;
+			return str_contains( $body, 'var l10n_cal_month =' )
+				&& str_contains( $body, 'var l10n_cal_days =' )
+				&& str_contains( $body, 'var l10n_cal_today =' )
+				&& str_contains( $body, 'var l10n_cal_close =' );
 		}
 	);
 }
@@ -245,11 +245,11 @@ function responsive_strip_inline_plugins( string $html ): string {
 	return responsive_strip_inline_script_blocks_matching(
 		$html,
 		static function ( string $attrs, string $body ): bool {
-			return strpos( $body, 'yourls_defaultsort = 0;' ) !== false
-				&& strpos( $body, 'yourls_defaultorder = 0;' ) !== false
-				&& strpos( $body, '#plugin_summary' ) !== false
-				&& strpos( $body, '#toggle_plugins' ) !== false
-				&& strpos( $body, '#main_table tr.inactive' ) !== false;
+			return str_contains( $body, 'yourls_defaultsort = 0;' )
+				&& str_contains( $body, 'yourls_defaultorder = 0;' )
+				&& str_contains( $body, '#plugin_summary' )
+				&& str_contains( $body, '#toggle_plugins' )
+				&& str_contains( $body, '#main_table tr.inactive' );
 		}
 	);
 }
@@ -260,7 +260,7 @@ function responsive_strip_inline_plugins( string $html ): string {
 
 function responsive_sanitize_html_output( string $html ): string {
 	// Fail open: no </head> means not a full HTML page
-	if ( stripos( $html, '</head>' ) === false ) {
+	if ( ! str_contains( strtolower( $html ), '</head>' ) ) {
 		return $html;
 	}
 

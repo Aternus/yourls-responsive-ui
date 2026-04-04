@@ -33,11 +33,11 @@ function responsive_bridge_install(): bool {
 		}
 
 		$block     = responsive_bridge_block();
-		$has_begin = strpos( $content, RESPONSIVE_BRIDGE_BEGIN ) !== false;
-		$has_end   = strpos( $content, RESPONSIVE_BRIDGE_END ) !== false;
+		$has_begin = str_contains( $content, RESPONSIVE_BRIDGE_BEGIN );
+		$has_end   = str_contains( $content, RESPONSIVE_BRIDGE_END );
 
 		if ( $has_begin && $has_end ) {
-			if ( strpos( $content, $block ) !== false ) {
+			if ( str_contains( $content, $block ) ) {
 				return true;
 			}
 
@@ -57,7 +57,7 @@ function responsive_bridge_install(): bool {
 		$content = "<?php\n";
 	}
 
-	if ( strpos( $content, '<?php' ) === false && strpos( $content, '<?' ) === false ) {
+	if ( ! str_contains( $content, '<?php' ) && ! str_contains( $content, '<?' ) ) {
 		$content = "<?php\n" . $content;
 	}
 
