@@ -13,10 +13,12 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
     die();
 }
 
-define( "RESPONSIVE_PLUGIN_URL", yourls_plugin_url( __DIR__ ) );
+require_once __DIR__ . '/src/bridge.php';
 
-require_once __DIR__ . '/src/constants.php';
-require_once __DIR__ . '/src/utils.php';
-require_once __DIR__ . '/src/settings_page.php';
-require_once __DIR__ . '/src/actions.php';
-require_once __DIR__ . '/src/filters.php';
+// Lifecycle hooks
+yourls_add_action( 'activated_yourls-responsive-ui/plugin.php', 'responsive_activate' );
+yourls_add_action( 'deactivated_yourls-responsive-ui/plugin.php', 'responsive_deactivate' );
+yourls_add_action( 'uninstalled_yourls-responsive-ui/plugin.php', 'responsive_uninstall' );
+
+// Runtime bootstrap (also loaded via cache bridge for upgrade/install flows)
+require_once __DIR__ . '/bootstrap.php';
