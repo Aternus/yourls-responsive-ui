@@ -133,7 +133,7 @@ function responsive_action_links_add_data_attributes(
             $pattern,
             '$1 data-rui-action="' . $action_name . '"',
             $action_links,
-        );
+        ) ?? $action_links;
     }
 
     // Strip any remaining onclick attributes from action links.

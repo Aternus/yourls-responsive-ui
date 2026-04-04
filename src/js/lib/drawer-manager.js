@@ -306,13 +306,16 @@ export function initDrawerManager() {
             if (data.success === 1 || data.success === "1") {
                 const row = document.querySelector(`#id-${id}`);
                 if (row instanceof HTMLElement) {
-                    row.style.transition = "opacity 0.3s ease";
-                    row.style.opacity = "0";
-                    setTimeout(() => {
+                    const removeRow = () => {
                         row.remove();
                         recomputeTotalLinks();
                         recomputeTotalClicks();
-                    }, 300);
+                    };
+                    row.addEventListener("transitionend", removeRow, {
+                        once: true,
+                    });
+                    row.style.transition = "opacity 0.3s ease";
+                    row.style.opacity = "0";
                 }
             } else {
                 showFeedback(
