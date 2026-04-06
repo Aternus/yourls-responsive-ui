@@ -5,21 +5,26 @@
     "description": "YOURLS Responsive UI",
     "main": "index.js",
     "scripts": {
-        "dev": "sass --watch src/css/app.scss:release/css/app.css",
-        "build": "sass src/css/app.scss:release/css/app.css --style=compressed",
+        "dev": "npx @tailwindcss/cli -i ./src/css/app.css -o ./release/css/app.css --watch --map",
+        "build": "npx @tailwindcss/cli -i ./src/css/app.css -o ./release/css/app.css --minify",
         "test:e2e": "playwright test",
         "format": "prettier --write 'src/**/*.{js,scss}'",
         "format:check": "prettier --check 'src/**/*.{js,scss}'"
     },
     "author": "Kiril Reznik",
     "license": "MIT",
-    "devDependencies": {
-        "@playwright/test": "^1.58.2",
-        "playwright": "^1.58.2",
-        "prettier": "3.8.1",
-        "sass": "^1.80.0"
-    },
     "engines": {
         "node": ">=22"
+    },
+    "devDependencies": {
+        "@ianvs/prettier-plugin-sort-imports": "4.7.1",
+        "@playwright/test": "^1.58.2",
+        "@tailwindcss/cli": "^4.2.2",
+        "@tailwindcss/forms": "0.5.11",
+        "playwright": "^1.58.2",
+        "prettier": "3.8.1",
+        "prettier-plugin-tailwindcss": "0.7.2",
+        "sass": "^1.80.0",
+        "tailwindcss": "4.2.2"
     }
 }
