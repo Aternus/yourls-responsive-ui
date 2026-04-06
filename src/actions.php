@@ -83,8 +83,8 @@ function responsive_head(): void {
         <script type="importmap">
         {
             "imports": {
-                "vue": "https://unpkg.com/vue@3.5.32/dist/vue.esm-browser.js",
-                "cva": "https://esm.sh/cva@1.0.0-beta.4"
+                "vue": "https://esm.sh/vue@3.5.32/dist/vue.esm-browser.js",
+                "class-variance-authority": "https://esm.sh/class-variance-authority@0.7.1/dist/index.mjs"
             }
         }
         </script>
@@ -102,6 +102,7 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
 
     if ( $context === 'login' ) {
         echo '<rui-login></rui-login>';
+
         return;
     }
 

@@ -1,4 +1,4 @@
-import { cva } from "cva";
+import { cva } from "class-variance-authority";
 import { computed, defineCustomElement, nextTick, onMounted, ref } from "vue";
 
 /* Variant configs (CVA)
