@@ -25,7 +25,7 @@ HTML markup changes should be done via YOURLS hooks; ONLY IF it is not possible
 
 ## Colors
 
-The color palette is defined in `src/css/_palette.css`.
+The color palette is defined inside the `@theme` layer in `src/css/app.css`.
 
 ## Icons
 
