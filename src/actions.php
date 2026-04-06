@@ -58,6 +58,13 @@ function responsive_head(): void {
             'current'   => $scheme,
             'available' => [ $system, $light, $dark ],
         ],
+        'strings'   => [
+            'login' => [
+                'brand'   => yourls__( 'YOURLS' ),
+                'heading' => yourls__( 'Sign in to your account' ),
+                'tagline' => yourls__( 'Enter your credentials to manage your short URLs.' ),
+            ],
+        ],
     ];
     $responsive_ui_json   = json_encode(
         $responsive_ui_config,
@@ -76,7 +83,8 @@ function responsive_head(): void {
         <script type="importmap">
         {
             "imports": {
-                "vue": "https://unpkg.com/vue@3.5.32/dist/vue.esm-browser.js"
+                "vue": "https://unpkg.com/vue@3.5.32/dist/vue.esm-browser.js",
+                "cva": "https://esm.sh/cva@1.0.0-beta.4"
             }
         }
         </script>
@@ -87,14 +95,19 @@ function responsive_head(): void {
 yourls_add_action( 'html_head', 'responsive_head' );
 
 function responsive_custom_elements_root( $hook_args = [] ): void {
-    if ( ! defined( 'YOURLS_USER' ) ) {
-        return;
-    }
-
     $context = is_array( $hook_args )
         ? array_shift( $hook_args )
         : $hook_args;
     $context = is_string( $context ) ? $context : '';
+
+    if ( $context === 'login' ) {
+        echo '<rui-login></rui-login>';
+        return;
+    }
+
+    if ( ! defined( 'YOURLS_USER' ) ) {
+        return;
+    }
 
     echo '<rui-nav-controls></rui-nav-controls>';
     echo '<rui-scroll-top></rui-scroll-top>';

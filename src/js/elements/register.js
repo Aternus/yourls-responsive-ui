@@ -1,4 +1,5 @@
 import { RuiInfosPage } from "./admin/rui-infos-page.js";
+import { RuiLogin } from "./admin/rui-login.js";
 import { RuiPluginActions } from "./admin/rui-plugin-actions.js";
 import { RuiDeletePanel } from "./links/rui-delete-panel.js";
 import { RuiDrawerIntro } from "./links/rui-drawer-intro.js";
@@ -53,4 +54,5 @@ export function registerAllElements() {
   // Admin
   define("rui-plugin-actions", RuiPluginActions);
   define("rui-infos-page", RuiInfosPage);
+  define("rui-login", RuiLogin);
 }
