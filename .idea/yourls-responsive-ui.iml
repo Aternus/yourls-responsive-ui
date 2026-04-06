@@ -5,6 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/.agents" />
       <excludeFolder url="file://$MODULE_DIR$/.claude" />
       <excludeFolder url="file://$MODULE_DIR$/_bmad" />
+      <excludeFolder url="file://$MODULE_DIR$/release" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
