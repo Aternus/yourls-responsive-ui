@@ -1,73 +1,73 @@
 import { defineCustomElement, ref } from "vue";
 
 function ceDetail(event, index = 0) {
-    const detail = event?.detail;
-    return Array.isArray(detail) ? detail[index] : detail;
+  const detail = event?.detail;
+  return Array.isArray(detail) ? detail[index] : detail;
 }
 
 export const RuiRowDrawerViewport = defineCustomElement(
-    {
-        name: "RuiRowDrawerViewport",
-        props: {
-            mode: { type: String, default: "" },
-            data: { type: Object, default: null },
-            open: { type: Boolean, default: false },
-        },
-        emits: [
-            "save-edit",
-            "request-close",
-            "confirm-delete",
-            "cancel-delete",
-            "after-leave",
-        ],
-        setup(_props, { emit }) {
-            const shellRef = ref(null);
+  {
+    name: "RuiRowDrawerViewport",
+    props: {
+      mode: { type: String, default: "" },
+      data: { type: Object, default: null },
+      open: { type: Boolean, default: false },
+    },
+    emits: [
+      "save-edit",
+      "request-close",
+      "confirm-delete",
+      "cancel-delete",
+      "after-leave",
+    ],
+    setup(_props, { emit }) {
+      const shellRef = ref(null);
 
-            const requestClose = () => {
-                emit("request-close");
-            };
+      const requestClose = () => {
+        emit("request-close");
+      };
 
-            const forwardSaveEdit = (event) => {
-                emit("save-edit", ceDetail(event, 0), ceDetail(event, 1));
-            };
+      const forwardSaveEdit = (event) => {
+        emit("save-edit", ceDetail(event, 0), ceDetail(event, 1));
+      };
 
-            const forwardConfirmDelete = (event) => {
-                emit("confirm-delete", ceDetail(event, 0));
-            };
+      const forwardConfirmDelete = (event) => {
+        emit("confirm-delete", ceDetail(event, 0));
+      };
 
-            const forwardCancelDelete = () => {
-                emit("cancel-delete");
-            };
+      const forwardCancelDelete = () => {
+        emit("cancel-delete");
+      };
 
-            const handleAfterLeave = () => {
-                emit("after-leave");
-            };
+      const handleAfterLeave = () => {
+        emit("after-leave");
+      };
 
-            const handleAfterEnter = () => {
-                window.requestAnimationFrame(() => {
-                    const shell = shellRef.value;
-                    if (!(shell instanceof HTMLElement)) {
-                        return;
-                    }
+      const handleAfterEnter = () => {
+        window.requestAnimationFrame(() => {
+          const shell = shellRef.value;
+          if (!(shell instanceof HTMLElement)) {
+            return;
+          }
 
-                    const primaryControl = shell.querySelector("[autofocus]");
-                    if (primaryControl instanceof HTMLElement) {
-                        primaryControl.focus();
-                    }
-                });
-            };
+          const primaryControl = shell.querySelector("[autofocus]");
+          if (primaryControl instanceof HTMLElement) {
+            primaryControl.focus();
+          }
+        });
+      };
 
-            return {
-                shellRef,
-                requestClose,
-                forwardSaveEdit,
-                forwardConfirmDelete,
-                forwardCancelDelete,
-                handleAfterLeave,
-                handleAfterEnter,
-            };
-        },
-        template: `
+      return {
+        shellRef,
+        requestClose,
+        forwardSaveEdit,
+        forwardConfirmDelete,
+        forwardCancelDelete,
+        handleAfterLeave,
+        handleAfterEnter,
+      };
+    },
+    template: `
             <Transition
                 name="rui-drawer-surface"
                 @after-enter="handleAfterEnter"
@@ -98,6 +98,6 @@ export const RuiRowDrawerViewport = defineCustomElement(
                 </div>
             </Transition>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

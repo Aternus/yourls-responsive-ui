@@ -7,40 +7,40 @@
 ///////////////////////////////////////////////////////////
 
 .plugin_page_responsive_settings {
-    #wrap {
-        main {
-            max-width: 40rem;
-            margin-left: auto;
-            margin-right: auto;
-        }
+  #wrap {
+    main {
+      max-width: 40rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+    color: var(--brand-800);
+  }
+
+  form {
+    @include md-elevation(1);
+
+    padding: 1rem;
+    background: var(--brand-050);
+    border: 1px solid var(--brand-200);
+    border-radius: $shape-corner-small;
+
+    @media (min-width: $breakpoint-sm) {
+      padding: 1.25rem;
     }
 
-    h2 {
-        margin-bottom: 1rem;
-        color: var(--brand-800);
+    label {
+      display: block;
+      font-weight: 700;
+      color: var(--brand-700);
     }
 
-    form {
-        @include md-elevation(1);
-
-        padding: 1rem;
-        background: var(--brand-050);
-        border: 1px solid var(--brand-200);
-        border-radius: $shape-corner-small;
-
-        @media (min-width: $breakpoint-sm) {
-            padding: 1.25rem;
-        }
-
-        label {
-            display: block;
-            font-weight: 700;
-            color: var(--brand-700);
-        }
-
-        select,
-        input[type="submit"] {
-            width: 100%;
-        }
+    select,
+    input[type="submit"] {
+      width: 100%;
     }
+  }
 }

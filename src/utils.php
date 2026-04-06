@@ -6,7 +6,11 @@ function responsive_sanitize_color_scheme( $color_scheme ): string {
     if (
         in_array(
             $scheme,
-            [ RESPONSIVE_SCHEME_LIGHT, RESPONSIVE_SCHEME_DARK ],
+            [
+                RESPONSIVE_SCHEME_SYSTEM,
+                RESPONSIVE_SCHEME_LIGHT,
+                RESPONSIVE_SCHEME_DARK,
+            ],
             true,
         )
     ) {
@@ -24,6 +28,14 @@ function responsive_get_color_scheme(): string {
     }
 
     return responsive_sanitize_color_scheme( $color_scheme );
+}
+
+function responsive_get_color_scheme_css_value( string $scheme ): string {
+    if ( $scheme === RESPONSIVE_SCHEME_SYSTEM ) {
+        return RESPONSIVE_SCHEME_LIGHT . ' ' . RESPONSIVE_SCHEME_DARK;
+    }
+
+    return $scheme;
 }
 
 function responsive_get_asset_url(

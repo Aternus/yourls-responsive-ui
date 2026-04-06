@@ -19,11 +19,13 @@ function responsive_settings_handler(): void {
 
     $nonce = yourls_create_nonce( 'responsive_settings' );
 
-    $dark  = RESPONSIVE_SCHEME_DARK;
-    $light = RESPONSIVE_SCHEME_LIGHT;
+    $system = RESPONSIVE_SCHEME_SYSTEM;
+    $dark   = RESPONSIVE_SCHEME_DARK;
+    $light  = RESPONSIVE_SCHEME_LIGHT;
 
-    $dark_selected  = ( $color_scheme === $dark ) ? 'selected' : '';
-    $light_selected = ( $color_scheme === $light ) ? 'selected' : '';
+    $system_selected = ( $color_scheme === $system ) ? 'selected' : '';
+    $dark_selected   = ( $color_scheme === $dark ) ? 'selected' : '';
+    $light_selected  = ( $color_scheme === $light ) ? 'selected' : '';
 
     echo <<<HTML
         <main>
@@ -33,6 +35,7 @@ function responsive_settings_handler(): void {
         	<p>
         		<label>Color Scheme</label>
         		<select name="responsive_color_scheme">
+        			<option value="$system" $system_selected>System</option>
         			<option value="$dark" $dark_selected>Dark</option>
         			<option value="$light" $light_selected>Light</option>
         		</select>

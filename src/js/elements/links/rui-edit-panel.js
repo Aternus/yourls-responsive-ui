@@ -1,48 +1,48 @@
 import { defineCustomElement, ref } from "vue";
 
 export const RuiEditPanel = defineCustomElement(
-    {
-        name: "RuiEditPanel",
-        props: {
-            data: { type: Object, required: true },
-        },
-        emits: ["save-edit", "close"],
-        setup(props, { emit }) {
-            const shortUrl = ref(String(props.data.shortUrl ?? ""));
-            const destinationUrl = ref(String(props.data.destinationUrl ?? ""));
-            const title = ref(String(props.data.title ?? ""));
+  {
+    name: "RuiEditPanel",
+    props: {
+      data: { type: Object, required: true },
+    },
+    emits: ["save-edit", "close"],
+    setup(props, { emit }) {
+      const shortUrl = ref(String(props.data.shortUrl ?? ""));
+      const destinationUrl = ref(String(props.data.destinationUrl ?? ""));
+      const title = ref(String(props.data.title ?? ""));
 
-            const drawerId = String(props.data.id ?? "");
+      const drawerId = String(props.data.id ?? "");
 
-            const closeDrawer = () => {
-                emit("close");
-            };
+      const closeDrawer = () => {
+        emit("close");
+      };
 
-            const saveEdit = (button) => {
-                emit(
-                    "save-edit",
-                    {
-                        id: String(props.data.id ?? ""),
-                        keyword: String(props.data.keyword ?? ""),
-                        nonce: String(props.data.nonce ?? ""),
-                        shortUrl: shortUrl.value,
-                        destinationUrl: destinationUrl.value,
-                        title: title.value,
-                    },
-                    button,
-                );
-            };
+      const saveEdit = (button) => {
+        emit(
+          "save-edit",
+          {
+            id: String(props.data.id ?? ""),
+            keyword: String(props.data.keyword ?? ""),
+            nonce: String(props.data.nonce ?? ""),
+            shortUrl: shortUrl.value,
+            destinationUrl: destinationUrl.value,
+            title: title.value,
+          },
+          button,
+        );
+      };
 
-            return {
-                shortUrl,
-                destinationUrl,
-                title,
-                drawerId,
-                closeDrawer,
-                saveEdit,
-            };
-        },
-        template: `
+      return {
+        shortUrl,
+        destinationUrl,
+        title,
+        drawerId,
+        closeDrawer,
+        saveEdit,
+      };
+    },
+    template: `
             <rui-drawer title="Edit Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
@@ -98,6 +98,6 @@ export const RuiEditPanel = defineCustomElement(
                 />
             </rui-drawer>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

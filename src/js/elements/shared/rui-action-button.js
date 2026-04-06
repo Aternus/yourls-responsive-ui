@@ -1,27 +1,27 @@
 import { defineCustomElement } from "vue";
 
 export const RuiActionButton = defineCustomElement(
-    {
-        name: "RuiActionButton",
-        props: {
-            dataId: { type: String, default: "" },
-            elementId: { type: String, default: "" },
-            iconName: { type: String, required: true },
-            iconLibrary: { type: String, default: "material" },
-            label: { type: String, required: true },
-        },
-        emits: ["press"],
-        setup(_props, { emit }) {
-            const handleClick = (event) => {
-                event.preventDefault();
-                emit("press", event.currentTarget);
-            };
+  {
+    name: "RuiActionButton",
+    props: {
+      dataId: { type: String, default: "" },
+      elementId: { type: String, default: "" },
+      iconName: { type: String, required: true },
+      iconLibrary: { type: String, default: "material" },
+      label: { type: String, required: true },
+    },
+    emits: ["press"],
+    setup(_props, { emit }) {
+      const handleClick = (event) => {
+        event.preventDefault();
+        emit("press", event.currentTarget);
+      };
 
-            return {
-                handleClick,
-            };
-        },
-        template: `
+      return {
+        handleClick,
+      };
+    },
+    template: `
             <button
                 type="button"
                 class="button"
@@ -42,6 +42,6 @@ export const RuiActionButton = defineCustomElement(
                 />
             </button>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

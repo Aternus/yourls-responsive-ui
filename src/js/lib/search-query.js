@@ -12,17 +12,17 @@
  * unchanged when no protocol prefix is detected.
  */
 export function stripSearchProtocol(value) {
-    if (typeof value !== "string") {
-        return "";
-    }
+  if (typeof value !== "string") {
+    return "";
+  }
 
-    const trimmed = value.trim();
-    if (!trimmed) {
-        return trimmed;
-    }
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return trimmed;
+  }
 
-    const match = trimmed.match(/^https?:\/\/(.*)/i);
-    return match ? match[1] : trimmed;
+  const match = trimmed.match(/^https?:\/\/(.*)/i);
+  return match ? match[1] : trimmed;
 }
 
 /**
@@ -31,14 +31,14 @@ export function stripSearchProtocol(value) {
  * with what the user typed.
  */
 export function restoreSearchProtocol(value, originalSearch) {
-    if (typeof value !== "string" || typeof originalSearch !== "string") {
-        return value ?? "";
-    }
+  if (typeof value !== "string" || typeof originalSearch !== "string") {
+    return value ?? "";
+  }
 
-    const protocolMatch = originalSearch.match(/^(https?:\/\/)/i);
-    if (!protocolMatch) {
-        return value;
-    }
+  const protocolMatch = originalSearch.match(/^(https?:\/\/)/i);
+  if (!protocolMatch) {
+    return value;
+  }
 
-    return protocolMatch[1] + value;
+  return protocolMatch[1] + value;
 }

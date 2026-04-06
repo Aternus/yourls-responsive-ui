@@ -1,31 +1,31 @@
 import { defineCustomElement } from "vue";
 
 export const RuiTextInputField = defineCustomElement(
-    {
-        name: "RuiTextInputField",
-        props: {
-            labelText: { type: String, required: true },
-            controlId: { type: String, required: true },
-            modelValue: { type: String, default: "" },
-            controlType: { type: String, default: "text" },
-            controlClass: { type: String, default: "" },
-            autoFocus: { type: Boolean, default: false },
-            placeholder: { type: String, default: "" },
-            readOnly: { type: Boolean, default: false },
-            ariaLabel: { type: String, default: "" },
-            controlRef: { type: [Object, Function], default: null },
-        },
-        emits: ["update:modelValue"],
-        setup(_props, { emit }) {
-            const updateValue = (event) => {
-                emit("update:modelValue", event.target.value);
-            };
+  {
+    name: "RuiTextInputField",
+    props: {
+      labelText: { type: String, required: true },
+      controlId: { type: String, required: true },
+      modelValue: { type: String, default: "" },
+      controlType: { type: String, default: "text" },
+      controlClass: { type: String, default: "" },
+      autoFocus: { type: Boolean, default: false },
+      placeholder: { type: String, default: "" },
+      readOnly: { type: Boolean, default: false },
+      ariaLabel: { type: String, default: "" },
+      controlRef: { type: [Object, Function], default: null },
+    },
+    emits: ["update:modelValue"],
+    setup(_props, { emit }) {
+      const updateValue = (event) => {
+        emit("update:modelValue", event.target.value);
+      };
 
-            return {
-                updateValue,
-            };
-        },
-        template: `
+      return {
+        updateValue,
+      };
+    },
+    template: `
             <rui-field
                 :label-text="labelText"
                 :control-id="controlId"
@@ -44,6 +44,6 @@ export const RuiTextInputField = defineCustomElement(
                 />
             </rui-field>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

@@ -1,2 +1,78 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";
+
+@theme {
+  --color-*: initial;
+
+  --color-brand-50: light-dark(#ecf5fb, #05111a);
+  --color-brand-100: light-dark(#d8eaf7, #081b29);
+  --color-brand-200: light-dark(#c2def3, #0c293e);
+  --color-brand-300: light-dark(#aad0ee, #16486f);
+  --color-brand-400: light-dark(#5ca6df, #1f659b);
+  --color-brand-500: light-dark(#2883c9, #2883c9);
+  --color-brand-600: light-dark(#1f659b, #5ca6df);
+  --color-brand-700: light-dark(#16486f, #aad0ee);
+  --color-brand-800: light-dark(#0c293e, #c2def3);
+  --color-brand-900: light-dark(#081b29, #d8eaf7);
+  --color-brand-950: light-dark(#05111a, #ecf5fb);
+
+  --color-secondary-50: light-dark(#fef3d8, #150f00);
+  --color-secondary-100: light-dark(#fde5ac, #221801);
+  --color-secondary-200: light-dark(#fcd57a, #332401);
+  --color-secondary-300: light-dark(#fbc33f, #5b4102);
+  --color-secondary-400: light-dark(#d29404, #805b03);
+  --color-secondary-500: light-dark(#a67603, #a67603);
+  --color-secondary-600: light-dark(#805b03, #d29404);
+  --color-secondary-700: light-dark(#5b4102, #fbc33f);
+  --color-secondary-800: light-dark(#332401, #fcd57a);
+  --color-secondary-900: light-dark(#221801, #fde5ac);
+  --color-secondary-950: light-dark(#150f00, #fef3d8);
+
+  --color-tertiary-50: light-dark(#e9f6fa, #051115);
+  --color-tertiary-100: light-dark(#d2ecf4, #081c23);
+  --color-tertiary-200: light-dark(#b8e0ee, #0c2a34);
+  --color-tertiary-300: light-dark(#9cd4e7, #164b5d);
+  --color-tertiary-400: light-dark(#3eacd1, #1f6982);
+  --color-tertiary-500: light-dark(#2888a9, #2888a9);
+  --color-tertiary-600: light-dark(#1f6982, #3eacd1);
+  --color-tertiary-700: light-dark(#164b5d, #9cd4e7);
+  --color-tertiary-800: light-dark(#0c2a34, #b8e0ee);
+  --color-tertiary-900: light-dark(#081c23, #d2ecf4);
+  --color-tertiary-950: light-dark(#051115, #e9f6fa);
+
+  --color-neutral-50: light-dark(#f3f3f3, #101010);
+  --color-neutral-100: light-dark(#e7e7e7, #191919);
+  --color-neutral-200: light-dark(#dadada, #272727);
+  --color-neutral-300: light-dark(#cbcbcb, #454545);
+  --color-neutral-400: light-dark(#a0a0a0, #616161);
+  --color-neutral-500: light-dark(#7e7e7e, #7e7e7e);
+  --color-neutral-600: light-dark(#616161, #a0a0a0);
+  --color-neutral-700: light-dark(#454545, #cbcbcb);
+  --color-neutral-800: light-dark(#272727, #dadada);
+  --color-neutral-900: light-dark(#191919, #e7e7e7);
+  --color-neutral-950: light-dark(#101010, #f3f3f3);
+
+  --color-error-50: light-dark(#fcf1ef, #1d0a05);
+  --color-error-100: light-dark(#f9e3dd, #2e1109);
+  --color-error-200: light-dark(#f5d3c9, #45190d);
+  --color-error-300: light-dark(#f1c1b4, #7a2c17);
+  --color-error-400: light-dark(#e4876e, #aa3d20);
+  --color-error-500: light-dark(#d8532f, #d8532f);
+  --color-error-600: light-dark(#aa3d20, #e4876e);
+  --color-error-700: light-dark(#7a2c17, #f1c1b4);
+  --color-error-800: light-dark(#45190d, #f5d3c9);
+  --color-error-900: light-dark(#2e1109, #f9e3dd);
+  --color-error-950: light-dark(#1d0a05, #fcf1ef);
+
+  --color-success-50: light-dark(#edf6ec, #091209);
+  --color-success-100: light-dark(#daecd8, #0f1d0e);
+  --color-success-200: light-dark(#c5e2c2, #172b15);
+  --color-success-300: light-dark(#aed6aa, #294e25);
+  --color-success-400: light-dark(#65b15d, #396d34);
+  --color-success-500: light-dark(#4b8d44, #4b8d44);
+  --color-success-600: light-dark(#396d34, #65b15d);
+  --color-success-700: light-dark(#294e25, #aed6aa);
+  --color-success-800: light-dark(#172b15, #c5e2c2);
+  --color-success-900: light-dark(#0f1d0e, #daecd8);
+  --color-success-950: light-dark(#091209, #edf6ec);
+}

@@ -3,9 +3,11 @@
 function responsive_output_color_scheme( string $html ): string {
     $scheme = responsive_get_color_scheme();
 
-    return $html
-           . ' data-rui-scheme="' . $scheme . '"'
-           . ' style="color-scheme: ' . $scheme . ';"';
+    if ( $scheme !== RESPONSIVE_SCHEME_SYSTEM ) {
+        return $html . ' style="color-scheme: ' . $scheme . ';"';
+    }
+
+    return $html;
 }
 
 yourls_add_filter( 'html_language_attributes',
@@ -128,12 +130,13 @@ function responsive_action_links_add_data_attributes(
     ];
 
     foreach ( $action_map as $id_prefix => $action_name ) {
-        $pattern = '/(<a\b[^>]*\bid=["\']' . preg_quote( $id_prefix, '/' ) . '-[^"\']*["\'])/i';
+        $pattern      = '/(<a\b[^>]*\bid=["\']' . preg_quote( $id_prefix,
+                '/' ) . '-[^"\']*["\'])/i';
         $action_links = preg_replace(
-            $pattern,
-            '$1 data-rui-action="' . $action_name . '"',
-            $action_links,
-        ) ?? $action_links;
+                            $pattern,
+                            '$1 data-rui-action="' . $action_name . '"',
+                            $action_links,
+                        ) ?? $action_links;
     }
 
     // Strip any remaining onclick attributes from action links.
@@ -312,9 +315,9 @@ function responsive_translate_labels(
     string $domain = 'default',
 ): string {
     return match ( $text ) {
-        'Shorten The URL'    => 'Shorten',
+        'Shorten The URL' => 'Shorten',
         'Delete confirmation' => 'Delete Link',
-        default               => $translation,
+        default => $translation,
     };
 }
 
@@ -332,41 +335,46 @@ function responsive_shunt_html_addnew( $false ): string {
     $nonce = yourls_create_nonce( 'add_url' );
     $site  = yourls_get_yourls_site();
 
-    return <<<HTML
-    <div id="new_url">
-        <rui-new-url></rui-new-url>
-        <div id="new_url_form_wrap">
-            <form id="new_url_form" action="" method="post">
-                <input type="hidden" name="nonce" value="{$nonce}" />
-                <input type="url" id="add-url" name="url" placeholder="Paste the URL to shorten" class="text" required />
-                <input type="text" id="add-keyword" name="keyword" placeholder="Optional custom short URL" class="text" value="" />
-                <input type="submit" id="add-button" name="add-button" value="Shorten" class="button primary" />
-            </form>
-        </div>
-        <div id="feedback" role="status" aria-live="polite" style="display:none"></div>
-        <div id="shareboxes" style="display:none">
-            <div id="copybox">
-                <label for="copylink">Short URL</label>
-                <input id="copylink" class="text" type="text" readonly />
-                <small>
-                    <span id="origlink"></span> -
-                    <span id="statlink"></span>
-                </small>
+    $output = <<<HTML
+        <main role="main">
+        <div id="new_url">
+            <rui-new-url></rui-new-url>
+            <div id="new_url_form_wrap">
+                <form id="new_url_form" action="" method="post">
+                    <input type="hidden" name="nonce" value="{$nonce}" />
+                    <input type="url" id="add-url" name="url" placeholder="Paste the URL to shorten" class="text" required />
+                    <input type="text" id="add-keyword" name="keyword" placeholder="Optional custom short URL" class="text" value="" />
+                    <input type="submit" id="add-button" name="add-button" value="Shorten" class="button primary" />
+                </form>
             </div>
-            <div id="sharebox">
-                <div id="tweet">
-                    <span id="charcount"></span>
-                    <textarea id="tweet_body" rows="2"></textarea>
+            <div id="feedback" role="status" aria-live="polite" style="display:none"></div>
+            <div id="shareboxes" style="display:none">
+                <div id="copybox">
+                    <label for="copylink">Short URL</label>
+                    <input id="copylink" class="text" type="text" readonly />
+                    <small>
+                        <span id="origlink"></span> -
+                        <span id="statlink"></span>
+                    </small>
                 </div>
-                <div id="share_links">
-                    <a id="share_tw" href="#">Twitter</a>
-                    <a id="share_fb" href="#">Facebook</a>
+                <div id="sharebox">
+                    <div id="tweet">
+                        <span id="charcount"></span>
+                        <textarea id="tweet_body" rows="2"></textarea>
+                    </div>
+                    <div id="share_links">
+                        <a id="share_tw" href="#">Twitter</a>
+                        <a id="share_fb" href="#">Facebook</a>
+                    </div>
                 </div>
             </div>
+            <input type="hidden" id="yourls-site" value="{$site}" />
         </div>
-        <input type="hidden" id="yourls-site" value="{$site}" />
-    </div>
-    HTML;
+        HTML;
+
+    echo $output;
+
+    return '';
 }
 
 yourls_add_filter( 'shunt_html_addnew', 'responsive_shunt_html_addnew' );

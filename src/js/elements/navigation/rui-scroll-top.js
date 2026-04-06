@@ -1,59 +1,60 @@
 import {
-    computed,
-    defineCustomElement,
-    onBeforeUnmount,
-    onMounted,
-    ref,
+  computed,
+  defineCustomElement,
+  onBeforeUnmount,
+  onMounted,
+  ref,
 } from "vue";
+
 import { useMediaQuery } from "../../composables/useMediaQuery.js";
 import { useRafScheduler } from "../../composables/useRafScheduler.js";
 
 export const RuiScrollTop = defineCustomElement(
-    {
-        name: "RuiScrollTop",
-        setup() {
-            const scrollY = ref(0);
-            const isMobile = useMediaQuery("(max-width: 767px)");
+  {
+    name: "RuiScrollTop",
+    setup() {
+      const scrollY = ref(0);
+      const isMobile = useMediaQuery("(max-width: 767px)");
 
-            const syncScrollPosition = () => {
-                scrollY.value = window.scrollY || window.pageYOffset || 0;
-            };
+      const syncScrollPosition = () => {
+        scrollY.value = window.scrollY || window.pageYOffset || 0;
+      };
 
-            const scheduleSync = useRafScheduler(syncScrollPosition);
+      const scheduleSync = useRafScheduler(syncScrollPosition);
 
-            const scrollToTop = (event) => {
-                event.preventDefault();
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth",
-                });
-            };
+      const scrollToTop = (event) => {
+        event.preventDefault();
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      };
 
-            onMounted(() => {
-                syncScrollPosition();
-                window.addEventListener("scroll", scheduleSync, {
-                    passive: true,
-                });
-                window.addEventListener("resize", scheduleSync, {
-                    passive: true,
-                });
-            });
+      onMounted(() => {
+        syncScrollPosition();
+        window.addEventListener("scroll", scheduleSync, {
+          passive: true,
+        });
+        window.addEventListener("resize", scheduleSync, {
+          passive: true,
+        });
+      });
 
-            onBeforeUnmount(() => {
-                window.removeEventListener("scroll", scheduleSync);
-                window.removeEventListener("resize", scheduleSync);
-            });
+      onBeforeUnmount(() => {
+        window.removeEventListener("scroll", scheduleSync);
+        window.removeEventListener("resize", scheduleSync);
+      });
 
-            const isVisible = computed(
-                () => isMobile.value === true && scrollY.value > 220,
-            );
+      const isVisible = computed(
+        () => isMobile.value === true && scrollY.value > 220,
+      );
 
-            return {
-                isVisible,
-                scrollToTop,
-            };
-        },
-        template: `
+      return {
+        isVisible,
+        scrollToTop,
+      };
+    },
+    template: `
             <button
                 type="button"
                 :class="{
@@ -68,6 +69,6 @@ export const RuiScrollTop = defineCustomElement(
                 <rui-material-icon name="arrow_upward" />
             </button>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

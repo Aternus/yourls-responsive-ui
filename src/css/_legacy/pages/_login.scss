@@ -6,71 +6,71 @@
 ///////////////////////////////////////////////////////////
 
 .login {
-    // Hide nav on login page
-    .nav_menu_button {
-        display: none;
-    }
+  // Hide nav on login page
+  .nav_menu_button {
+    display: none;
+  }
 
-    // Remove portrait fixed-header padding
-    #wrap {
-        padding-top: 0;
-    }
+  // Remove portrait fixed-header padding
+  #wrap {
+    padding-top: 0;
+  }
 
-    #wrap header {
-        position: relative;
+  #wrap header {
+    position: relative;
+    text-align: center;
+    height: auto;
+    padding: 1rem;
+    box-shadow: none;
+
+    h1 {
+      a {
         text-align: center;
-        height: auto;
-        padding: 1rem;
-        box-shadow: none;
 
-        h1 {
-            a {
-                text-align: center;
-
-                img#yourls-logo {
-                    position: relative;
-                    top: auto;
-                    left: auto;
-                    margin: 0.5rem auto 0;
-                }
-            }
+        img#yourls-logo {
+          position: relative;
+          top: auto;
+          left: auto;
+          margin: 0.5rem auto 0;
         }
+      }
     }
+  }
 }
 
 #login {
-    max-width: 24rem;
-    margin: 2rem auto;
-    padding: 1.5rem;
+  max-width: 24rem;
+  margin: 2rem auto;
+  padding: 1.5rem;
 
-    background: var(--brand-050);
-    border-radius: $shape-corner-medium;
+  background: var(--brand-050);
+  border-radius: $shape-corner-medium;
 
-    @media (min-width: $breakpoint-sm) {
-        margin-top: 3rem;
-        padding: 2rem;
-    }
+  @media (min-width: $breakpoint-sm) {
+    margin-top: 3rem;
+    padding: 2rem;
+  }
 
-    p {
-        margin-bottom: 0.75rem;
-    }
+  p {
+    margin-bottom: 0.75rem;
+  }
 
-    .error {
-        margin-bottom: 1rem;
-        text-align: center;
-    }
+  .error {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
 
-    label {
-        font-weight: 600;
-        padding: 0.25rem 0;
-    }
+  label {
+    font-weight: 600;
+    padding: 0.25rem 0;
+  }
 
-    .text {
-        width: 100%;
-    }
+  .text {
+    width: 100%;
+  }
 
-    #submit {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
+  #submit {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
 }

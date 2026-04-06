@@ -1,12 +1,12 @@
 import { defineCustomElement } from "vue";
 
 export const RuiDrawer = defineCustomElement(
-    {
-        name: "RuiDrawer",
-        props: {
-            title: { type: String, required: true },
-        },
-        template: `
+  {
+    name: "RuiDrawer",
+    props: {
+      title: { type: String, required: true },
+    },
+    template: `
             <div class="rui-drawer__titlebar">
                 <div class="rui-drawer__heading">
                     <div class="rui-drawer__heading-text">
@@ -21,6 +21,6 @@ export const RuiDrawer = defineCustomElement(
                 <slot name="actions" />
             </div>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

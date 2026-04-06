@@ -3,20 +3,20 @@
 ///////////////////////////////////////////////////////////
 
 .index {
-    #wrap {
-        > p {
-            &:first-of-type {
-                margin-top: 1rem;
-            }
-            &:last-of-type {
-                margin-bottom: 0;
-            }
-        }
+  #wrap {
+    > p {
+      &:first-of-type {
+        margin-top: 1rem;
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
+  }
 
-    // Stats summary
-    #overall_tracking {
-        font-size: 0.875em;
-        color: var(--brand-600);
-    }
+  // Stats summary
+  #overall_tracking {
+    font-size: 0.875em;
+    color: var(--brand-600);
+  }
 }

@@ -1,27 +1,27 @@
 import { defineCustomElement } from "vue";
 
 export const RuiDeletePanel = defineCustomElement(
-    {
-        name: "RuiDeletePanel",
-        props: {
-            data: { type: Object, required: true },
-        },
-        emits: ["confirm", "cancel"],
-        setup(_props, { emit }) {
-            const confirmDelete = (button) => {
-                emit("confirm", button);
-            };
+  {
+    name: "RuiDeletePanel",
+    props: {
+      data: { type: Object, required: true },
+    },
+    emits: ["confirm", "cancel"],
+    setup(_props, { emit }) {
+      const confirmDelete = (button) => {
+        emit("confirm", button);
+      };
 
-            const cancelDelete = () => {
-                emit("cancel");
-            };
+      const cancelDelete = () => {
+        emit("cancel");
+      };
 
-            return {
-                confirmDelete,
-                cancelDelete,
-            };
-        },
-        template: `
+      return {
+        confirmDelete,
+        cancelDelete,
+      };
+    },
+    template: `
             <rui-drawer title="Delete Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
@@ -67,6 +67,6 @@ export const RuiDeletePanel = defineCustomElement(
                 />
             </rui-drawer>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

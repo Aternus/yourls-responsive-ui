@@ -3,71 +3,71 @@
 @use "../internal/motion" as *;
 
 .jquery-notify-bar {
-    @include md-elevation(4);
+  @include md-elevation(4);
 
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 
-    background-color: var(--neutral-100);
-    color: var(--neutral-800);
+  background-color: var(--neutral-100);
+  color: var(--neutral-800);
 
-    font-size: 1em;
-    text-align: center;
+  font-size: 1em;
+  text-align: center;
 
-    font-family: "Open Sans", sans-serif;
-    font-optical-sizing: auto;
+  font-family: "Open Sans", sans-serif;
+  font-optical-sizing: auto;
 
-    padding: 1rem;
+  padding: 1rem;
 
-    border-bottom: 0;
-    border-radius: 0;
+  border-bottom: 0;
+  border-radius: 0;
 
-    opacity: 1;
+  opacity: 1;
 
-    text-shadow: none;
+  text-shadow: none;
 }
 .jquery-notify-bar.error,
 .jquery-notify-bar.fail {
-    background: var(--error-500);
-    color: var(--error-050);
+  background: var(--error-500);
+  color: var(--error-050);
 }
 .jquery-notify-bar.error span,
 .jquery-notify-bar.fail span {
-    background: none;
-    padding-left: 0;
+  background: none;
+  padding-left: 0;
 }
 .jquery-notify-bar.success span {
-    background: none;
-    padding-left: 0;
+  background: none;
+  padding-left: 0;
 }
 .jquery-notify-bar.success {
-    background: var(--success-500);
-    color: var(--success-050);
+  background: var(--success-500);
+  color: var(--success-050);
 }
 a.notify-bar-close {
-    position: revert;
-    left: revert;
+  position: revert;
+  left: revert;
 
-    display: inline-block;
+  display: inline-block;
 
-    font-size: 1em;
-    padding: 0.5em 1em;
-    margin: 0 0 0 1rem;
-    border-radius: $shape-corner-extra-small;
+  font-size: 1em;
+  padding: 0.5em 1em;
+  margin: 0 0 0 1rem;
+  border-radius: $shape-corner-extra-small;
 
-    background: var(--neutral-700);
-    color: var(--neutral-050);
+  background: var(--neutral-700);
+  color: var(--neutral-050);
 
-    transition:
-        background-color $motion-duration-short4 $motion-easing-standard,
-        box-shadow $motion-duration-short4 $motion-easing-standard;
+  transition:
+    background-color $motion-duration-short4 $motion-easing-standard,
+    box-shadow $motion-duration-short4 $motion-easing-standard;
 
-    &:hover,
-    &:active,
-    &:focus {
-        background: var(--neutral-800);
-        @include md-elevation(1);
-    }
+  &:hover,
+  &:active,
+  &:focus {
+    background: var(--neutral-800);
+    @include md-elevation(1);
+  }
 }

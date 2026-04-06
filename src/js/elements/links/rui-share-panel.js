@@ -1,77 +1,78 @@
 import { defineCustomElement, ref } from "vue";
-import { copyToClipboard, openShareWindow } from "../../lib/shared.js";
+
 import { useCopyFeedback } from "../../composables/useCopyFeedback.js";
+import { copyToClipboard, openShareWindow } from "../../lib/shared.js";
 
 function buildShareMessage(data) {
-    const title = typeof data.title === "string" ? data.title.trim() : "";
-    const shortUrl =
-        typeof data.shortUrl === "string" ? data.shortUrl.trim() : "";
+  const title = typeof data.title === "string" ? data.title.trim() : "";
+  const shortUrl =
+    typeof data.shortUrl === "string" ? data.shortUrl.trim() : "";
 
-    return `${title ? `${title} ` : ""}${shortUrl}`.trim();
+  return `${title ? `${title} ` : ""}${shortUrl}`.trim();
 }
 
 export const RuiSharePanel = defineCustomElement(
-    {
-        name: "RuiSharePanel",
-        props: {
-            data: { type: Object, required: true },
-        },
-        emits: ["close"],
-        setup(props, { emit }) {
-            const shortUrl = ref(String(props.data.shortUrl ?? ""));
-            const message = ref(buildShareMessage(props.data));
-            const {
-                iconName: copyIconName,
-                label: copyLabel,
-                markCopied,
-            } = useCopyFeedback();
+  {
+    name: "RuiSharePanel",
+    props: {
+      data: { type: Object, required: true },
+    },
+    emits: ["close"],
+    setup(props, { emit }) {
+      const shortUrl = ref(String(props.data.shortUrl ?? ""));
+      const message = ref(buildShareMessage(props.data));
+      const {
+        iconName: copyIconName,
+        label: copyLabel,
+        markCopied,
+      } = useCopyFeedback();
 
-            const drawerId = String(props.data.id ?? "");
+      const drawerId = String(props.data.id ?? "");
 
-            const closeDrawer = () => {
-                emit("close");
-            };
+      const closeDrawer = () => {
+        emit("close");
+      };
 
-            const copyShortUrl = async () => {
-                const copied = await copyToClipboard(shortUrl.value);
-                if (!copied) {
-                    return;
-                }
+      const copyShortUrl = async () => {
+        const copied = await copyToClipboard(shortUrl.value);
+        if (!copied) {
+          return;
+        }
 
-                markCopied();
-            };
+        markCopied();
+      };
 
-            const shareOnTwitter = () => {
-                openShareWindow(
-                    "tw",
-                    message.value.trim(),
-                    shortUrl.value.trim(),
-                    String(props.data.destinationUrl ?? ""),
-                );
-            };
+      const shareOnTwitter = () => {
+        openShareWindow(
+          "tw",
+          message.value.trim(),
+          shortUrl.value.trim(),
+          String(props.data.destinationUrl ?? ""),
+        );
+      };
 
-            const shareOnFacebook = () => {
-                openShareWindow(
-                    "fb",
-                    message.value.trim(),
-                    shortUrl.value.trim(),
-                    String(props.data.destinationUrl ?? ""),
-                );
-            };
+      const shareOnFacebook = () => {
+        openShareWindow(
+          "fb",
+          message.value.trim(),
+          shortUrl.value.trim(),
+          String(props.data.destinationUrl ?? ""),
+        );
+      };
 
-            return {
-                shortUrl,
-                message,
-                copyIconName,
-                copyLabel,
-                drawerId,
-                closeDrawer,
-                copyShortUrl,
-                shareOnTwitter,
-                shareOnFacebook,
-            };
-        },
-        template: `
+      return {
+        shortUrl,
+        message,
+        copyIconName,
+        copyLabel,
+        drawerId,
+        closeDrawer,
+        copyShortUrl,
+        shareOnTwitter,
+        shareOnFacebook,
+      };
+    },
+    template: `
             <rui-drawer title="Share Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
@@ -137,6 +138,6 @@ export const RuiSharePanel = defineCustomElement(
                 />
             </rui-drawer>
         `,
-    },
-    { shadowRoot: false },
+  },
+  { shadowRoot: false },
 );

@@ -10,22 +10,22 @@
  * toggle the #nourl_found empty-state row.
  */
 export function recomputeTotalLinks() {
-    const rows = document.querySelectorAll(
-        "#main_table tbody tr:not(#nourl_found)",
-    );
-    const visibleRows = Array.from(rows).filter(
-        (row) => row.style.display !== "none",
-    );
+  const rows = document.querySelectorAll(
+    "#main_table tbody tr:not(#nourl_found)",
+  );
+  const visibleRows = Array.from(rows).filter(
+    (row) => row.style.display !== "none",
+  );
 
-    const countEl = document.querySelector("#overall_tracking .total_links");
-    if (countEl instanceof HTMLElement) {
-        countEl.textContent = String(visibleRows.length);
-    }
+  const countEl = document.querySelector("#overall_tracking .total_links");
+  if (countEl instanceof HTMLElement) {
+    countEl.textContent = String(visibleRows.length);
+  }
 
-    const noUrlRow = document.querySelector("#nourl_found");
-    if (noUrlRow instanceof HTMLElement) {
-        noUrlRow.style.display = visibleRows.length === 0 ? "" : "none";
-    }
+  const noUrlRow = document.querySelector("#nourl_found");
+  if (noUrlRow instanceof HTMLElement) {
+    noUrlRow.style.display = visibleRows.length === 0 ? "" : "none";
+  }
 }
 
 /**
@@ -33,24 +33,24 @@ export function recomputeTotalLinks() {
  * visible table rows.
  */
 export function recomputeTotalClicks() {
-    const rows = document.querySelectorAll(
-        "#main_table tbody tr:not(#nourl_found)",
-    );
-    let total = 0;
+  const rows = document.querySelectorAll(
+    "#main_table tbody tr:not(#nourl_found)",
+  );
+  let total = 0;
 
-    for (const row of rows) {
-        if (row.style.display === "none") {
-            continue;
-        }
-
-        const clicksCell = row.querySelector("td.clicks");
-        if (clicksCell) {
-            total += parseInt(clicksCell.textContent?.trim() ?? "0", 10) || 0;
-        }
+  for (const row of rows) {
+    if (row.style.display === "none") {
+      continue;
     }
 
-    const clicksEl = document.querySelector("#overall_tracking .total_clicks");
-    if (clicksEl instanceof HTMLElement) {
-        clicksEl.textContent = String(total);
+    const clicksCell = row.querySelector("td.clicks");
+    if (clicksCell) {
+      total += parseInt(clicksCell.textContent?.trim() ?? "0", 10) || 0;
     }
+  }
+
+  const clicksEl = document.querySelector("#overall_tracking .total_clicks");
+  if (clicksEl instanceof HTMLElement) {
+    clicksEl.textContent = String(total);
+  }
 }

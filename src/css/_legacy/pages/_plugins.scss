@@ -8,150 +8,150 @@
 ///////////////////////////////////////////////////////////
 
 #plugin_summary {
-    display: flex;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  #toggle_plugins {
+    @include md-elevation(1);
+
+    display: inline-flex !important;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    justify-content: center;
+    vertical-align: middle;
+    margin-left: 0 !important;
+    width: var(--button-height-icon) !important;
+    height: var(--button-height-icon) !important;
+    border: 1px solid var(--brand-300);
+    border-radius: $shape-corner-extra-small;
+    background: var(--brand-050) !important;
+    color: var(--brand-700);
+    font-size: var(--button-font-size-row);
+    text-indent: 0 !important;
+    line-height: 1;
 
-    #toggle_plugins {
-        @include md-elevation(1);
+    transition:
+      background-color $motion-duration-short4 $motion-easing-standard,
+      border-color $motion-duration-short4 $motion-easing-standard,
+      color $motion-duration-short4 $motion-easing-standard,
+      box-shadow $motion-duration-short4 $motion-easing-standard;
 
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        vertical-align: middle;
-        margin-left: 0 !important;
-        width: var(--button-height-icon) !important;
-        height: var(--button-height-icon) !important;
-        border: 1px solid var(--brand-300);
-        border-radius: $shape-corner-extra-small;
-        background: var(--brand-050) !important;
-        color: var(--brand-700);
-        font-size: var(--button-font-size-row);
-        text-indent: 0 !important;
-        line-height: 1;
-
-        transition:
-            background-color $motion-duration-short4 $motion-easing-standard,
-            border-color $motion-duration-short4 $motion-easing-standard,
-            color $motion-duration-short4 $motion-easing-standard,
-            box-shadow $motion-duration-short4 $motion-easing-standard;
-
-        &:hover,
-        &:active,
-        &:focus {
-            @include md-elevation(2);
-            background: var(--brand-100) !important;
-            border-color: var(--brand-400);
-        }
-
-        .material-icons {
-            font-size: 1.125rem;
-        }
+    &:hover,
+    &:active,
+    &:focus {
+      @include md-elevation(2);
+      background: var(--brand-100) !important;
+      border-color: var(--brand-400);
     }
+
+    .material-icons {
+      font-size: 1.125rem;
+    }
+  }
 }
 
 // Plugins table - card layout on mobile
 .plugins {
-    td.plugin_actions a {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: var(--button-height-row);
-        padding: var(--button-padding-row);
-        gap: 0.25rem;
-        border: 1px solid var(--brand-300);
-        border-radius: $shape-corner-extra-small;
-        background: var(--brand-050);
-        color: var(--brand-700);
-        font-size: var(--button-font-size-row);
-        line-height: var(--button-line-height);
-        font-weight: 700;
-        text-decoration: none;
+  td.plugin_actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--button-height-row);
+    padding: var(--button-padding-row);
+    gap: 0.25rem;
+    border: 1px solid var(--brand-300);
+    border-radius: $shape-corner-extra-small;
+    background: var(--brand-050);
+    color: var(--brand-700);
+    font-size: var(--button-font-size-row);
+    line-height: var(--button-line-height);
+    font-weight: 700;
+    text-decoration: none;
 
-        transition:
-            background-color $motion-duration-short4 $motion-easing-standard,
-            border-color $motion-duration-short4 $motion-easing-standard,
-            color $motion-duration-short4 $motion-easing-standard,
-            box-shadow $motion-duration-short4 $motion-easing-standard;
+    transition:
+      background-color $motion-duration-short4 $motion-easing-standard,
+      border-color $motion-duration-short4 $motion-easing-standard,
+      color $motion-duration-short4 $motion-easing-standard,
+      box-shadow $motion-duration-short4 $motion-easing-standard;
 
-        &:hover,
-        &:active,
-        &:focus {
+    &:hover,
+    &:active,
+    &:focus {
+      background: var(--brand-100);
+      color: var(--brand-900);
+      border-color: var(--brand-400);
+      @include md-elevation(1);
+    }
+
+    .rui-links-table__action-icon {
+      font-size: 1.125em;
+      line-height: 1;
+    }
+  }
+
+  #main_table {
+    @media (max-width: $breakpoint-md - 1px) {
+      border: 0;
+      background: none;
+
+      thead {
+        display: none;
+      }
+
+      tbody {
+        tr {
+          display: block;
+          margin-bottom: 1rem;
+          background: var(--brand-050);
+          border-radius: $shape-corner-small;
+          @include md-elevation(1);
+          overflow: hidden;
+
+          &.active {
+            border-left: 4px solid var(--brand-500);
+          }
+
+          &.inactive {
+            border-left: 4px solid var(--neutral-300);
+          }
+        }
+
+        td {
+          display: block;
+          border: 0;
+          border-bottom: 1px solid var(--brand-100);
+          padding: 0.5rem 1rem;
+
+          &::before {
+            display: block;
+            font-weight: 700;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--brand-500);
+            margin-bottom: 0.125em;
+          }
+
+          &.plugin_name::before {
+            content: "Plugin";
+          }
+          &.plugin_version::before {
+            content: "Version";
+          }
+          &.plugin_desc::before {
+            content: "Description";
+          }
+          &.plugin_author::before {
+            content: "Author";
+          }
+          &.plugin_actions {
+            border-bottom: 0;
             background: var(--brand-100);
-            color: var(--brand-900);
-            border-color: var(--brand-400);
-            @include md-elevation(1);
+            padding: 0.75rem 1rem;
+          }
         }
-
-        .rui-links-table__action-icon {
-            font-size: 1.125em;
-            line-height: 1;
-        }
+      }
     }
-
-    #main_table {
-        @media (max-width: $breakpoint-md - 1px) {
-            border: 0;
-            background: none;
-
-            thead {
-                display: none;
-            }
-
-            tbody {
-                tr {
-                    display: block;
-                    margin-bottom: 1rem;
-                    background: var(--brand-050);
-                    border-radius: $shape-corner-small;
-                    @include md-elevation(1);
-                    overflow: hidden;
-
-                    &.active {
-                        border-left: 4px solid var(--brand-500);
-                    }
-
-                    &.inactive {
-                        border-left: 4px solid var(--neutral-300);
-                    }
-                }
-
-                td {
-                    display: block;
-                    border: 0;
-                    border-bottom: 1px solid var(--brand-100);
-                    padding: 0.5rem 1rem;
-
-                    &::before {
-                        display: block;
-                        font-weight: 700;
-                        font-size: 0.75em;
-                        text-transform: uppercase;
-                        letter-spacing: 0.05em;
-                        color: var(--brand-500);
-                        margin-bottom: 0.125em;
-                    }
-
-                    &.plugin_name::before {
-                        content: "Plugin";
-                    }
-                    &.plugin_version::before {
-                        content: "Version";
-                    }
-                    &.plugin_desc::before {
-                        content: "Description";
-                    }
-                    &.plugin_author::before {
-                        content: "Author";
-                    }
-                    &.plugin_actions {
-                        border-bottom: 0;
-                        background: var(--brand-100);
-                        padding: 0.75rem 1rem;
-                    }
-                }
-            }
-        }
-    }
+  }
 }

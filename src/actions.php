@@ -31,13 +31,15 @@ function responsive_detect_page_context(): string {
 }
 
 function responsive_head(): void {
-    $scheme  = responsive_get_color_scheme();
-    $context = responsive_detect_page_context();
+    $scheme           = responsive_get_color_scheme();
+    $scheme_css_value = responsive_get_color_scheme_css_value( $scheme );
+    $context          = responsive_detect_page_context();
 
     $url = RESPONSIVE_PLUGIN_URL;
     $css = responsive_get_asset_url( 'release/css/app.css' );
     $js  = responsive_get_asset_url( 'release/js/app.js', 'src/js/app.js' );
 
+    $system   = RESPONSIVE_SCHEME_SYSTEM;
     $light    = RESPONSIVE_SCHEME_LIGHT;
     $dark     = RESPONSIVE_SCHEME_DARK;
     $ajax_url = yourls_admin_url( 'admin-ajax.php' );
@@ -49,17 +51,17 @@ function responsive_head(): void {
     $flags_json = json_encode( $config_flags ) ?: '[]';
 
     echo <<<HEAD
-        <meta name="color-scheme" content="$scheme">
+        <meta name="color-scheme" content="$scheme_css_value">
         <link rel="stylesheet" href="$css">
         <script>
         const RESPONSIVEUI = {
             pluginURL: '$url',
-            ajaxUrl: '$ajax_url',
+            ajaxURL: '$ajax_url',
             context: '$context',
             flags: $flags_json,
             scheme: {
                 current: '$scheme',
-                available: ['$light', '$dark']
+                available: ['$system', '$light', '$dark']
             },
         }
         </script>

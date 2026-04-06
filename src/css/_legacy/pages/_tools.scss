@@ -6,87 +6,87 @@
 ///////////////////////////////////////////////////////////
 
 .tools {
-    main {
-        max-width: revert;
+  main {
+    max-width: revert;
 
-        span {
-            display: inline-block;
-            background: var(--secondary-050);
-            padding: 0.1rem 0.25rem;
-            border-radius: $shape-corner-extra-small;
-        }
+    span {
+      display: inline-block;
+      background: var(--secondary-050);
+      padding: 0.1rem 0.25rem;
+      border-radius: $shape-corner-extra-small;
     }
+  }
 
-    // Code blocks
-    pre,
+  // Code blocks
+  pre,
+  code {
+    max-width: 100%;
+    overflow-x: auto;
+    word-break: break-all;
+  }
+
+  pre {
+    padding: 1rem;
+    background: var(--neutral-100);
+    border-radius: $shape-corner-small;
+    margin-bottom: 1rem;
+
     code {
-        max-width: 100%;
-        overflow-x: auto;
-        word-break: break-all;
+      background: none;
+      padding: 0;
     }
+  }
 
-    pre {
-        padding: 1rem;
-        background: var(--neutral-100);
-        border-radius: $shape-corner-small;
-        margin-bottom: 1rem;
+  // Sub wrap - remove restrictive max-width on mobile
+  .sub_wrap {
+    max-width: 100%;
+    padding-bottom: 2rem;
 
-        code {
-            background: none;
-            padding: 0;
+    @media (min-width: $breakpoint-md) {
+      max-width: 40rem;
+    }
+  }
+
+  // Bookmarklet table on mobile
+  table.tblSorter {
+    @media (max-width: $breakpoint-sm - 1px) {
+      thead {
+        display: none;
+      }
+
+      tbody {
+        tr {
+          display: block;
+          margin-bottom: 1rem;
         }
-    }
 
-    // Sub wrap - remove restrictive max-width on mobile
-    .sub_wrap {
-        max-width: 100%;
-        padding-bottom: 2rem;
-
-        @media (min-width: $breakpoint-md) {
-            max-width: 40rem;
+        th,
+        td {
+          display: block;
+          border: 0;
+          border-bottom: 1px solid var(--brand-100);
+          padding: 0.75rem 1rem;
         }
-    }
 
-    // Bookmarklet table on mobile
-    table.tblSorter {
-        @media (max-width: $breakpoint-sm - 1px) {
-            thead {
-                display: none;
-            }
-
-            tbody {
-                tr {
-                    display: block;
-                    margin-bottom: 1rem;
-                }
-
-                th,
-                td {
-                    display: block;
-                    border: 0;
-                    border-bottom: 1px solid var(--brand-100);
-                    padding: 0.75rem 1rem;
-                }
-
-                th.header {
-                    font-weight: 700;
-                }
-            }
+        th.header {
+          font-weight: 700;
         }
+      }
     }
+  }
 
-    // Signature token
-    strong code {
-        font-size: 1.1em;
-        padding: 0.25rem 0.5rem;
+  // Signature token
+  strong code {
+    font-size: 1.1em;
+    padding: 0.25rem 0.5rem;
+  }
+
+  // API section lists
+  ul {
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.5rem;
     }
-
-    // API section lists
-    ul {
-        padding-left: 1.5rem;
-
-        li {
-            margin-bottom: 0.5rem;
-        }
-    }
+  }
 }
