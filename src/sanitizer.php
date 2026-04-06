@@ -304,9 +304,9 @@ function responsive_sanitize_html_output( string $html ): string {
 function responsive_begin_output_sanitizer( $context = '', $title = '' ): void {
 	if (
 		isset( $GLOBALS['responsive_output_sanitizer_active'] )
-		|| ( function_exists( 'yourls_is_API' ) && yourls_is_API() )
-		|| ( function_exists( 'yourls_is_Ajax' ) && yourls_is_Ajax() )
-		|| ( function_exists( 'yourls_is_GO' ) && yourls_is_GO() )
+		|| yourls_is_API()
+		|| yourls_is_Ajax()
+		|| yourls_is_GO()
 	) {
 		return;
 	}

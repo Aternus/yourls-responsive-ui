@@ -45,7 +45,7 @@ function responsive_head(): void {
     $ajax_url = yourls_admin_url( 'admin-ajax.php' );
 
     $config_flags = [];
-    if ( function_exists( 'yourls_is_valid_user' ) && yourls_is_valid_user() === true ) {
+    if ( defined( 'YOURLS_USER' ) ) {
         $config_flags[] = 'authenticated';
     }
 
@@ -87,7 +87,7 @@ function responsive_head(): void {
 yourls_add_action( 'html_head', 'responsive_head' );
 
 function responsive_custom_elements_root( $hook_args = [] ): void {
-    if ( yourls_is_valid_user() !== true ) {
+    if ( ! defined( 'YOURLS_USER' ) ) {
         return;
     }
 

@@ -1,7 +1,12 @@
 <?php
 
 if ( ! defined( 'YOURLS_ABSPATH' ) ) {
-	die();
+    die();
+}
+
+// Short URL redirects have no HTML output for us to touch - skip
+if ( yourls_is_GO() ) {
+    return;
 }
 
 define( 'RESPONSIVE_PLUGIN_URL', yourls_plugin_url( __DIR__ ) );

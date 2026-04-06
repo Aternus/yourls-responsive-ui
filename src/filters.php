@@ -58,7 +58,7 @@ function responsive_infos_full_long_string(
     int $length = 60,
     string $append = '[...]',
 ): string {
-    if ( function_exists( 'yourls_is_infos' ) && yourls_is_infos() ) {
+    if ( yourls_is_infos() ) {
         return $string;
     }
 
@@ -328,7 +328,7 @@ yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );
 ///////////////////////////////////////////////////////////
 
 function responsive_shunt_html_addnew( $false ): string {
-    if ( yourls_is_valid_user() !== true ) {
+    if ( ! defined( 'YOURLS_USER' ) ) {
         return '';
     }
 
