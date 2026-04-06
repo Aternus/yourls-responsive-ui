@@ -7,7 +7,8 @@ To run the project, you need to execute the following commands:
 1. Backend: `docker compose up`
 2. Frontend: `npm run dev`
 
-You can access the project at `https://localhost/admin/index.php` with the default credentials: `root` / `root`.
+You can access the project at `https://localhost/admin/index.php` with the
+default credentials: `root` / `root`.
 
 You will need to use cURL to access `localhost`.
 
@@ -17,9 +18,14 @@ Assume Backend & Frontend are running.
 
 Write code that is idiomatic to PHP, inspired by WordPress core.
 
+## Components
+
+HTML markup changes should be done via YOURLS hooks; ONLY IF it is not possible
+(i.e., there is no appropriate action/filter), you should use DOM replacement.
+
 ## Colors
 
-The color palette is defined in `src/css/_palette.scss`.
+The color palette is defined in `src/css/_palette.css`.
 
 ## Icons
 
@@ -27,23 +33,24 @@ Use Material Design Icons.
 
 ## CSS
 
-Use SCSS. Prefer CSS variables.
+- Use TailwindCSS.
+- Prefer CSS variables.
 
-Use the following SCSS comments style:
+Use the following CSS comments style:
 
-```scss
-///////////////////////////////////////////////////////////
-// SCSS Heading 1
-///////////////////////////////////////////////////////////
+```css
+/**********************************************************
+    Heading 1
+**********************************************************/
 
-// SCSS Heading 2
-/////////////////////////////////////////////////
+/* Heading 2
+************************************************/
 
-//=== SCSS Heading 3 ===//
+/**=== Heading 3 ===**/
 
-// SCSS Heading 4 //
+/** Heading 4 **/
 
-// Comment
+/* */
 ```
 
 ## UX / UI

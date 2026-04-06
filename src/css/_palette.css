@@ -1,0 +1,76 @@
+/**********************************************************
+  Palette Tokens
+
+  @see https://coolors.co/palette/a2d7e9-2682b1-1f669c-477a67-70b769-cce1bc-fdeec7-fcd476-e58b76-d95735
+  @see https://perceptualpalettes.alexdunn.au/?c=Brand%234393bb%2CSecondary%23e2b327%2CTertiary%230b1f65%2CNeutral%23000000%2CError%23ef4444%2CSuccess%2322c55e&l=90%2C80%2C70%2C60%2C35%2C21%2C12%2C6%2C2%2C1%2C0.5&n=true&i=true
+
+**********************************************************/
+
+:root {
+  --brand-050: light-dark(#ecf5fb, #05111a);
+  --brand-100: light-dark(#d8eaf7, #081b29);
+  --brand-200: light-dark(#c2def3, #0c293e);
+  --brand-300: light-dark(#aad0ee, #16486f);
+  --brand-400: light-dark(#5ca6df, #1f659b);
+  --brand-500: light-dark(#2883c9, #2883c9);
+  --brand-600: light-dark(#1f659b, #5ca6df);
+  --brand-700: light-dark(#16486f, #aad0ee);
+  --brand-800: light-dark(#0c293e, #c2def3);
+  --brand-900: light-dark(#081b29, #d8eaf7);
+  --brand-950: light-dark(#05111a, #ecf5fb);
+  --secondary-050: light-dark(#fef3d8, #150f00);
+  --secondary-100: light-dark(#fde5ac, #221801);
+  --secondary-200: light-dark(#fcd57a, #332401);
+  --secondary-300: light-dark(#fbc33f, #5b4102);
+  --secondary-400: light-dark(#d29404, #805b03);
+  --secondary-500: light-dark(#a67603, #a67603);
+  --secondary-600: light-dark(#805b03, #d29404);
+  --secondary-700: light-dark(#5b4102, #fbc33f);
+  --secondary-800: light-dark(#332401, #fcd57a);
+  --secondary-900: light-dark(#221801, #fde5ac);
+  --secondary-950: light-dark(#150f00, #fef3d8);
+  --tertiary-050: light-dark(#e9f6fa, #051115);
+  --tertiary-100: light-dark(#d2ecf4, #081c23);
+  --tertiary-200: light-dark(#b8e0ee, #0c2a34);
+  --tertiary-300: light-dark(#9cd4e7, #164b5d);
+  --tertiary-400: light-dark(#3eacd1, #1f6982);
+  --tertiary-500: light-dark(#2888a9, #2888a9);
+  --tertiary-600: light-dark(#1f6982, #3eacd1);
+  --tertiary-700: light-dark(#164b5d, #9cd4e7);
+  --tertiary-800: light-dark(#0c2a34, #b8e0ee);
+  --tertiary-900: light-dark(#081c23, #d2ecf4);
+  --tertiary-950: light-dark(#051115, #e9f6fa);
+  --neutral-050: light-dark(#f3f3f3, #101010);
+  --neutral-100: light-dark(#e7e7e7, #191919);
+  --neutral-200: light-dark(#dadada, #272727);
+  --neutral-300: light-dark(#cbcbcb, #454545);
+  --neutral-400: light-dark(#a0a0a0, #616161);
+  --neutral-500: light-dark(#7e7e7e, #7e7e7e);
+  --neutral-600: light-dark(#616161, #a0a0a0);
+  --neutral-700: light-dark(#454545, #cbcbcb);
+  --neutral-800: light-dark(#272727, #dadada);
+  --neutral-900: light-dark(#191919, #e7e7e7);
+  --neutral-950: light-dark(#101010, #f3f3f3);
+  --error-050: light-dark(#fcf1ef, #1d0a05);
+  --error-100: light-dark(#f9e3dd, #2e1109);
+  --error-200: light-dark(#f5d3c9, #45190d);
+  --error-300: light-dark(#f1c1b4, #7a2c17);
+  --error-400: light-dark(#e4876e, #aa3d20);
+  --error-500: light-dark(#d8532f, #d8532f);
+  --error-600: light-dark(#aa3d20, #e4876e);
+  --error-700: light-dark(#7a2c17, #f1c1b4);
+  --error-800: light-dark(#45190d, #f5d3c9);
+  --error-900: light-dark(#2e1109, #f9e3dd);
+  --error-950: light-dark(#1d0a05, #fcf1ef);
+  --success-050: light-dark(#edf6ec, #091209);
+  --success-100: light-dark(#daecd8, #0f1d0e);
+  --success-200: light-dark(#c5e2c2, #172b15);
+  --success-300: light-dark(#aed6aa, #294e25);
+  --success-400: light-dark(#65b15d, #396d34);
+  --success-500: light-dark(#4b8d44, #4b8d44);
+  --success-600: light-dark(#396d34, #65b15d);
+  --success-700: light-dark(#294e25, #aed6aa);
+  --success-800: light-dark(#172b15, #c5e2c2);
+  --success-900: light-dark(#0f1d0e, #daecd8);
+  --success-950: light-dark(#091209, #edf6ec);
+}
