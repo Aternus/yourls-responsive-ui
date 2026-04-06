@@ -28,7 +28,7 @@ export function createMaterialIcon(iconName, extraClass = "") {
 }
 
 export function setMaterialIcon(icon, iconName, extraClass = "") {
-  icon.className = `material-icons${extraClass ? ` ${extraClass}` : ""}`;
+  icon.className = `material-symbols-outlined${extraClass ? ` ${extraClass}` : ""}`;
   icon.setAttribute("aria-hidden", "true");
   icon.textContent = iconName;
 }

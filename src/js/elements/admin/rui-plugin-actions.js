@@ -16,7 +16,7 @@ export const RuiPluginActions = defineCustomElement(
 
         if (
           !(toggle instanceof HTMLElement) ||
-          toggle.querySelector(".material-icons")
+          toggle.querySelector(".material-symbols-outlined")
         ) {
           return;
         }

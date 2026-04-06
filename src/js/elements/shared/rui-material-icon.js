@@ -7,7 +7,7 @@ export const RuiMaterialIcon = defineCustomElement(
       name: { type: String, default: "" },
     },
     template: `
-            <span :class="['material-icons', $attrs.class]" aria-hidden="true">{{ name }}</span>
+            <span :class="['material-symbols-outlined', $attrs.class]" aria-hidden="true">{{ name }}</span>
         `,
   },
   { shadowRoot: false },

@@ -80,7 +80,7 @@ function responsive_table_row_action_array(
         'stats'  => 'bar_chart',
         'share'  => 'share',
         'edit'   => 'edit',
-        'delete' => 'delete_outline',
+        'delete' => 'delete',
     ];
 
     foreach ( $actions as $key => $action ) {
@@ -95,7 +95,7 @@ function responsive_table_row_action_array(
             $label = strip_tags( html_entity_decode( (string) $action['anchor'] ) );
         }
 
-        $icon = '<span class="material-icons rui-links-table__action-icon" aria-hidden="true">'
+        $icon = '<span class="material-symbols-outlined rui-links-table__action-icon" aria-hidden="true">'
                 . $icons[ $key ] . '</span>';
         $text = '<span class="rui-sr-only">' . yourls_esc_html( $label )
                 . '</span>';
@@ -172,7 +172,7 @@ function responsive_table_row_cell_array(
               . '<span class="rui-link-row">'
               . '<a class="rui-links-table__shorturl-link rui-url-value" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
               . '<span class="rui-link-row__text">%keyword_html%</span>'
-              . '<span class="material-icons rui-link-row__icon" aria-hidden="true">open_in_new</span>'
+              . '<span class="material-symbols-outlined rui-link-row__icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
               . '<rui-copy-button copy-text="%shorturl%" copy-label="Copy short URL"></rui-copy-button>'
               . '</span>';
@@ -192,7 +192,7 @@ function responsive_table_row_cell_array(
               . '<small class="rui-links-table__destination-raw">%warning%<span class="rui-link-row">'
               . '<a class="rui-links-table__destination-link rui-url-value" href="%long_url%" target="_blank" rel="noopener noreferrer">'
               . '<span class="rui-link-row__text">%long_url_html%</span>'
-              . '<span class="material-icons rui-link-row__icon" aria-hidden="true">open_in_new</span>'
+              . '<span class="material-symbols-outlined rui-link-row__icon" aria-hidden="true">open_in_new</span>'
               . '</a>'
               . '<rui-copy-button copy-text="%long_url%" copy-label="Copy destination URL"></rui-copy-button>'
               . '</span></small>'

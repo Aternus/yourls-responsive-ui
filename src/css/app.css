@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block");
 @import url("https://unpkg.com/@fortawesome/fontawesome-free@7.2.0/css/brands.min.css");
 @import "tailwindcss";
 @plugin "@tailwindcss/forms";

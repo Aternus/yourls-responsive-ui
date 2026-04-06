@@ -11,7 +11,7 @@ export const RuiDrawerIntro = defineCustomElement(
     },
     template: `
             <section :class="['rui-drawer__intro', 'is-' + variant]">
-                <span class="material-icons rui-drawer__intro-icon" aria-hidden="true">{{ icon }}</span>
+                <span class="material-symbols-outlined rui-drawer__intro-icon" aria-hidden="true">{{ icon }}</span>
                 <p class="rui-drawer__intro-title">{{ title }}</p>
                 <p class="rui-drawer__intro-meta">{{ meta }}</p>
             </section>

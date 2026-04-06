@@ -208,7 +208,7 @@ export const RuiSearch = defineCustomElement(
         button.setAttribute("aria-label", label);
 
         const iconElement = document.createElement("span");
-        iconElement.className = "material-icons";
+        iconElement.className = "material-symbols-outlined";
         iconElement.setAttribute("aria-hidden", "true");
         iconElement.textContent = icon;
 
@@ -501,7 +501,7 @@ export const RuiSearch = defineCustomElement(
                         aria-controls="rui-filter-drawer"
                         @click="toggleDrawer"
                     >
-                        <span class="material-icons" aria-hidden="true">
+                        <span class="material-symbols-outlined" aria-hidden="true">
                             {{ filtersActive ? 'filter_alt' : 'filter_alt_off' }}
                         </span>
                     </button>
@@ -567,7 +567,7 @@ export const RuiSearch = defineCustomElement(
                                     title="Apply filters"
                                     @click="submitFilters"
                                 >
-                                    <span class="material-icons" aria-hidden="true">check</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">check</span>
                                 </button>
                                 <button
                                     type="button"
@@ -576,7 +576,7 @@ export const RuiSearch = defineCustomElement(
                                     title="Clear filters"
                                     @click="clearFilters"
                                 >
-                                    <span class="material-icons" aria-hidden="true">filter_alt_off</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
                                 </button>
                                 <button
                                     type="button"
@@ -585,7 +585,7 @@ export const RuiSearch = defineCustomElement(
                                     title="Close"
                                     @click="closeDrawer"
                                 >
-                                    <span class="material-icons" aria-hidden="true">close</span>
+                                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
                                 </button>
                             </div>
                         </div>

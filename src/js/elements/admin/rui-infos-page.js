@@ -305,7 +305,7 @@ export const RuiInfosPage = defineCustomElement(
               "Aggregate stats for duplicate short URLs",
           );
 
-          if (!aggregateAnchor.querySelector(".material-icons")) {
+          if (!aggregateAnchor.querySelector(".material-symbols-outlined")) {
             aggregateAnchor.textContent = "";
             const icon = document.createElement("rui-material-icon");
             icon.setAttribute("name", "bar_chart");
