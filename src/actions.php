@@ -48,22 +48,30 @@ function responsive_head(): void {
     if ( function_exists( 'yourls_is_valid_user' ) && yourls_is_valid_user() === true ) {
         $config_flags[] = 'authenticated';
     }
-    $flags_json = json_encode( $config_flags ) ?: '[]';
+
+    $responsive_ui_config = [
+        'pluginURL' => $url,
+        'ajaxURL'   => $ajax_url,
+        'context'   => $context,
+        'flags'     => $config_flags,
+        'scheme'    => [
+            'current'   => $scheme,
+            'available' => [ $system, $light, $dark ],
+        ],
+    ];
+    $responsive_ui_json   = json_encode(
+        $responsive_ui_config,
+        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_INVALID_UTF8_SUBSTITUTE,
+    );
+    if ( $responsive_ui_json === false ) {
+        $responsive_ui_json = '{}';
+    }
 
     echo <<<HEAD
         <meta name="color-scheme" content="$scheme_css_value">
         <link rel="stylesheet" href="$css">
         <script>
-        const RESPONSIVEUI = {
-            pluginURL: '$url',
-            ajaxURL: '$ajax_url',
-            context: '$context',
-            flags: $flags_json,
-            scheme: {
-                current: '$scheme',
-                available: ['$system', '$light', '$dark']
-            },
-        }
+        const RESPONSIVEUI = $responsive_ui_json;
         </script>
         <script type="importmap">
         {
