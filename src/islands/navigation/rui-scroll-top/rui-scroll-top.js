@@ -66,7 +66,10 @@ export const RuiScrollTop = defineCustomElement(
                 title="Scroll to top"
                 @click="scrollToTop"
             >
-                <rui-material-icon name="arrow_upward" />
+                <iconify-icon
+                    icon="mdi:arrow-up"
+                    aria-hidden="true"
+                ></iconify-icon>
             </button>
         `,
   },

@@ -2,9 +2,9 @@ import { onBeforeUnmount, ref } from "vue";
 
 export function useCopyFeedback(options = {}) {
   const {
-    defaultIcon = "content_copy",
+    defaultIcon = "mdi:content-copy",
     defaultLabel = "Copy short URL",
-    copiedIcon = "check",
+    copiedIcon = "mdi:check",
     copiedLabel = "Copied",
     resetAfterMs = 1200,
   } = options;

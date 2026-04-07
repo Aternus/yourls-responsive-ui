@@ -25,7 +25,7 @@ export const RuiDeletePanel = defineCustomElement(
             <rui-drawer title="Delete Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
-                        icon="warning_amber"
+                        icon="mdi:alert-outline"
                         title="Review the link details before deleting."
                         meta="Deletion is permanent."
                         variant="error"
@@ -54,14 +54,14 @@ export const RuiDeletePanel = defineCustomElement(
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--destructive"
-                    :icon-name="'delete'"
+                    :icon-name="'mdi:delete'"
                     :label="'Delete'"
                     @press="confirmDelete"
                 />
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'close'"
+                    :icon-name="'mdi:close'"
                     :label="'Cancel'"
                     @press="cancelDelete"
                 />

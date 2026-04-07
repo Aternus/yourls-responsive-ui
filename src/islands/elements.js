@@ -13,10 +13,8 @@ import { RuiSharePanel } from "./links/rui-share-panel/rui-share-panel.js";
 import { RuiNavControls } from "./navigation/rui-nav-controls/rui-nav-controls.js";
 import { RuiScrollTop } from "./navigation/rui-scroll-top/rui-scroll-top.js";
 import { RuiActionButton } from "./shared/rui-action-button/rui-action-button.js";
-import { RuiBrandIcon } from "./shared/rui-brand-icon/rui-brand-icon.js";
 import { RuiCopyButton } from "./shared/rui-copy-button/rui-copy-button.js";
 import { RuiField } from "./shared/rui-field/rui-field.js";
-import { RuiMaterialIcon } from "./shared/rui-material-icon/rui-material-icon.js";
 import { RuiTextInputField } from "./shared/rui-text-input-field/rui-text-input-field.js";
 import { RuiTextareaField } from "./shared/rui-textarea-field/rui-textarea-field.js";
 
@@ -28,8 +26,6 @@ function define(tag, constructor) {
 
 export function registerAllElements() {
   // Shared
-  define("rui-material-icon", RuiMaterialIcon);
-  define("rui-brand-icon", RuiBrandIcon);
   define("rui-copy-button", RuiCopyButton);
   define("rui-action-button", RuiActionButton);
   define("rui-field", RuiField);

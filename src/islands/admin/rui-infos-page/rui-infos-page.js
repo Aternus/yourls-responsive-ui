@@ -1,5 +1,7 @@
 import { defineCustomElement } from "vue";
 
+import { createIconifyIcon } from "../../lib/shared.js";
+
 export const RuiInfosPage = defineCustomElement(
   {
     name: "RuiInfosPage",
@@ -30,10 +32,10 @@ export const RuiInfosPage = defineCustomElement(
     methods: {
       installTabIcons(wrap) {
         const tabIcons = {
-          "#stat_tab_stats": "show_chart",
-          "#stat_tab_location": "location_on",
-          "#stat_tab_sources": "account_tree",
-          "#stat_tab_share": "share",
+          "#stat_tab_stats": "mdi:chart-line",
+          "#stat_tab_location": "mdi:map-marker",
+          "#stat_tab_sources": "mdi:source-branch",
+          "#stat_tab_share": "mdi:share-variant",
         };
 
         document.querySelectorAll("#headers a[href]").forEach((anchor) => {
@@ -51,9 +53,7 @@ export const RuiInfosPage = defineCustomElement(
             return;
           }
 
-          const icon = document.createElement("rui-material-icon");
-          icon.setAttribute("name", iconName);
-          icon.setAttribute("class", "rui-infos__tab-icon");
+          const icon = createIconifyIcon(iconName, "rui-infos__tab-icon");
           anchor.prepend(icon);
         });
       },
@@ -305,10 +305,9 @@ export const RuiInfosPage = defineCustomElement(
               "Aggregate stats for duplicate short URLs",
           );
 
-          if (!aggregateAnchor.querySelector(".material-symbols-outlined")) {
+          if (!aggregateAnchor.querySelector("iconify-icon")) {
             aggregateAnchor.textContent = "";
-            const icon = document.createElement("rui-material-icon");
-            icon.setAttribute("name", "bar_chart");
+            const icon = createIconifyIcon("mdi:chart-bar");
             aggregateAnchor.append(icon);
           }
 
@@ -347,9 +346,10 @@ export const RuiInfosPage = defineCustomElement(
         text.className = "rui-link-row__text";
         text.textContent = rawText.trim();
 
-        const linkIcon = document.createElement("rui-material-icon");
-        linkIcon.setAttribute("name", "open_in_new");
-        linkIcon.setAttribute("class", "rui-link-row__icon");
+        const linkIcon = createIconifyIcon(
+          "mdi:open-in-new",
+          "rui-link-row__icon",
+        );
 
         anchor.append(text, linkIcon);
 

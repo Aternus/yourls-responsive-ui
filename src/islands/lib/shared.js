@@ -21,16 +21,17 @@ export function openShareWindow(
   }
 }
 
-export function createMaterialIcon(iconName, extraClass = "") {
-  const icon = document.createElement("span");
-  setMaterialIcon(icon, iconName, extraClass);
+export function createIconifyIcon(iconName, extraClass = "") {
+  const icon = document.createElement("iconify-icon");
+  setIconifyIcon(icon, iconName, extraClass);
   return icon;
 }
 
-export function setMaterialIcon(icon, iconName, extraClass = "") {
-  icon.className = `material-symbols-outlined${extraClass ? ` ${extraClass}` : ""}`;
+export function setIconifyIcon(icon, iconName, extraClass = "") {
+  const normalizedName = String(iconName ?? "").trim();
+  icon.className = extraClass;
   icon.setAttribute("aria-hidden", "true");
-  icon.textContent = iconName;
+  icon.setAttribute("icon", normalizedName || "mdi:help-circle-outline");
 }
 
 function fallbackCopyText(value) {

@@ -46,7 +46,7 @@ export const RuiEditPanel = defineCustomElement(
             <rui-drawer title="Edit Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
-                        icon="edit"
+                        icon="mdi:pencil"
                         title="Edit the link details below."
                         meta="Changes are saved when you press Save."
                         variant="brand"
@@ -85,14 +85,14 @@ export const RuiEditPanel = defineCustomElement(
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--primary"
-                    :icon-name="'save'"
+                    :icon-name="'mdi:content-save'"
                     :label="'Save'"
                     @press="saveEdit"
                 />
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'close'"
+                    :icon-name="'mdi:close'"
                     :label="'Cancel'"
                     @press="closeDrawer"
                 />

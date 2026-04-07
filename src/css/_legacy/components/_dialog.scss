@@ -411,8 +411,7 @@ dialog:not(.rui-drawer) {
       color $motion-duration-short4 $motion-easing-standard,
       border-color $motion-duration-short4 $motion-easing-standard;
 
-    .material-symbols-outlined,
-    .rui-brand-icon {
+    iconify-icon {
       font-size: 1rem;
       line-height: 1;
       pointer-events: none;

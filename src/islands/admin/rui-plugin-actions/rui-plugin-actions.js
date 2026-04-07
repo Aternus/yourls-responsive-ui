@@ -1,5 +1,7 @@
 import { defineCustomElement } from "vue";
 
+import { createIconifyIcon } from "../../lib/shared.js";
+
 export const RuiPluginActions = defineCustomElement(
   {
     name: "RuiPluginActions",
@@ -16,7 +18,7 @@ export const RuiPluginActions = defineCustomElement(
 
         if (
           !(toggle instanceof HTMLElement) ||
-          toggle.querySelector(".material-symbols-outlined")
+          toggle.querySelector("iconify-icon")
         ) {
           return;
         }
@@ -24,8 +26,7 @@ export const RuiPluginActions = defineCustomElement(
         toggle.textContent = "";
         toggle.setAttribute("aria-label", "Toggle active and inactive plugins");
 
-        const icon = document.createElement("rui-material-icon");
-        icon.setAttribute("name", "filter_alt");
+        const icon = createIconifyIcon("mdi:filter-variant");
         toggle.append(icon);
       },
       enhanceActionLinks() {
@@ -44,15 +45,18 @@ export const RuiPluginActions = defineCustomElement(
           }
 
           const text = button.textContent?.trim().toLowerCase() ?? "";
-          let iconName = "settings";
+          let iconName = "mdi:cog";
 
           if (text.includes("activate")) {
-            iconName = text.includes("deactivate") ? "power_off" : "power";
+            iconName = text.includes("deactivate")
+              ? "mdi:power-off"
+              : "mdi:power";
           }
 
-          const icon = document.createElement("rui-material-icon");
-          icon.setAttribute("name", iconName);
-          icon.setAttribute("class", "rui-links-table__action-icon");
+          const icon = createIconifyIcon(
+            iconName,
+            "rui-links-table__action-icon",
+          );
           button.prepend(icon);
         });
       },

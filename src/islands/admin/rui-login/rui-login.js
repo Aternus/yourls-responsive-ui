@@ -120,26 +120,32 @@ export const RuiLogin = defineCustomElement(
     template: `
       <div
         v-if="ready"
-        class="flex min-h-screen w-full items-center justify-center bg-neutral-100 px-4 py-12"
+        class="flex min-h-screen w-full items-start justify-center bg-base-200 px-6 py-10 sm:py-14"
       >
         <div
-          class="flex w-full max-w-sm flex-col gap-6 rounded-2xl bg-neutral-50 p-8 shadow-xl ring-1 ring-neutral-200">
-          <div class="text-center text-2xl font-extrabold tracking-tight text-brand-500">{{ t("brand") }}</div>
-          <div class="flex flex-col gap-2">
-            <h1 class="text-center text-2xl font-bold leading-tight text-neutral-950">{{ t("heading") }}</h1>
-            <p class="text-center text-sm text-neutral-600">{{ t("tagline") }}</p>
+          class="w-full max-w-sm"
+        >
+          <div class="text-5xl font-black tracking-tight text-error lowercase">
+            {{ t("brand") }}
+          </div>
+          <div class="mt-10 flex flex-col gap-3">
+            <h1 class="text-4xl font-black leading-tight text-base-content sm:text-5xl">{{ t("heading") }}</h1>
+            <p class="text-base text-base-content/80">
+              {{ t("signupPrompt") }}
+              <a href="#" class="link link-primary font-semibold no-underline hover:underline" @click.prevent>{{ t("signUpLabel") }}</a>
+            </p>
           </div>
           <div
             v-if="hasError"
             :id="alertId"
             role="alert"
-            class="alert alert-error alert-soft"
+            class="alert alert-error alert-soft mt-6"
           >{{ errorMessage }}
           </div>
           <form
             method="post"
             :action="formAction"
-            class="flex flex-col gap-5"
+            class="mt-9 flex flex-col gap-5"
           >
             <input
               v-for="field in hiddenFields"
@@ -152,8 +158,8 @@ export const RuiLogin = defineCustomElement(
               <legend class="fieldset-legend sr-only">{{ t("heading") }}</legend>
               <label
                 for="username"
-                class="label"
-              >{{ t("usernameLabel") }}</label>
+                class="label text-base font-semibold text-base-content"
+              >{{ t("emailLabel") }}</label>
               <input
                 ref="usernameInputRef"
                 id="username"
@@ -161,14 +167,14 @@ export const RuiLogin = defineCustomElement(
                 type="text"
                 autocomplete="username"
                 v-model="username"
-                class="input w-full"
+                class="input h-12 w-full rounded-lg border-base-300 bg-base-100"
                 :class="{ 'input-error': hasError }"
                 :aria-invalid="hasError"
                 :aria-describedby="usernameDescribedBy"
               />
               <label
                 for="password"
-                class="label"
+                class="label mt-4 text-base font-semibold text-base-content"
               >{{ t("passwordLabel") }}</label>
               <input
                 id="password"
@@ -176,19 +182,44 @@ export const RuiLogin = defineCustomElement(
                 type="password"
                 autocomplete="current-password"
                 v-model="password"
-                class="input w-full"
+                class="input h-12 w-full rounded-lg border-base-300 bg-base-100"
                 :class="{ 'input-error': hasError }"
                 :aria-invalid="hasError"
               />
             </fieldset>
+            <div class="text-right">
+              <a href="#" class="link link-primary text-lg font-semibold no-underline hover:underline" @click.prevent>{{ t("forgotPasswordLabel") }}</a>
+            </div>
             <button
               type="submit"
               name="submit"
-              class="btn btn-primary w-full text-base font-semibold"
+              class="btn btn-primary btn-block h-12 rounded-lg text-base font-semibold"
               :disabled="!bothFilled"
             >{{ t("submitLabel") }}
             </button>
           </form>
+          <div class="divider my-8 font-semibold text-base-content/60">{{ t("orLabel") }}</div>
+          <div class="flex flex-col gap-3">
+            <button type="button" class="btn btn-outline btn-block h-12 justify-center gap-2 rounded-lg border-base-300 bg-base-100 text-base font-semibold normal-case text-base-content">
+              <iconify-icon icon="mdi:google" class="text-lg text-error" aria-hidden="true"></iconify-icon>
+              <span>{{ t("continueWithGoogleLabel") }}</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-block h-12 justify-center gap-2 rounded-lg border-base-300 bg-base-100 text-base font-semibold normal-case text-base-content">
+              <iconify-icon icon="mdi:apple" class="text-lg" aria-hidden="true"></iconify-icon>
+              <span>{{ t("continueWithAppleLabel") }}</span>
+            </button>
+            <button type="button" class="btn btn-outline btn-block h-12 justify-center gap-2 rounded-lg border-base-300 bg-base-100 text-base font-semibold normal-case text-base-content">
+              <iconify-icon icon="mdi:key" class="text-xl" aria-hidden="true"></iconify-icon>
+              <span>{{ t("continueWithSsoLabel") }}</span>
+            </button>
+          </div>
+          <p class="mt-8 text-sm leading-relaxed text-base-content/70">
+            {{ t("termsPrefix") }}
+            <a href="#" class="link link-hover font-medium text-base-content/70" @click.prevent>{{ t("termsOfServiceLabel") }}</a>,
+            <a href="#" class="link link-hover font-medium text-base-content/70" @click.prevent>{{ t("privacyPolicyLabel") }}</a>
+            {{ t("andLabel") }}
+            <a href="#" class="link link-hover font-medium text-base-content/70" @click.prevent>{{ t("acceptableUsePolicyLabel") }}</a>.
+          </p>
         </div>
       </div>
     `,

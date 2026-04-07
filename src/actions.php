@@ -60,12 +60,25 @@ function responsive_head(): void {
         ],
         'i18n'      => [
             'login' => [
-                'brand'         => yourls__( 'YOURLS' ),
-                'heading'       => yourls__( 'Sign in to your account' ),
-                'tagline'       => yourls__( 'Enter your credentials to manage your short URLs.' ),
-                'usernameLabel' => yourls__( 'Username' ),
-                'passwordLabel' => yourls__( 'Password' ),
-                'submitLabel'   => yourls__( 'Login' ),
+                'brand'                    => yourls__( 'YOURLS' ),
+                'heading'                  => yourls__( 'Log in and start sharing' ),
+                'signupPrompt'             => yourls__( "Don't have an account?" ),
+                'signUpLabel'              => yourls__( 'Sign up' ),
+                'tagline'                  => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'emailLabel'               => yourls__( 'Email' ),
+                'usernameLabel'            => yourls__( 'Username' ),
+                'passwordLabel'            => yourls__( 'Password' ),
+                'forgotPasswordLabel'      => yourls__( 'Forgot your password?' ),
+                'submitLabel'              => yourls__( 'Log in' ),
+                'orLabel'                  => yourls__( 'OR' ),
+                'continueWithGoogleLabel'  => yourls__( 'Continue with Google' ),
+                'continueWithAppleLabel'   => yourls__( 'Continue with Apple' ),
+                'continueWithSsoLabel'     => yourls__( 'Continue with Single Sign On' ),
+                'termsPrefix'              => yourls__( 'By logging in with an account, you agree to YOURLS' ),
+                'termsOfServiceLabel'      => yourls__( 'Terms of Service' ),
+                'privacyPolicyLabel'       => yourls__( 'Privacy Policy' ),
+                'andLabel'                 => yourls__( 'and' ),
+                'acceptableUsePolicyLabel' => yourls__( 'Acceptable Use Policy' ),
             ],
         ],
     ];
@@ -91,6 +104,7 @@ function responsive_head(): void {
             }
         }
         </script>
+        <script src="https://code.iconify.design/iconify-icon/3.0.2/iconify-icon.min.js"></script>
         <script type="module" src="$js"></script>
         HEAD;
 }

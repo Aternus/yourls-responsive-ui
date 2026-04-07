@@ -76,7 +76,7 @@ export const RuiSharePanel = defineCustomElement(
             <rui-drawer title="Share Link">
                 <section class="rui-drawer__content">
                     <rui-drawer-intro
-                        icon="share"
+                        icon="mdi:share-variant"
                         title="Share this link or copy it to clipboard."
                         meta="Customize the share message before sharing."
                         variant="brand"
@@ -116,23 +116,21 @@ export const RuiSharePanel = defineCustomElement(
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'fa-x-twitter'"
-                    :icon-library="'brand'"
+                    :icon-name="'mdi:twitter'"
                     :label="'Share on Twitter'"
                     @press="shareOnTwitter"
                 />
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'fa-facebook-f'"
-                    :icon-library="'brand'"
+                    :icon-name="'mdi:facebook'"
                     :label="'Share on Facebook'"
                     @press="shareOnFacebook"
                 />
                 <rui-action-button
                     slot="actions"
                     class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'close'"
+                    :icon-name="'mdi:close'"
                     :label="'Close share mode'"
                     @press="closeDrawer"
                 />

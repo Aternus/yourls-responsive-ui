@@ -207,12 +207,11 @@ export const RuiSearch = defineCustomElement(
         button.title = label;
         button.setAttribute("aria-label", label);
 
-        const iconElement = document.createElement("span");
-        iconElement.className = "material-symbols-outlined";
-        iconElement.setAttribute("aria-hidden", "true");
-        iconElement.textContent = icon;
+        const iconComponent = document.createElement("iconify-icon");
+        iconComponent.setAttribute("aria-hidden", "true");
+        iconComponent.setAttribute("icon", icon);
 
-        button.append(iconElement);
+        button.append(iconComponent);
         return button;
       };
 
@@ -391,7 +390,7 @@ export const RuiSearch = defineCustomElement(
             const searchButton = createIconButton({
               type: "submit",
               className: "button primary rui-search__submit-button",
-              icon: "search",
+              icon: "mdi:magnify",
               label: "Search",
             });
             mountField(searchButtonSlot.value, searchButton);
@@ -423,7 +422,7 @@ export const RuiSearch = defineCustomElement(
             const fallbackSearchButton = createIconButton({
               type: "button",
               className: "button primary rui-search__submit-button",
-              icon: "search",
+              icon: "mdi:magnify",
               label: "Search",
             });
             fallbackSearchButton.addEventListener("click", () => {
@@ -501,9 +500,10 @@ export const RuiSearch = defineCustomElement(
                         aria-controls="rui-filter-drawer"
                         @click="toggleDrawer"
                     >
-                        <span class="material-symbols-outlined" aria-hidden="true">
-                            {{ filtersActive ? 'filter_alt' : 'filter_alt_off' }}
-                        </span>
+                        <iconify-icon
+                            :icon="filtersActive ? 'mdi:filter-variant' : 'mdi:filter-off'"
+                            aria-hidden="true"
+                        ></iconify-icon>
                     </button>
                 </div>
                 <dialog
@@ -567,7 +567,10 @@ export const RuiSearch = defineCustomElement(
                                     title="Apply filters"
                                     @click="submitFilters"
                                 >
-                                    <span class="material-symbols-outlined" aria-hidden="true">check</span>
+                                    <iconify-icon
+                                        icon="mdi:check"
+                                        aria-hidden="true"
+                                    ></iconify-icon>
                                 </button>
                                 <button
                                     type="button"
@@ -576,7 +579,10 @@ export const RuiSearch = defineCustomElement(
                                     title="Clear filters"
                                     @click="clearFilters"
                                 >
-                                    <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+                                    <iconify-icon
+                                        icon="mdi:filter-off"
+                                        aria-hidden="true"
+                                    ></iconify-icon>
                                 </button>
                                 <button
                                     type="button"
@@ -585,7 +591,10 @@ export const RuiSearch = defineCustomElement(
                                     title="Close"
                                     @click="closeDrawer"
                                 >
-                                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                                    <iconify-icon
+                                        icon="mdi:close"
+                                        aria-hidden="true"
+                                    ></iconify-icon>
                                 </button>
                             </div>
                         </div>

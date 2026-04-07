@@ -10,7 +10,7 @@ export const RuiCopyButton = defineCustomElement(
       copyLabel: { type: String, default: "Copy URL" },
     },
     setup(props) {
-      const iconName = ref("content_copy");
+      const iconName = ref("mdi:content-copy");
       const ariaLabel = ref(props.copyLabel);
       const isCopied = ref(false);
       let resetTimer = 0;
@@ -25,12 +25,12 @@ export const RuiCopyButton = defineCustomElement(
           window.clearTimeout(resetTimer);
         }
 
-        iconName.value = "check";
+        iconName.value = "mdi:check";
         ariaLabel.value = "Copied";
         isCopied.value = true;
 
         resetTimer = window.setTimeout(() => {
-          iconName.value = "content_copy";
+          iconName.value = "mdi:content-copy";
           ariaLabel.value = props.copyLabel;
           isCopied.value = false;
           resetTimer = 0;
@@ -53,7 +53,10 @@ export const RuiCopyButton = defineCustomElement(
                 :title="ariaLabel"
                 @click="handleClick"
             >
-                <span class="material-symbols-outlined" aria-hidden="true">{{ iconName }}</span>
+                <iconify-icon
+                    :icon="iconName"
+                    aria-hidden="true"
+                ></iconify-icon>
             </button>
         `,
   },

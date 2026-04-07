@@ -1,4 +1,4 @@
-import { createMaterialIcon, setMaterialIcon } from "./shared.js";
+import { createIconifyIcon, setIconifyIcon } from "./shared.js";
 
 function ensureButtonDefaults(button) {
   if (button.dataset.ruiDefaultTitle) {
@@ -13,8 +13,11 @@ function ensureButtonDefaults(button) {
   button.dataset.ruiDefaultTitle = title;
   button.dataset.ruiDefaultLabel = label;
   if (icon instanceof HTMLElement) {
+    const iconName =
+      icon.getAttribute("icon") ?? icon.textContent?.trim() ?? "";
+
     button.dataset.ruiDefaultIcon = icon.className;
-    button.dataset.ruiDefaultIconName = icon.textContent?.trim() ?? "";
+    button.dataset.ruiDefaultIconName = iconName;
   }
 }
 
@@ -26,11 +29,24 @@ export function setActionButtonVisual(button, iconName, title, label) {
   ensureButtonDefaults(button);
 
   let icon = button.querySelector(".rui-links-table__action-icon");
-  if (!(icon instanceof HTMLElement)) {
-    icon = createMaterialIcon(iconName, "rui-links-table__action-icon");
-    button.prepend(icon);
+  if (
+    !(icon instanceof HTMLElement) ||
+    icon.tagName.toLowerCase() !== "iconify-icon"
+  ) {
+    const nextIcon = createIconifyIcon(
+      iconName,
+      "rui-links-table__action-icon",
+    );
+
+    if (icon instanceof HTMLElement) {
+      icon.replaceWith(nextIcon);
+    } else {
+      button.prepend(nextIcon);
+    }
+
+    icon = nextIcon;
   } else {
-    setMaterialIcon(icon, iconName, "rui-links-table__action-icon");
+    setIconifyIcon(icon, iconName, "rui-links-table__action-icon");
   }
 
   button.setAttribute("title", title);
@@ -66,7 +82,7 @@ export function restoreActionButtonVisual(button) {
   if (icon instanceof HTMLElement && defaultIcon) {
     icon.className = defaultIcon;
     if (defaultIconName !== "") {
-      icon.textContent = defaultIconName;
+      icon.setAttribute("icon", defaultIconName);
     }
   }
 }
@@ -77,21 +93,21 @@ export function setModeButtons(mode, id) {
   const deleteButton = document.querySelector(`#delete-button-${id}`);
 
   if (mode === "edit") {
-    setActionButtonVisual(editButton, "close", "Close edit", "Close");
+    setActionButtonVisual(editButton, "mdi:close", "Close edit", "Close");
     restoreActionButtonVisual(shareButton);
     restoreActionButtonVisual(deleteButton);
     return;
   }
 
   if (mode === "share") {
-    setActionButtonVisual(shareButton, "close", "Close share", "Close");
+    setActionButtonVisual(shareButton, "mdi:close", "Close share", "Close");
     restoreActionButtonVisual(editButton);
     restoreActionButtonVisual(deleteButton);
     return;
   }
 
   if (mode === "delete") {
-    setActionButtonVisual(deleteButton, "close", "Close delete", "Close");
+    setActionButtonVisual(deleteButton, "mdi:close", "Close delete", "Close");
     restoreActionButtonVisual(editButton);
     restoreActionButtonVisual(shareButton);
     return;

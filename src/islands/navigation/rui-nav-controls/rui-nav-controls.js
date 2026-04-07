@@ -78,14 +78,16 @@ export const RuiNavControls = defineCustomElement(
                     aria-label="Toggle navigation menu"
                     @click="toggleMenu"
                 >
-                    <rui-material-icon
-                        name="menu"
+                    <iconify-icon
+                        icon="mdi:menu"
                         class="rui-nav__icon rui-nav__icon--open"
-                    />
-                    <rui-material-icon
-                        name="close"
+                        aria-hidden="true"
+                    ></iconify-icon>
+                    <iconify-icon
+                        icon="mdi:close"
                         class="rui-nav__icon rui-nav__icon--close"
-                    />
+                        aria-hidden="true"
+                    ></iconify-icon>
                 </button>
                 <button
                     type="button"

@@ -74,15 +74,28 @@ yourls_add_filter(
     4,
 );
 
+function responsive_iconify_icon( string $icon, string $class = '' ): string {
+    $class = trim( $class );
+
+    $attributes = ' icon="' . yourls_esc_attr( $icon ) . '"'
+                  . ' aria-hidden="true"';
+
+    if ( $class !== '' ) {
+        $attributes .= ' class="' . yourls_esc_attr( $class ) . '"';
+    }
+
+    return '<iconify-icon' . $attributes . '></iconify-icon>';
+}
+
 function responsive_table_row_action_array(
     array $actions,
     string $keyword,
 ): array {
     $icons = [
-        'stats'  => 'bar_chart',
-        'share'  => 'share',
-        'edit'   => 'edit',
-        'delete' => 'delete',
+        'stats'  => 'mdi:chart-bar',
+        'share'  => 'mdi:share-variant',
+        'edit'   => 'mdi:pencil',
+        'delete' => 'mdi:delete',
     ];
 
     foreach ( $actions as $key => $action ) {
@@ -97,8 +110,10 @@ function responsive_table_row_action_array(
             $label = strip_tags( html_entity_decode( (string) $action['anchor'] ) );
         }
 
-        $icon = '<span class="material-symbols-outlined rui-links-table__action-icon" aria-hidden="true">'
-                . $icons[ $key ] . '</span>';
+        $icon = responsive_iconify_icon(
+            $icons[ $key ],
+            'rui-links-table__action-icon',
+        );
         $text = '<span class="rui-sr-only">' . yourls_esc_html( $label )
                 . '</span>';
 
@@ -174,7 +189,8 @@ function responsive_table_row_cell_array(
               . '<span class="rui-link-row">'
               . '<a class="rui-links-table__shorturl-link rui-url-value" href="%shorturl%" target="_blank" rel="noopener noreferrer">'
               . '<span class="rui-link-row__text">%keyword_html%</span>'
-              . '<span class="material-symbols-outlined rui-link-row__icon" aria-hidden="true">open_in_new</span>'
+              . responsive_iconify_icon( 'mdi:open-in-new',
+                'rui-link-row__icon' )
               . '</a>'
               . '<rui-copy-button copy-text="%shorturl%" copy-label="Copy short URL"></rui-copy-button>'
               . '</span>';
@@ -194,7 +210,8 @@ function responsive_table_row_cell_array(
               . '<small class="rui-links-table__destination-raw">%warning%<span class="rui-link-row">'
               . '<a class="rui-links-table__destination-link rui-url-value" href="%long_url%" target="_blank" rel="noopener noreferrer">'
               . '<span class="rui-link-row__text">%long_url_html%</span>'
-              . '<span class="material-symbols-outlined rui-link-row__icon" aria-hidden="true">open_in_new</span>'
+              . responsive_iconify_icon( 'mdi:open-in-new',
+                'rui-link-row__icon' )
               . '</a>'
               . '<rui-copy-button copy-text="%long_url%" copy-label="Copy destination URL"></rui-copy-button>'
               . '</span></small>'

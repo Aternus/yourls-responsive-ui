@@ -7,7 +7,6 @@ export const RuiActionButton = defineCustomElement(
       dataId: { type: String, default: "" },
       elementId: { type: String, default: "" },
       iconName: { type: String, required: true },
-      iconLibrary: { type: String, default: "material" },
       label: { type: String, required: true },
     },
     emits: ["press"],
@@ -31,15 +30,10 @@ export const RuiActionButton = defineCustomElement(
                 :title="label"
                 @click="handleClick"
             >
-                <rui-brand-icon
-                    v-if="iconLibrary === 'brand'"
-                    :name="iconName"
-                    class="rui-brand-icon"
-                />
-                <rui-material-icon
-                    v-else
-                    :name="iconName"
-                />
+                <iconify-icon
+                    :icon="iconName"
+                    aria-hidden="true"
+                ></iconify-icon>
             </button>
         `,
   },
