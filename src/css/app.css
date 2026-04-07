@@ -2,6 +2,7 @@
 @import "./icons.css";
 @import "./../islands/elements.css";
 @plugin "@tailwindcss/forms";
+@plugin "daisyui";
 
 @theme {
   --color-*: initial;
