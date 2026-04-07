@@ -12,7 +12,8 @@ default credentials: `root` / `root`.
 
 You will need to use cURL to access `localhost`.
 
-Assume Backend & Frontend are running.
+- Assume Backend and Frontend services are running.
+- Frontend includes: TailwindCSS CLI running in watch mode.
 
 ## PHP
 
@@ -61,9 +62,9 @@ Use the following CSS comments style:
 
 ## UX / UI
 
-The project is inspired by Material Design 3. It uses parts from `material-web`.
-The design decisions should be idiomatic to Material Design 3.
+The project uses `daisyui`. The design decisions should be idiomatic to daisyUI.
 
 ## Code Styling
 
-The project uses Prettier. Make sure to run prettier before task completion.
+The project uses Prettier. Make sure to run `npm run format` before task
+completion.

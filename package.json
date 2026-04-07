@@ -8,8 +8,8 @@
     "dev": "npx @tailwindcss/cli -i ./src/css/app.css -o ./release/css/app.css --watch --map",
     "build": "npx @tailwindcss/cli -i ./src/css/app.css -o ./release/css/app.css --minify",
     "test:e2e": "playwright test",
-    "format": "prettier --write 'src/**/*.{js,scss}'",
-    "format:check": "prettier --check 'src/**/*.{js,scss}'"
+    "format": "prettier --write 'src/**/*.{js,css,scss}'",
+    "format:check": "prettier --check 'src/**/*.{js,css,scss}'"
   },
   "author": "Kiril Reznik",
   "license": "MIT",

@@ -4,7 +4,9 @@ function responsive_output_color_scheme( string $html ): string {
     $scheme = responsive_get_color_scheme();
 
     if ( $scheme !== RESPONSIVE_SCHEME_SYSTEM ) {
-        return $html . ' style="color-scheme: ' . $scheme . ';"';
+        return $html
+               . ' style="color-scheme: ' . $scheme . ';"'
+               . ' data-theme="' . $scheme . '"';
     }
 
     return $html;
