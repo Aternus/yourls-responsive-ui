@@ -1,4 +1,3 @@
-import { cva } from "class-variance-authority";
 import {
   computed,
   defineCustomElement,
@@ -8,47 +7,8 @@ import {
   useHost,
 } from "vue";
 
-/* Variant configs (CVA)
- ************************************************/
-
-const loginButton = cva(
-  "inline-flex min-h-[44px] w-full items-center justify-center rounded-full px-6 py-3 text-base font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-2",
-  {
-    variants: {
-      state: {
-        disabled: "cursor-not-allowed bg-neutral-300 text-neutral-500",
-        enabled:
-          "cursor-pointer bg-brand-500 text-neutral-50 hover:bg-brand-600",
-      },
-    },
-    defaultVariants: { state: "disabled" },
-  },
-);
-
-const loginInput = cva(
-  "block min-h-[44px] w-full rounded-lg border bg-neutral-50 px-4 py-3 text-base text-neutral-950 placeholder:text-neutral-400 focus:ring-2 focus:ring-offset-0 focus:outline-none",
-  {
-    variants: {
-      state: {
-        default:
-          "border-neutral-300 focus:border-brand-500 focus:ring-brand-400",
-        invalid: "border-error-500 focus:border-error-500 focus:ring-error-400",
-      },
-    },
-    defaultVariants: { state: "default" },
-  },
-);
-
-const loginAlert = cva("rounded-lg border px-4 py-3 text-sm", {
-  variants: {
-    severity: {
-      error: "border-error-300 bg-error-50 text-error-700",
-      warning: "border-secondary-300 bg-secondary-50 text-secondary-700",
-      info: "border-tertiary-300 bg-tertiary-50 text-tertiary-700",
-    },
-  },
-  defaultVariants: { severity: "info" },
-});
+import { useI18n } from "../../composables/useI18n.js";
+import { RuiInvariantError } from "../../lib/errors.js";
 
 const ALERT_ID = "rui-login-alert";
 
@@ -70,14 +30,7 @@ export const RuiLogin = defineCustomElement(
 
       const usernameInputRef = ref(null);
 
-      const strings = window.RESPONSIVEUI?.strings?.login ?? {};
-      const brandText = strings.brand ?? "YOURLS";
-      const headingText = strings.heading ?? "Sign in to your account";
-      const taglineText =
-        strings.tagline ?? "Enter your credentials to manage your short URLs.";
-      const usernameLabelText = strings.usernameLabel ?? "Username";
-      const passwordLabelText = strings.passwordLabel ?? "Password";
-      const submitLabelText = strings.submitLabel ?? "Login";
+      const { t } = useI18n("login");
 
       const hasError = computed(() => errorMessage.value.length > 0);
 
@@ -85,16 +38,6 @@ export const RuiLogin = defineCustomElement(
         () =>
           username.value.trim().length > 0 && password.value.trim().length > 0,
       );
-
-      const buttonClasses = computed(() =>
-        loginButton({ state: bothFilled.value ? "enabled" : "disabled" }),
-      );
-
-      const inputClasses = computed(() =>
-        loginInput({ state: hasError.value ? "invalid" : "default" }),
-      );
-
-      const alertClasses = computed(() => loginAlert({ severity: "error" }));
 
       const usernameDescribedBy = computed(() =>
         hasError.value ? ALERT_ID : null,
@@ -108,32 +51,51 @@ export const RuiLogin = defineCustomElement(
         const container =
           host?.closest?.("#login") ?? document.querySelector("#login");
 
-        if (container instanceof HTMLElement) {
-          const form = container.querySelector("form");
-
-          if (form instanceof HTMLFormElement) {
-            formAction.value = form.getAttribute("action") ?? "";
-
-            hiddenFields.value = Array.from(
-              form.querySelectorAll('input[type="hidden"]'),
-            ).map((input) => ({
-              name: input.name,
-              value: input.value,
-            }));
-
-            const errorEl = form.querySelector("#error-message");
-            if (errorEl instanceof HTMLElement) {
-              errorMessage.value = (errorEl.textContent ?? "").trim();
-            }
-          }
-
-          // Replace #login with our custom element host. Vue's custom
-          // element runtime defers unmount across synchronous DOM moves,
-          // so the component instance survives the relocation.
-          if (host instanceof HTMLElement && container.parentNode) {
-            container.parentNode.replaceChild(host, container);
-          }
+        if (!(container instanceof HTMLElement)) {
+          throw new RuiInvariantError(
+            "Expected container to exist before mount.",
+            { code: "DOM_MISSING" },
+          );
         }
+
+        const form = container.querySelector("form");
+        if (!(form instanceof HTMLFormElement)) {
+          throw new RuiInvariantError("Expected form element to exist.", {
+            code: "DOM_MISSING",
+          });
+        }
+
+        formAction.value = form.getAttribute("action") ?? "";
+
+        hiddenFields.value = Array.from(
+          form.querySelectorAll('input[type="hidden"]'),
+        ).map((input) => ({
+          name: input.name,
+          value: input.value,
+        }));
+
+        const errorEl = form.querySelector("#error-message");
+        if (errorEl) {
+          errorMessage.value = (errorEl.textContent ?? "").trim();
+        }
+
+        // Replace #login with our custom element host. Vue's custom
+        // element runtime defers unmount across synchronous DOM moves,
+        // so the component instance survives the relocation.
+        if (!(host instanceof HTMLElement)) {
+          throw new RuiInvariantError(
+            "Expected host element to be an HTMLElement.",
+            { code: "DOM_INVALID_TYPE" },
+          );
+        }
+
+        if (!container.parentNode) {
+          throw new RuiInvariantError(
+            "Expected container to have a parent node.",
+            { code: "DOM_MISSING" },
+          );
+        }
+        container.parentNode.replaceChild(host, container);
 
         ready.value = true;
         await nextTick();
@@ -149,91 +111,87 @@ export const RuiLogin = defineCustomElement(
         errorMessage,
         hasError,
         bothFilled,
-        buttonClasses,
-        inputClasses,
-        alertClasses,
         usernameDescribedBy,
         usernameInputRef,
-        brandText,
-        headingText,
-        taglineText,
-        usernameLabelText,
-        passwordLabelText,
-        submitLabelText,
+        t,
         alertId: ALERT_ID,
       };
     },
     template: `
-            <div
-                v-if="ready"
-                class="flex min-h-screen w-full items-center justify-center bg-neutral-100 px-4 py-12"
-            >
-                <div class="flex w-full max-w-sm flex-col gap-6 rounded-2xl bg-neutral-50 p-8 shadow-xl ring-1 ring-neutral-200">
-                    <div class="text-center text-2xl font-extrabold tracking-tight text-brand-500">{{ brandText }}</div>
-                    <div class="flex flex-col gap-2">
-                        <h1 class="text-center text-2xl font-bold leading-tight text-neutral-950">{{ headingText }}</h1>
-                        <p class="text-center text-sm text-neutral-600">{{ taglineText }}</p>
-                    </div>
-                    <div
-                        v-if="hasError"
-                        :id="alertId"
-                        role="alert"
-                        :class="alertClasses"
-                    >{{ errorMessage }}</div>
-                    <form
-                        method="post"
-                        :action="formAction"
-                        class="flex flex-col gap-5"
-                    >
-                        <input
-                            v-for="field in hiddenFields"
-                            :key="field.name"
-                            type="hidden"
-                            :name="field.name"
-                            :value="field.value"
-                        />
-                        <div class="flex flex-col">
-                            <label
-                                for="username"
-                                class="block text-sm font-medium text-neutral-800 mb-2"
-                            >{{ usernameLabelText }}</label>
-                            <input
-                                ref="usernameInputRef"
-                                id="username"
-                                name="username"
-                                type="text"
-                                autocomplete="username"
-                                v-model="username"
-                                :class="inputClasses"
-                                :aria-invalid="hasError"
-                                :aria-describedby="usernameDescribedBy"
-                            />
-                        </div>
-                        <div class="flex flex-col">
-                            <label
-                                for="password"
-                                class="block text-sm font-medium text-neutral-800 mb-2"
-                            >{{ passwordLabelText }}</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                autocomplete="current-password"
-                                v-model="password"
-                                :class="inputClasses"
-                                :aria-invalid="hasError"
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            name="submit"
-                            :class="buttonClasses"
-                            :disabled="!bothFilled"
-                        >{{ submitLabelText }}</button>
-                    </form>
-                </div>
-            </div>
-        `,
+      <div
+        v-if="ready"
+        class="flex min-h-screen w-full items-center justify-center bg-neutral-100 px-4 py-12"
+      >
+        <div
+          class="flex w-full max-w-sm flex-col gap-6 rounded-2xl bg-neutral-50 p-8 shadow-xl ring-1 ring-neutral-200">
+          <div class="text-center text-2xl font-extrabold tracking-tight text-brand-500">{{ t("brand") }}</div>
+          <div class="flex flex-col gap-2">
+            <h1 class="text-center text-2xl font-bold leading-tight text-neutral-950">{{ t("heading") }}</h1>
+            <p class="text-center text-sm text-neutral-600">{{ t("tagline") }}</p>
+          </div>
+          <div
+            v-if="hasError"
+            :id="alertId"
+            role="alert"
+            class="alert alert-error alert-soft"
+          >{{ errorMessage }}
+          </div>
+          <form
+            method="post"
+            :action="formAction"
+            class="flex flex-col gap-5"
+          >
+            <input
+              v-for="field in hiddenFields"
+              :key="field.name"
+              type="hidden"
+              :name="field.name"
+              :value="field.value"
+            />
+            <fieldset class="fieldset w-full">
+              <legend class="fieldset-legend sr-only">{{ t("heading") }}</legend>
+              <label
+                for="username"
+                class="label"
+              >{{ t("usernameLabel") }}</label>
+              <input
+                ref="usernameInputRef"
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                v-model="username"
+                class="input w-full"
+                :class="{ 'input-error': hasError }"
+                :aria-invalid="hasError"
+                :aria-describedby="usernameDescribedBy"
+              />
+              <label
+                for="password"
+                class="label"
+              >{{ t("passwordLabel") }}</label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                v-model="password"
+                class="input w-full"
+                :class="{ 'input-error': hasError }"
+                :aria-invalid="hasError"
+              />
+            </fieldset>
+            <button
+              type="submit"
+              name="submit"
+              class="btn btn-primary w-full text-base font-semibold"
+              :disabled="!bothFilled"
+            >{{ t("submitLabel") }}
+            </button>
+          </form>
+        </div>
+      </div>
+    `,
   },
   { shadowRoot: false },
 );

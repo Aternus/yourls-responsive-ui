@@ -58,7 +58,7 @@ function responsive_head(): void {
             'current'   => $scheme,
             'available' => [ $system, $light, $dark ],
         ],
-        'strings'   => [
+        'i18n'      => [
             'login' => [
                 'brand'         => yourls__( 'YOURLS' ),
                 'heading'       => yourls__( 'Sign in to your account' ),
@@ -81,7 +81,7 @@ function responsive_head(): void {
         <meta name="color-scheme" content="$scheme_css_value">
         <link rel="stylesheet" href="$css">
         <script>
-        const RESPONSIVEUI = $responsive_ui_json;
+        window.RESPONSIVEUI = $responsive_ui_json;
         </script>
         <script type="importmap">
         {
