@@ -12,9 +12,6 @@ import { RuiInvariantError } from "../../lib/errors.js";
 
 const ALERT_ID = "rui-login-alert";
 
-/* Element
- ************************************************/
-
 export const RuiLogin = defineCustomElement(
   {
     name: "RuiLogin",
