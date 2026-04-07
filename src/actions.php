@@ -60,9 +60,12 @@ function responsive_head(): void {
         ],
         'strings'   => [
             'login' => [
-                'brand'   => yourls__( 'YOURLS' ),
-                'heading' => yourls__( 'Sign in to your account' ),
-                'tagline' => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'brand'         => yourls__( 'YOURLS' ),
+                'heading'       => yourls__( 'Sign in to your account' ),
+                'tagline'       => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'usernameLabel' => yourls__( 'Username' ),
+                'passwordLabel' => yourls__( 'Password' ),
+                'submitLabel'   => yourls__( 'Login' ),
             ],
         ],
     ];
@@ -100,12 +103,6 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
         : $hook_args;
     $context = is_string( $context ) ? $context : '';
 
-    if ( $context === 'login' ) {
-        echo '<rui-login></rui-login>';
-
-        return;
-    }
-
     if ( ! defined( 'YOURLS_USER' ) ) {
         return;
     }
@@ -127,3 +124,9 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
 }
 
 yourls_add_action( 'html_footer', 'responsive_custom_elements_root', 10, 1 );
+
+function responsive_login_form_top(): void {
+    echo '<rui-login></rui-login>';
+}
+
+yourls_add_action( 'login_form_top', 'responsive_login_form_top' );

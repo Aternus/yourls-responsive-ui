@@ -6,7 +6,6 @@ import {
   recomputeTotalLinks,
 } from "../../lib/counters.js";
 import { addLoading, endLoading, showFeedback } from "../../lib/feedback.js";
-import { replaceRowFromHtml } from "../../lib/shared.js";
 
 export const RuiNewUrl = defineCustomElement(
   {

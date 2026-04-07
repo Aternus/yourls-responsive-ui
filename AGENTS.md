@@ -23,6 +23,12 @@ Write code that is idiomatic to PHP, inspired by WordPress core.
 HTML markup changes should be done via YOURLS hooks; ONLY IF it is not possible
 (i.e., there is no appropriate action/filter), you should use DOM replacement.
 
+When a custom element performs a host replacement (i.e., it takes over and
+replaces a server-rendered element on mount), the element being replaced MUST be
+hidden with `display: none` from the initial render until the custom element
+takes over. This prevents a flash of the legacy markup before the replacement
+happens.
+
 ## Colors
 
 The color palette is defined inside the `@theme` layer in `src/css/app.css`.

@@ -1,0 +1,31 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block");
+@import url("https://unpkg.com/@fortawesome/fontawesome-free@7.2.0/css/brands.min.css");
+
+@layer base {
+  .fa-brands,
+  .fab {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    font-family: var(--fa-family, var(--fa-family-brands));
+    font-feature-settings: normal;
+    font-style: normal;
+    font-synthesis: none;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 1;
+    text-align: center;
+    text-rendering: auto;
+    width: 1.25em;
+  }
+
+  :is(.fab, .fa-brands)::before {
+    content: var(--fa) / "";
+  }
+
+  @supports not (content: "" / "") {
+    :is(.fab, .fa-brands)::before {
+      content: var(--fa);
+    }
+  }
+}

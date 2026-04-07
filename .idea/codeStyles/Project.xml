@@ -3,6 +3,9 @@
     <HTMLCodeStyleSettings>
       <option name="HTML_QUOTE_STYLE" value="Single" />
     </HTMLCodeStyleSettings>
+    <JSCodeStyleSettings version="0">
+      <option name="USE_EXPLICIT_JS_EXTENSION" value="ALWAYS_JS" />
+    </JSCodeStyleSettings>
     <PHPCodeStyleSettings>
       <option name="ALIGN_KEY_VALUE_PAIRS" value="true" />
       <option name="ALIGN_ASSIGNMENTS" value="true" />
