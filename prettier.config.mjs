@@ -24,7 +24,7 @@ const config = {
   importOrderTypeScriptVersion: "5.0.0",
 
   tailwindStylesheet: "./src/css/app.css",
-  tailwindFunctions: ["tw", "clsx", "cva", "cn"],
+  tailwindFunctions: ["cva"],
 };
 
 export default config;
