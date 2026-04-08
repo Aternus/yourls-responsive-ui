@@ -4,6 +4,9 @@
 @theme {
   --color-*: initial;
 
+  --color-black: #000;
+  --color-white: #fff;
+
   --color-brand-50: #ecf5fb;
   --color-brand-100: #d8eaf7;
   --color-brand-200: #c2def3;
