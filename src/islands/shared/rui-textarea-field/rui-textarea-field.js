@@ -22,23 +22,20 @@ export const RuiTextareaField = defineCustomElement(
         updateValue,
       };
     },
-    template: `
-            <rui-field
-                :label-text="labelText"
-                :control-id="controlId"
-            >
-                <textarea
-                    :ref="controlRef || null"
-                    class="text"
-                    :id="controlId"
-                    :rows="rows"
-                    :autofocus="autoFocus || null"
-                    :aria-label="ariaLabel || null"
-                    :value="modelValue"
-                    @input="updateValue"
-                ></textarea>
-            </rui-field>
-        `,
+    template: /* HTML */ `
+      <rui-field :label-text="labelText" :control-id="controlId">
+        <textarea
+          :ref="controlRef || null"
+          class="text"
+          :id="controlId"
+          :rows="rows"
+          :autofocus="autoFocus || null"
+          :aria-label="ariaLabel || null"
+          :value="modelValue"
+          @input="updateValue"
+        ></textarea>
+      </rui-field>
+    `,
   },
   { shadowRoot: false },
 );

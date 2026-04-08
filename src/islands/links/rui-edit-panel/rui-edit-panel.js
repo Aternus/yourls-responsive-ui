@@ -42,62 +42,59 @@ export const RuiEditPanel = defineCustomElement(
         saveEdit,
       };
     },
-    template: `
-            <rui-drawer title="Edit Link">
-                <section class="rui-drawer__content">
-                    <rui-drawer-intro
-                        icon="mdi:pencil"
-                        title="Edit the link details below."
-                        meta="Changes are saved when you press Save."
-                        variant="brand"
-                    />
-                    <section
-                        class="rui-drawer__editor"
-                        :data-id="drawerId"
-                    >
-                        <rui-text-input-field
-                            class="rui-drawer__field"
-                            :label-text="'Short URL'"
-                            :control-id="'rui-drawer-keyword-' + drawerId"
-                            :model-value="shortUrl"
-                            :auto-focus="true"
-                            :aria-label="'Short URL'"
-                            @update:model-value="shortUrl = $event"
-                        />
-                        <rui-text-input-field
-                            class="rui-drawer__field"
-                            :label-text="'Destination URL'"
-                            :control-id="'rui-drawer-url-' + drawerId"
-                            :model-value="destinationUrl"
-                            :aria-label="'Destination URL'"
-                            @update:model-value="destinationUrl = $event"
-                        />
-                        <rui-text-input-field
-                            class="rui-drawer__field"
-                            :label-text="'Title'"
-                            :control-id="'rui-drawer-title-input-' + drawerId"
-                            :model-value="title"
-                            :aria-label="'Title'"
-                            @update:model-value="title = $event"
-                        />
-                    </section>
-                </section>
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--primary"
-                    :icon-name="'mdi:content-save'"
-                    :label="'Save'"
-                    @press="saveEdit"
-                />
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'mdi:close'"
-                    :label="'Cancel'"
-                    @press="closeDrawer"
-                />
-            </rui-drawer>
-        `,
+    template: /* HTML */ `
+      <rui-drawer title="Edit Link">
+        <section class="rui-drawer__content">
+          <rui-drawer-intro
+            icon="mdi:pencil"
+            title="Edit the link details below."
+            meta="Changes are saved when you press Save."
+            variant="brand"
+          />
+          <section class="rui-drawer__editor" :data-id="drawerId">
+            <rui-text-input-field
+              class="rui-drawer__field"
+              :label-text="'Short URL'"
+              :control-id="'rui-drawer-keyword-' + drawerId"
+              :model-value="shortUrl"
+              :auto-focus="true"
+              :aria-label="'Short URL'"
+              @update:model-value="shortUrl = $event"
+            />
+            <rui-text-input-field
+              class="rui-drawer__field"
+              :label-text="'Destination URL'"
+              :control-id="'rui-drawer-url-' + drawerId"
+              :model-value="destinationUrl"
+              :aria-label="'Destination URL'"
+              @update:model-value="destinationUrl = $event"
+            />
+            <rui-text-input-field
+              class="rui-drawer__field"
+              :label-text="'Title'"
+              :control-id="'rui-drawer-title-input-' + drawerId"
+              :model-value="title"
+              :aria-label="'Title'"
+              @update:model-value="title = $event"
+            />
+          </section>
+        </section>
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--primary"
+          :icon-name="'mdi:content-save'"
+          :label="'Save'"
+          @press="saveEdit"
+        />
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--tonal"
+          :icon-name="'mdi:close'"
+          :label="'Cancel'"
+          @press="closeDrawer"
+        />
+      </rui-drawer>
+    `,
   },
   { shadowRoot: false },
 );

@@ -68,36 +68,36 @@ export const RuiNavControls = defineCustomElement(
         closeMenu,
       };
     },
-    template: `
-            <template v-if="navElement">
-                <button
-                    type="button"
-                    class="rui-nav__button"
-                    aria-controls="admin_menu"
-                    :aria-expanded="isOpen ? 'true' : 'false'"
-                    aria-label="Toggle navigation menu"
-                    @click="toggleMenu"
-                >
-                    <iconify-icon
-                        icon="mdi:menu"
-                        class="rui-nav__icon rui-nav__icon--open"
-                        aria-hidden="true"
-                    ></iconify-icon>
-                    <iconify-icon
-                        icon="mdi:close"
-                        class="rui-nav__icon rui-nav__icon--close"
-                        aria-hidden="true"
-                    ></iconify-icon>
-                </button>
-                <button
-                    type="button"
-                    class="rui-nav__overlay"
-                    aria-hidden="true"
-                    tabindex="-1"
-                    @click="closeMenu"
-                ></button>
-            </template>
-        `,
+    template: /* HTML */ `
+      <template v-if="navElement">
+        <button
+          type="button"
+          class="rui-nav__button"
+          aria-controls="admin_menu"
+          :aria-expanded="isOpen ? 'true' : 'false'"
+          aria-label="Toggle navigation menu"
+          @click="toggleMenu"
+        >
+          <iconify-icon
+            icon="mdi:menu"
+            class="rui-nav__icon rui-nav__icon--open"
+            aria-hidden="true"
+          ></iconify-icon>
+          <iconify-icon
+            icon="mdi:close"
+            class="rui-nav__icon rui-nav__icon--close"
+            aria-hidden="true"
+          ></iconify-icon>
+        </button>
+        <button
+          type="button"
+          class="rui-nav__overlay"
+          aria-hidden="true"
+          tabindex="-1"
+          @click="closeMenu"
+        ></button>
+      </template>
+    `,
   },
   { shadowRoot: false },
 );

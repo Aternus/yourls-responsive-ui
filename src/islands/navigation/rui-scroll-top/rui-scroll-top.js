@@ -54,24 +54,21 @@ export const RuiScrollTop = defineCustomElement(
         scrollToTop,
       };
     },
-    template: `
-            <button
-                type="button"
-                :class="{
+    template: /* HTML */ `
+      <button
+        type="button"
+        :class="{
                     'rui-scroll-top__button': true,
                     'is-visible': isVisible,
                 }"
-                :hidden="!isVisible"
-                aria-label="Scroll to top"
-                title="Scroll to top"
-                @click="scrollToTop"
-            >
-                <iconify-icon
-                    icon="mdi:arrow-up"
-                    aria-hidden="true"
-                ></iconify-icon>
-            </button>
-        `,
+        :hidden="!isVisible"
+        aria-label="Scroll to top"
+        title="Scroll to top"
+        @click="scrollToTop"
+      >
+        <iconify-icon icon="mdi:arrow-up" aria-hidden="true"></iconify-icon>
+      </button>
+    `,
   },
   { shadowRoot: false },
 );

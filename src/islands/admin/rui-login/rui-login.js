@@ -114,21 +114,20 @@ export const RuiLogin = defineCustomElement(
         alertId: ALERT_ID,
       };
     },
-    template: `
-      <div
-        v-if="ready"
-        class="hero min-h-screen bg-base-200 px-4 py-8 sm:px-6"
-      >
+    template: /* HTML */ `
+      <div v-if="ready" class="hero bg-base-200 px-4 py-8 sm:px-6">
         <div class="hero-content w-full max-w-md p-0">
-          <div
-            class="card w-full border border-base-300 bg-base-100 shadow-xl"
-          >
+          <div class="card w-full border border-base-300 bg-base-100 shadow-xl">
             <div class="card-body gap-6 p-6 sm:p-8">
               <div class="space-y-3">
-                <div class="text-4xl font-black tracking-tight text-error lowercase">
+                <div
+                  class="text-4xl font-black tracking-tight text-error lowercase"
+                >
                   {{ t("brand") }}
                 </div>
-                <h1 class="card-title text-3xl font-black sm:text-4xl">{{ t("heading") }}</h1>
+                <h1 class="card-title text-3xl font-black sm:text-4xl">
+                  {{ t("heading") }}
+                </h1>
                 <p class="text-base text-base-content/80">{{ t("tagline") }}</p>
               </div>
 
@@ -136,15 +135,12 @@ export const RuiLogin = defineCustomElement(
                 v-if="hasError"
                 :id="alertId"
                 role="alert"
-                class="alert alert-error alert-soft"
-              >{{ errorMessage }}
+                class="alert alert-soft alert-error"
+              >
+                {{ errorMessage }}
               </div>
 
-              <form
-                method="post"
-                :action="formAction"
-                class="space-y-4"
-              >
+              <form method="post" :action="formAction" class="space-y-4">
                 <input
                   v-for="field in hiddenFields"
                   :key="field.name"
@@ -153,11 +149,12 @@ export const RuiLogin = defineCustomElement(
                   :value="field.value"
                 />
                 <fieldset class="fieldset w-full">
-                  <legend class="fieldset-legend sr-only">{{ t("heading") }}</legend>
-                  <label
-                    for="username"
-                    class="label text-base font-semibold"
-                  >{{ t("usernameLabel") }}</label>
+                  <legend class="sr-only fieldset-legend">
+                    {{ t("heading") }}
+                  </legend>
+                  <label for="username" class="label text-base font-semibold"
+                    >{{ t("usernameLabel") }}</label
+                  >
                   <input
                     ref="usernameInputRef"
                     id="username"
@@ -173,7 +170,8 @@ export const RuiLogin = defineCustomElement(
                   <label
                     for="password"
                     class="label mt-2 text-base font-semibold"
-                  >{{ t("passwordLabel") }}</label>
+                    >{{ t("passwordLabel") }}</label
+                  >
                   <input
                     id="password"
                     name="password"
@@ -188,9 +186,10 @@ export const RuiLogin = defineCustomElement(
                 <button
                   type="submit"
                   name="submit"
-                  class="btn btn-primary w-full"
+                  class="btn w-full btn-primary"
                   :disabled="!bothFilled"
-                >{{ t("submitLabel") }}
+                >
+                  {{ t("submitLabel") }}
                 </button>
               </form>
             </div>

@@ -388,7 +388,7 @@ export const RuiInfosPage = defineCustomElement(
           });
       },
     },
-    template: `<span hidden></span>`,
+    template: /* HTML */ `<span hidden></span>`,
   },
   { shadowRoot: false },
 );

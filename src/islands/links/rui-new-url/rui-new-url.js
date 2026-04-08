@@ -134,12 +134,12 @@ export const RuiNewUrl = defineCustomElement(
         ready,
       };
     },
-    template: `
-            <section v-if="ready" class="rui-new-url__surface">
-                <div ref="formSlot"></div>
-                <div ref="feedbackSlot"></div>
-            </section>
-        `,
+    template: /* HTML */ `
+      <section v-if="ready" class="rui-new-url__surface">
+        <div ref="formSlot"></div>
+        <div ref="feedbackSlot"></div>
+      </section>
+    `,
   },
   { shadowRoot: false },
 );

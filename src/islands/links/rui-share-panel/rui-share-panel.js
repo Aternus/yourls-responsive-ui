@@ -72,70 +72,67 @@ export const RuiSharePanel = defineCustomElement(
         shareOnFacebook,
       };
     },
-    template: `
-            <rui-drawer title="Share Link">
-                <section class="rui-drawer__content">
-                    <rui-drawer-intro
-                        icon="mdi:share-variant"
-                        title="Share this link or copy it to clipboard."
-                        meta="Customize the share message before sharing."
-                        variant="brand"
-                    />
-                    <section
-                        class="rui-drawer__share"
-                        :data-id="drawerId"
-                    >
-                        <rui-text-input-field
-                            class="rui-drawer__field"
-                            :label-text="'Short URL'"
-                            :control-id="'rui-drawer-share-shorturl-' + drawerId"
-                            :model-value="shortUrl"
-                            :control-class="'rui-url-value'"
-                            :read-only="true"
-                            :aria-label="'Short URL to share'"
-                        />
-                        <rui-textarea-field
-                            class="rui-drawer__field"
-                            :label-text="'Message'"
-                            :control-id="'rui-drawer-share-message-' + drawerId"
-                            :model-value="message"
-                            :rows="3"
-                            :auto-focus="true"
-                            :aria-label="'Share message'"
-                            @update:model-value="message = $event"
-                        />
-                    </section>
-                </section>
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--primary"
-                    :icon-name="copyIconName"
-                    :label="copyLabel"
-                    @press="copyShortUrl"
-                />
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'mdi:twitter'"
-                    :label="'Share on Twitter'"
-                    @press="shareOnTwitter"
-                />
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'mdi:facebook'"
-                    :label="'Share on Facebook'"
-                    @press="shareOnFacebook"
-                />
-                <rui-action-button
-                    slot="actions"
-                    class="rui-drawer__button rui-drawer__button--tonal"
-                    :icon-name="'mdi:close'"
-                    :label="'Close share mode'"
-                    @press="closeDrawer"
-                />
-            </rui-drawer>
-        `,
+    template: /* HTML */ `
+      <rui-drawer title="Share Link">
+        <section class="rui-drawer__content">
+          <rui-drawer-intro
+            icon="mdi:share-variant"
+            title="Share this link or copy it to clipboard."
+            meta="Customize the share message before sharing."
+            variant="brand"
+          />
+          <section class="rui-drawer__share" :data-id="drawerId">
+            <rui-text-input-field
+              class="rui-drawer__field"
+              :label-text="'Short URL'"
+              :control-id="'rui-drawer-share-shorturl-' + drawerId"
+              :model-value="shortUrl"
+              :control-class="'rui-url-value'"
+              :read-only="true"
+              :aria-label="'Short URL to share'"
+            />
+            <rui-textarea-field
+              class="rui-drawer__field"
+              :label-text="'Message'"
+              :control-id="'rui-drawer-share-message-' + drawerId"
+              :model-value="message"
+              :rows="3"
+              :auto-focus="true"
+              :aria-label="'Share message'"
+              @update:model-value="message = $event"
+            />
+          </section>
+        </section>
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--primary"
+          :icon-name="copyIconName"
+          :label="copyLabel"
+          @press="copyShortUrl"
+        />
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--tonal"
+          :icon-name="'mdi:twitter'"
+          :label="'Share on Twitter'"
+          @press="shareOnTwitter"
+        />
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--tonal"
+          :icon-name="'mdi:facebook'"
+          :label="'Share on Facebook'"
+          @press="shareOnFacebook"
+        />
+        <rui-action-button
+          slot="actions"
+          class="rui-drawer__button rui-drawer__button--tonal"
+          :icon-name="'mdi:close'"
+          :label="'Close share mode'"
+          @press="closeDrawer"
+        />
+      </rui-drawer>
+    `,
   },
   { shadowRoot: false },
 );

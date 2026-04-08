@@ -7,12 +7,14 @@ export const RuiField = defineCustomElement(
       labelText: { type: String, required: true },
       controlId: { type: String, default: "" },
     },
-    template: `
-            <div>
-                <label class="rui-field-label" :for="controlId || null">{{ labelText }}</label>
-                <slot />
-            </div>
-        `,
+    template: /* HTML */ `
+      <div>
+        <label class="rui-field-label" :for="controlId || null"
+          >{{ labelText }}</label
+        >
+        <slot />
+      </div>
+    `,
   },
   { shadowRoot: false },
 );

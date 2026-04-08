@@ -44,21 +44,18 @@ export const RuiCopyButton = defineCustomElement(
         handleClick,
       };
     },
-    template: `
-            <button
-                type="button"
-                class="rui-copy-button__trigger"
-                :class="{ 'is-copied': isCopied }"
-                :aria-label="ariaLabel"
-                :title="ariaLabel"
-                @click="handleClick"
-            >
-                <iconify-icon
-                    :icon="iconName"
-                    aria-hidden="true"
-                ></iconify-icon>
-            </button>
-        `,
+    template: /* HTML */ `
+      <button
+        type="button"
+        class="rui-copy-button__trigger"
+        :class="{ 'is-copied': isCopied }"
+        :aria-label="ariaLabel"
+        :title="ariaLabel"
+        @click="handleClick"
+      >
+        <iconify-icon :icon="iconName" aria-hidden="true"></iconify-icon>
+      </button>
+    `,
   },
   { shadowRoot: false },
 );

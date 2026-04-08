@@ -485,123 +485,149 @@ export const RuiSearch = defineCustomElement(
         clearFilters,
       };
     },
-    template: `
-            <section v-if="ready" class="rui-search__surface">
-                <div class="rui-search__row">
-                    <div ref="searchSlot" class="rui-search__input-slot"></div>
-                    <div ref="searchButtonSlot" class="rui-search__submit-slot"></div>
-                    <button
-                        type="button"
-                        class="rui-search__toggle"
-                        :class="{ 'is-active': filtersActive || drawerOpen }"
-                        title="Filters"
-                        aria-label="Filters"
-                        :aria-expanded="drawerOpen ? 'true' : 'false'"
-                        aria-controls="rui-filter-drawer"
-                        @click="toggleDrawer"
-                    >
-                        <iconify-icon
-                            :icon="filtersActive ? 'mdi:filter-variant' : 'mdi:filter-off'"
-                            aria-hidden="true"
-                        ></iconify-icon>
-                    </button>
+    template: /* HTML */ `
+      <section v-if="ready" class="rui-search__surface">
+        <div class="rui-search__row">
+          <div ref="searchSlot" class="rui-search__input-slot"></div>
+          <div ref="searchButtonSlot" class="rui-search__submit-slot"></div>
+          <button
+            type="button"
+            class="rui-search__toggle"
+            :class="{ 'is-active': filtersActive || drawerOpen }"
+            title="Filters"
+            aria-label="Filters"
+            :aria-expanded="drawerOpen ? 'true' : 'false'"
+            aria-controls="rui-filter-drawer"
+            @click="toggleDrawer"
+          >
+            <iconify-icon
+              :icon="filtersActive ? 'mdi:filter-variant' : 'mdi:filter-off'"
+              aria-hidden="true"
+            ></iconify-icon>
+          </button>
+        </div>
+        <dialog
+          id="rui-filter-drawer"
+          ref="drawerDialog"
+          class="rui-drawer rui-search__filter-drawer"
+          @close="handleDrawerDialogClose"
+          @cancel.prevent="requestDrawerClose"
+        >
+          <Transition
+            name="rui-drawer-surface"
+            @after-leave="handleDrawerAfterLeave"
+          >
+            <div v-show="drawerContentVisible" class="rui-drawer__shell">
+              <div class="rui-drawer__titlebar">
+                <div class="rui-drawer__heading">
+                  <div class="rui-drawer__heading-text">
+                    <span class="rui-drawer__heading-title">Filters</span>
+                  </div>
                 </div>
-                <dialog
-                    id="rui-filter-drawer"
-                    ref="drawerDialog"
-                    class="rui-drawer rui-search__filter-drawer"
-                    @close="handleDrawerDialogClose"
-                    @cancel.prevent="requestDrawerClose"
+              </div>
+              <div class="confirm-message rui-drawer__body">
+                <section class="rui-drawer__content rui-search__filter-body">
+                  <section class="rui-search__filter-group is-scope">
+                    <p class="rui-search__filter-group-title">In field</p>
+                    <div
+                      ref="scopeSlot"
+                      class="rui-search__filter-controls"
+                    ></div>
+                  </section>
+                  <div
+                    class="rui-search__filter-divider"
+                    aria-hidden="true"
+                  ></div>
+                  <section class="rui-search__filter-group is-sort">
+                    <p class="rui-search__filter-group-title">Sort</p>
+                    <div
+                      ref="sortSlot"
+                      class="rui-search__filter-controls"
+                    ></div>
+                  </section>
+                  <section class="rui-search__filter-group is-perpage">
+                    <div class="rui-search__filter-heading is-stacked">
+                      <p class="rui-search__filter-group-title">Rows</p>
+                      <p class="rui-search__filter-group-hint">
+                        Results per page
+                      </p>
+                    </div>
+                    <div
+                      ref="rowsSlot"
+                      class="rui-search__filter-controls"
+                    ></div>
+                  </section>
+                  <section class="rui-search__filter-group is-clicks">
+                    <div class="rui-search__filter-heading is-stacked">
+                      <p class="rui-search__filter-group-title">Clicks</p>
+                      <p class="rui-search__filter-group-hint">
+                        Show links with more or less clicks
+                      </p>
+                    </div>
+                    <div
+                      ref="clicksSlot"
+                      class="rui-search__filter-controls"
+                    ></div>
+                  </section>
+                  <section class="rui-search__filter-group is-date">
+                    <div class="rui-search__filter-heading">
+                      <p class="rui-search__filter-group-title">Date</p>
+                      <p class="rui-search__filter-group-hint">
+                        Filter by creation date
+                      </p>
+                    </div>
+                    <div
+                      ref="dateSlot"
+                      class="rui-search__filter-controls"
+                    ></div>
+                  </section>
+                </section>
+              </div>
+              <div
+                class="button-group rui-drawer__actions rui-drawer__footer rui-search__filter-actions"
+              >
+                <button
+                  type="button"
+                  class="button rui-drawer__button rui-drawer__button--primary rui-search__filter-submit"
+                  aria-label="Apply filters"
+                  title="Apply filters"
+                  @click="submitFilters"
                 >
-                    <Transition
-                        name="rui-drawer-surface"
-                        @after-leave="handleDrawerAfterLeave"
-                    >
-                        <div v-show="drawerContentVisible" class="rui-drawer__shell">
-                            <div class="rui-drawer__titlebar">
-                                <div class="rui-drawer__heading">
-                                    <div class="rui-drawer__heading-text">
-                                        <span class="rui-drawer__heading-title">Filters</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="confirm-message rui-drawer__body">
-                                <section class="rui-drawer__content rui-search__filter-body">
-                                    <section class="rui-search__filter-group is-scope">
-                                        <p class="rui-search__filter-group-title">In field</p>
-                                        <div ref="scopeSlot" class="rui-search__filter-controls"></div>
-                                    </section>
-                                    <div class="rui-search__filter-divider" aria-hidden="true"></div>
-                                    <section class="rui-search__filter-group is-sort">
-                                        <p class="rui-search__filter-group-title">Sort</p>
-                                        <div ref="sortSlot" class="rui-search__filter-controls"></div>
-                                    </section>
-                                    <section class="rui-search__filter-group is-perpage">
-                                        <div class="rui-search__filter-heading is-stacked">
-                                            <p class="rui-search__filter-group-title">Rows</p>
-                                            <p class="rui-search__filter-group-hint">Results per page</p>
-                                        </div>
-                                        <div ref="rowsSlot" class="rui-search__filter-controls"></div>
-                                    </section>
-                                    <section class="rui-search__filter-group is-clicks">
-                                        <div class="rui-search__filter-heading is-stacked">
-                                            <p class="rui-search__filter-group-title">Clicks</p>
-                                            <p class="rui-search__filter-group-hint">Show links with more or less clicks</p>
-                                        </div>
-                                        <div ref="clicksSlot" class="rui-search__filter-controls"></div>
-                                    </section>
-                                    <section class="rui-search__filter-group is-date">
-                                        <div class="rui-search__filter-heading">
-                                            <p class="rui-search__filter-group-title">Date</p>
-                                            <p class="rui-search__filter-group-hint">Filter by creation date</p>
-                                        </div>
-                                        <div ref="dateSlot" class="rui-search__filter-controls"></div>
-                                    </section>
-                                </section>
-                            </div>
-                            <div class="button-group rui-drawer__actions rui-drawer__footer rui-search__filter-actions">
-                                <button
-                                    type="button"
-                                    class="button rui-drawer__button rui-drawer__button--primary rui-search__filter-submit"
-                                    aria-label="Apply filters"
-                                    title="Apply filters"
-                                    @click="submitFilters"
-                                >
-                                    <iconify-icon
-                                        icon="mdi:check"
-                                        aria-hidden="true"
-                                    ></iconify-icon>
-                                </button>
-                                <button
-                                    type="button"
-                                    class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-clear"
-                                    aria-label="Clear filters"
-                                    title="Clear filters"
-                                    @click="clearFilters"
-                                >
-                                    <iconify-icon
-                                        icon="mdi:filter-off"
-                                        aria-hidden="true"
-                                    ></iconify-icon>
-                                </button>
-                                <button
-                                    type="button"
-                                    class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-close"
-                                    aria-label="Close"
-                                    title="Close"
-                                    @click="closeDrawer"
-                                >
-                                    <iconify-icon
-                                        icon="mdi:close"
-                                        aria-hidden="true"
-                                    ></iconify-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </Transition>
-                </dialog>
-            </section>
-        `,
+                  <iconify-icon
+                    icon="mdi:check"
+                    aria-hidden="true"
+                  ></iconify-icon>
+                </button>
+                <button
+                  type="button"
+                  class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-clear"
+                  aria-label="Clear filters"
+                  title="Clear filters"
+                  @click="clearFilters"
+                >
+                  <iconify-icon
+                    icon="mdi:filter-off"
+                    aria-hidden="true"
+                  ></iconify-icon>
+                </button>
+                <button
+                  type="button"
+                  class="button rui-drawer__button rui-drawer__button--tonal rui-search__filter-close"
+                  aria-label="Close"
+                  title="Close"
+                  @click="closeDrawer"
+                >
+                  <iconify-icon
+                    icon="mdi:close"
+                    aria-hidden="true"
+                  ></iconify-icon>
+                </button>
+              </div>
+            </div>
+          </Transition>
+        </dialog>
+      </section>
+    `,
   },
   { shadowRoot: false },
 );

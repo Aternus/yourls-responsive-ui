@@ -1,0 +1,9 @@
+@layer components {
+  #wrap > header {
+    display: none;
+  }
+
+  #wrap > nav {
+    display: none;
+  }
+}

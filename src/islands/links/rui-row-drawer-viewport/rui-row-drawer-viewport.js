@@ -67,37 +67,37 @@ export const RuiRowDrawerViewport = defineCustomElement(
         handleAfterEnter,
       };
     },
-    template: `
-            <Transition
-                name="rui-drawer-surface"
-                @after-enter="handleAfterEnter"
-                @after-leave="handleAfterLeave"
-            >
-                <div
-                    v-if="open && data && mode"
-                    ref="shellRef"
-                    class="rui-drawer__shell"
-                >
-                    <rui-edit-panel
-                        v-if="mode === 'edit'"
-                        :data="data"
-                        @save-edit="forwardSaveEdit"
-                        @close="requestClose"
-                    />
-                    <rui-share-panel
-                        v-else-if="mode === 'share'"
-                        :data="data"
-                        @close="requestClose"
-                    />
-                    <rui-delete-panel
-                        v-else-if="mode === 'delete'"
-                        :data="data"
-                        @confirm="forwardConfirmDelete"
-                        @cancel="forwardCancelDelete"
-                    />
-                </div>
-            </Transition>
-        `,
+    template: /* HTML */ `
+      <Transition
+        name="rui-drawer-surface"
+        @after-enter="handleAfterEnter"
+        @after-leave="handleAfterLeave"
+      >
+        <div
+          v-if="open && data && mode"
+          ref="shellRef"
+          class="rui-drawer__shell"
+        >
+          <rui-edit-panel
+            v-if="mode === 'edit'"
+            :data="data"
+            @save-edit="forwardSaveEdit"
+            @close="requestClose"
+          />
+          <rui-share-panel
+            v-else-if="mode === 'share'"
+            :data="data"
+            @close="requestClose"
+          />
+          <rui-delete-panel
+            v-else-if="mode === 'delete'"
+            :data="data"
+            @confirm="forwardConfirmDelete"
+            @cancel="forwardCancelDelete"
+          />
+        </div>
+      </Transition>
+    `,
   },
   { shadowRoot: false },
 );

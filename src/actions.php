@@ -44,10 +44,9 @@ function responsive_head(): void {
     $dark     = RESPONSIVE_SCHEME_DARK;
     $ajax_url = yourls_admin_url( 'admin-ajax.php' );
 
-    $config_flags = [];
-    if ( defined( 'YOURLS_USER' ) ) {
-        $config_flags[] = 'authenticated';
-    }
+    $config_flags = [
+        'authenticated' => defined( 'YOURLS_USER' ),
+    ];
 
     $responsive_ui_config = [
         'pluginURL' => $url,
@@ -131,3 +130,9 @@ function responsive_login_form_top(): void {
 }
 
 yourls_add_action( 'login_form_top', 'responsive_login_form_top' );
+
+function responsive_navbar(): void {
+    echo '<rui-navbar></rui-navbar>';
+}
+
+yourls_add_action( 'pre_html_logo', 'responsive_navbar' );

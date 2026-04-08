@@ -50,17 +50,18 @@ export const RuiExpandableTitle = defineCustomElement(
         handleKeydown,
       };
     },
-    template: `
-            <span
-                ref="root"
-                class="rui-links-table__title"
-                :class="{ 'is-expanded': isExpanded }"
-                :title="title"
-                role="button"
-                @click="toggle"
-                @keydown="handleKeydown"
-            ><slot /></span>
-        `,
+    template: /* HTML */ `
+      <span
+        ref="root"
+        class="rui-links-table__title"
+        :class="{ 'is-expanded': isExpanded }"
+        :title="title"
+        role="button"
+        @click="toggle"
+        @keydown="handleKeydown"
+        ><slot
+      /></span>
+    `,
   },
   { shadowRoot: false },
 );

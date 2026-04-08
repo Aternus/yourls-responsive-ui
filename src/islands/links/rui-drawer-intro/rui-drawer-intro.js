@@ -9,17 +9,17 @@ export const RuiDrawerIntro = defineCustomElement(
       meta: { type: String, required: true },
       variant: { type: String, default: "brand" },
     },
-    template: `
-            <section :class="['rui-drawer__intro', 'is-' + variant]">
-                <iconify-icon
-                    :icon="icon"
-                    class="rui-drawer__intro-icon"
-                    aria-hidden="true"
-                ></iconify-icon>
-                <p class="rui-drawer__intro-title">{{ title }}</p>
-                <p class="rui-drawer__intro-meta">{{ meta }}</p>
-            </section>
-        `,
+    template: /* HTML */ `
+      <section :class="['rui-drawer__intro', 'is-' + variant]">
+        <iconify-icon
+          :icon="icon"
+          class="rui-drawer__intro-icon"
+          aria-hidden="true"
+        ></iconify-icon>
+        <p class="rui-drawer__intro-title">{{ title }}</p>
+        <p class="rui-drawer__intro-meta">{{ meta }}</p>
+      </section>
+    `,
   },
   { shadowRoot: false },
 );

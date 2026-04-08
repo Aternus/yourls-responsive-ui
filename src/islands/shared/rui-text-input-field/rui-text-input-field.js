@@ -25,25 +25,22 @@ export const RuiTextInputField = defineCustomElement(
         updateValue,
       };
     },
-    template: `
-            <rui-field
-                :label-text="labelText"
-                :control-id="controlId"
-            >
-                <input
-                    :ref="controlRef || null"
-                    :type="controlType"
-                    :class="['text', controlClass || null]"
-                    :id="controlId"
-                    :value="modelValue"
-                    :autofocus="autoFocus || null"
-                    :placeholder="placeholder || null"
-                    :readonly="readOnly"
-                    :aria-label="ariaLabel || null"
-                    @input="updateValue"
-                />
-            </rui-field>
-        `,
+    template: /* HTML */ `
+      <rui-field :label-text="labelText" :control-id="controlId">
+        <input
+          :ref="controlRef || null"
+          :type="controlType"
+          :class="['text', controlClass || null]"
+          :id="controlId"
+          :value="modelValue"
+          :autofocus="autoFocus || null"
+          :placeholder="placeholder || null"
+          :readonly="readOnly"
+          :aria-label="ariaLabel || null"
+          @input="updateValue"
+        />
+      </rui-field>
+    `,
   },
   { shadowRoot: false },
 );

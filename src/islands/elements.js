@@ -11,6 +11,7 @@ import { RuiRowDrawerViewport } from "./links/rui-row-drawer-viewport/rui-row-dr
 import { RuiSearch } from "./links/rui-search/rui-search.js";
 import { RuiSharePanel } from "./links/rui-share-panel/rui-share-panel.js";
 import { RuiNavControls } from "./navigation/rui-nav-controls/rui-nav-controls.js";
+import { RuiNavbar } from "./navigation/rui-navbar/rui-navbar.js";
 import { RuiScrollTop } from "./navigation/rui-scroll-top/rui-scroll-top.js";
 import { RuiActionButton } from "./shared/rui-action-button/rui-action-button.js";
 import { RuiCopyButton } from "./shared/rui-copy-button/rui-copy-button.js";
@@ -44,6 +45,7 @@ export function registerAllElements() {
   define("rui-delete-panel", RuiDeletePanel);
 
   // Navigation
+  define("rui-navbar", RuiNavbar);
   define("rui-nav-controls", RuiNavControls);
   define("rui-scroll-top", RuiScrollTop);
 
