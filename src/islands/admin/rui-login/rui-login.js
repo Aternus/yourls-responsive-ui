@@ -115,18 +115,15 @@ export const RuiLogin = defineCustomElement(
       };
     },
     template: /* HTML */ `
-      <div v-if="ready" class="hero bg-base-200 px-4 py-8 sm:px-6">
-        <div class="hero-content w-full max-w-md p-0">
-          <div class="card w-full border border-base-300 bg-base-100 shadow-xl">
-            <div class="card-body gap-6 p-6 sm:p-8">
+      <div v-if="ready" class="hero h-full bg-base-200">
+        <div class="hero-content w-full">
+          <div class="card w-full max-w-sm bg-base-100 shadow-sm">
+            <div class="card-body gap-6">
               <div class="space-y-3">
-                <div
-                  class="text-4xl font-black tracking-tight text-error lowercase"
+                <h1
+                  class="card-title text-4xl font-black tracking-tight text-brand-500"
                 >
                   {{ t("brand") }}
-                </div>
-                <h1 class="card-title text-3xl font-black sm:text-4xl">
-                  {{ t("heading") }}
                 </h1>
                 <p class="text-base text-base-content/80">{{ t("tagline") }}</p>
               </div>
@@ -148,11 +145,11 @@ export const RuiLogin = defineCustomElement(
                   :name="field.name"
                   :value="field.value"
                 />
-                <fieldset class="fieldset w-full">
+                <fieldset class="fieldset">
                   <legend class="sr-only fieldset-legend">
-                    {{ t("heading") }}
+                    {{ t("legend") }}
                   </legend>
-                  <label for="username" class="label text-base font-semibold"
+                  <label for="username" class="label"
                     >{{ t("usernameLabel") }}</label
                   >
                   <input
@@ -167,9 +164,7 @@ export const RuiLogin = defineCustomElement(
                     :aria-invalid="hasError"
                     :aria-describedby="usernameDescribedBy"
                   />
-                  <label
-                    for="password"
-                    class="label mt-2 text-base font-semibold"
+                  <label for="password" class="label"
                     >{{ t("passwordLabel") }}</label
                   >
                   <input

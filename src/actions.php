@@ -60,8 +60,8 @@ function responsive_head(): void {
         'i18n'      => [
             'login' => [
                 'brand'         => yourls__( 'YOURLS' ),
-                'heading'       => yourls__( 'Log in and start sharing' ),
-                'tagline'       => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'tagline'       => yourls__( 'Your Own URL Shortener' ),
+                'legend'       => yourls__( 'Enter your credentials to manage your short URLs.' ),
                 'usernameLabel' => yourls__( 'Username' ),
                 'passwordLabel' => yourls__( 'Password' ),
                 'submitLabel'   => yourls__( 'Log in' ),
@@ -125,11 +125,11 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
 
 yourls_add_action( 'html_footer', 'responsive_custom_elements_root', 10, 1 );
 
-function responsive_login_form_top(): void {
+function responsive_login(): void {
     echo '<rui-login></rui-login>';
 }
 
-yourls_add_action( 'login_form_top', 'responsive_login_form_top' );
+yourls_add_action( 'login_form_end', 'responsive_login' );
 
 function responsive_navbar(): void {
     echo '<rui-navbar></rui-navbar>';

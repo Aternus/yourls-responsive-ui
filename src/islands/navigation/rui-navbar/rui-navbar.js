@@ -169,18 +169,13 @@ export const RuiNavbar = defineCustomElement(
     template: /* HTML */ `
       <div v-if="ready" class="navbar bg-base-100 shadow-sm">
         <div class="navbar-start">
-          <a
-            :href="brandHref"
-            :title="brandTitle"
-            class="btn font-black tracking-tight normal-case btn-ghost sm:text-lg"
-          >
+          <a :href="brandHref" :title="brandTitle" class="btn btn-ghost">
             <img
               v-if="logoSrc"
               :src="logoSrc"
               :alt="logoAlt"
               class="h-7 w-auto shrink-0"
             />
-            <span class="truncate">{{ t("brand") }}</span>
           </a>
         </div>
 

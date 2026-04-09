@@ -1,0 +1,28 @@
+body {
+  @apply grid min-h-dvh;
+  grid-template-areas:
+    "content"
+    "footer";
+  grid-template-rows: 1fr auto;
+}
+
+#wrap {
+  @apply grid;
+  grid-area: content;
+  grid-template-areas:
+    "nav"
+    "main";
+  grid-template-rows: auto 1fr;
+}
+
+#wrap > :is(header, rui-navbar) {
+  grid-area: nav;
+}
+
+#wrap > main {
+  grid-area: main;
+}
+
+#footer {
+  grid-area: footer;
+}
