@@ -13,8 +13,7 @@ default credentials: `root` / `root`.
 You will need to use cURL to access `localhost`.
 
 - Assume Backend and Frontend services are running.
-- Frontend includes: TailwindCSS CLI running in watch mode.
-- Assume the frontend dev process (including TailwindCSS CLI watch mode) is
+- Assume the Frontend dev process (including TailwindCSS CLI watch mode) is
   already running.
 - Do not run `npm run dev` or `npm run build` for routine development tasks. Run
   either command only when explicitly requested.
