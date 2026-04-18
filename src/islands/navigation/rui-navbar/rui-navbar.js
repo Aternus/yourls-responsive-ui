@@ -14,15 +14,16 @@ import { RuiInvariantError } from "../../lib/errors.js";
 
 const HEADER_SELECTOR = "#wrap > header[role='banner']";
 const NAV_SELECTOR = "#wrap > nav[role='navigation']";
-const TOPLEVEL_NAV_LINK_SELECTOR =
-  "#admin_menu > li.admin_menu_toplevel > a[href]";
+const TOPLEVEL_NAV_ITEM_SELECTOR = "#admin_menu > li.admin_menu_toplevel";
+const SUBLEVEL_NAV_LINK_SELECTOR = "ul > li.admin_menu_sublevel > a[href]";
 const LOGOUT_LINK_SELECTOR = "#admin_menu_logout_link a[href]";
 const USERNAME_SELECTOR = "#admin_menu_logout_link strong";
 const MOBILE_DRAWER_TOGGLE_ID = "rui-navbar-mobile-drawer-toggle";
 
-function toPathname(url) {
+function toRoute(url) {
   try {
-    return new URL(url, window.location.href).pathname;
+    const parsed = new URL(url, window.location.href);
+    return `${parsed.pathname}${parsed.search}`;
   } catch {
     return "";
   }
@@ -60,8 +61,15 @@ function readLegacyHeaderData(legacyHeader) {
 }
 
 function readLegacyNavLinks(legacyNav, currentPathname) {
-  return Array.from(legacyNav.querySelectorAll(TOPLEVEL_NAV_LINK_SELECTOR))
-    .map((anchor) => {
+  return Array.from(legacyNav.querySelectorAll(TOPLEVEL_NAV_ITEM_SELECTOR))
+    .map((menuItem) => {
+      if (!(menuItem instanceof HTMLElement)) {
+        return null;
+      }
+
+      const topLevelChild = menuItem.firstElementChild;
+      const anchor =
+        topLevelChild instanceof HTMLAnchorElement ? topLevelChild : null;
       if (!(anchor instanceof HTMLAnchorElement)) {
         return null;
       }
@@ -71,10 +79,34 @@ function readLegacyNavLinks(legacyNav, currentPathname) {
         return null;
       }
 
+      const children = Array.from(
+        menuItem.querySelectorAll(SUBLEVEL_NAV_LINK_SELECTOR),
+      )
+        .map((sublevelAnchor) => {
+          if (!(sublevelAnchor instanceof HTMLAnchorElement)) {
+            return null;
+          }
+
+          const sublevelLabel = (sublevelAnchor.textContent ?? "").trim();
+          if (sublevelLabel.length === 0) {
+            return null;
+          }
+
+          return {
+            href: sublevelAnchor.href,
+            label: sublevelLabel,
+            isCurrent: toRoute(sublevelAnchor.href) === currentPathname,
+          };
+        })
+        .filter((sublevelLink) => sublevelLink !== null);
+
       return {
         href: anchor.href,
         label,
-        isCurrent: toPathname(anchor.href) === currentPathname,
+        isCurrent:
+          toRoute(anchor.href) === currentPathname ||
+          children.some((child) => child.isCurrent),
+        children,
       };
     })
     .filter((link) => link !== null);
@@ -166,7 +198,7 @@ export const RuiNavbar = defineCustomElement(
 
           navLinks.value = readLegacyNavLinks(
             legacyNav,
-            window.location.pathname,
+            `${window.location.pathname}${window.location.search}`,
           );
 
           const legacyUserData = readLegacyUserData(legacyNav);
@@ -240,8 +272,27 @@ export const RuiNavbar = defineCustomElement(
               <div v-if="hasNavLinks" class="navbar-center hidden lg:flex">
                 <ul class="menu menu-horizontal gap-2 rounded-box bg-base-200">
                   <li v-for="item in navLinks" :key="item.href">
+                    <template v-if="item.children.length > 0">
+                      <details>
+                        <summary :class="{ 'menu-active': item.isCurrent }">
+                          {{ item.label }}
+                        </summary>
+                        <ul class="space-y-1">
+                          <li v-for="child in item.children" :key="child.href">
+                            <a
+                              :href="child.href"
+                              class="text-nowrap"
+                              :class="{ 'menu-active': child.isCurrent }"
+                              >{{ child.label }}</a
+                            >
+                          </li>
+                        </ul>
+                      </details>
+                    </template>
                     <a
+                      v-else
                       :href="item.href"
+                      class="text-nowrap"
                       :class="{ 'menu-active': item.isCurrent }"
                       >{{ item.label }}</a
                     >
@@ -302,10 +353,29 @@ export const RuiNavbar = defineCustomElement(
 
               <div class="divider m-0"></div>
 
-              <ul class="menu w-full rounded-box bg-base-200">
+              <ul class="menu w-full space-y-1 rounded-box bg-base-200">
                 <li v-for="item in navLinks" :key="item.href">
+                  <template v-if="item.children.length > 0">
+                    <details>
+                      <summary :class="{ 'menu-active': item.isCurrent }">
+                        {{ item.label }}
+                      </summary>
+                      <ul class="mt-1 space-y-1">
+                        <li v-for="child in item.children" :key="child.href">
+                          <a
+                            :href="child.href"
+                            class="text-nowrap"
+                            :class="{ 'menu-active': child.isCurrent }"
+                            >{{ child.label }}</a
+                          >
+                        </li>
+                      </ul>
+                    </details>
+                  </template>
                   <a
+                    v-else
                     :href="item.href"
+                    class="text-nowrap"
                     :class="{ 'menu-active': item.isCurrent }"
                     >{{ item.label }}</a
                   >
