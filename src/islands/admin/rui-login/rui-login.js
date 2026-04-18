@@ -344,36 +344,48 @@ export const RuiLogin = defineCustomElement(
               <label for="password" class="label"
                 >{{ t("passwordLabel") }}</label
               >
-              <input
-                ref="passwordInputRef"
-                id="password"
-                name="password"
-                :type="passwordInputType"
-                autocomplete="current-password"
-                required
-                v-model="password"
-                class="input w-full"
-                :class="{ 'input-error': passwordHasError }"
-                :aria-invalid="passwordHasError"
-                :aria-describedby="passwordDescribedBy"
-                @input="handleCredentialInput"
-                @keydown="updateCapsLockState"
-                @keyup="updateCapsLockState"
-                @blur="clearCapsLockState"
-              />
-              <div class="mt-1 flex gap-2 text-xs text-base-content/60">
-                <label>
-                  <input
-                    id="show-password-toggle"
-                    type="checkbox"
-                    :checked="showPassword"
-                    @change="togglePasswordVisibility"
-                    class="toggle toggle-xs"
-                  />
-                </label>
-                <label for="show-password-toggle">
-                  {{ passwordToggleLabel }}
-                </label>
+              <div class="join w-full">
+                <input
+                  ref="passwordInputRef"
+                  id="password"
+                  name="password"
+                  :type="passwordInputType"
+                  autocomplete="current-password"
+                  required
+                  v-model="password"
+                  class="input join-item grow"
+                  :class="{ 'input-error': passwordHasError }"
+                  :aria-invalid="passwordHasError"
+                  :aria-describedby="passwordDescribedBy"
+                  @input="handleCredentialInput"
+                  @keydown="updateCapsLockState"
+                  @keyup="updateCapsLockState"
+                  @blur="clearCapsLockState"
+                />
+                <button
+                  type="button"
+                  class="btn join-item btn-square"
+                  :aria-label="passwordToggleLabel"
+                  :aria-pressed="showPassword"
+                  :title="passwordToggleLabel"
+                  aria-controls="password"
+                  @click="togglePasswordVisibility"
+                >
+                  <span
+                    class="swap swap-flip"
+                    :class="{ 'swap-active': showPassword }"
+                    aria-hidden="true"
+                  >
+                    <iconify-icon
+                      class="swap-off"
+                      icon="mdi:eye-outline"
+                    ></iconify-icon>
+                    <iconify-icon
+                      class="swap-on"
+                      icon="mdi:eye-off-outline"
+                    ></iconify-icon>
+                  </span>
+                </button>
               </div>
               <p
                 v-if="capsLockOn"
