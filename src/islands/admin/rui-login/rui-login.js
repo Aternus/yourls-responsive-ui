@@ -3,22 +3,28 @@ import {
   defineCustomElement,
   nextTick,
   onMounted,
+  reactive,
   ref,
   useHost,
 } from "vue";
 
 import { useI18n } from "../../composables/useI18n.js";
+import { ensureHostElement, replaceElementWithHost } from "../../lib/dom.js";
 import { RuiInvariantError } from "../../lib/errors.js";
 
 const ALERT_ID = "rui-login-alert";
 const CAPSLOCK_HINT_ID = "rui-login-capslock-hint";
+const LEGACY_LOGIN_SELECTOR = "#login";
+const ADMIN_INDEX_PATH = "/admin/index.php";
+const BRAND_LOGO_PATH = "/images/yourls-logo.svg";
+const NON_ERROR_MESSAGE_KEYS = ["messageLogin", "messageLogout"];
 
 function normalizeMessage(value) {
   return value.trim().toLowerCase().replace(/\s+/g, " ");
 }
 
 function resolveLegacyLoginContainer(host) {
-  const container = host?.closest?.("#login");
+  const container = host?.closest?.(LEGACY_LOGIN_SELECTOR);
 
   if (!(container instanceof HTMLElement)) {
     throw new RuiInvariantError("Expected container to exist before mount.", {
@@ -54,22 +60,12 @@ function readLegacyLoginData(container) {
   };
 }
 
-function resolveBrandLogoSource() {
-  const legacyLogo = document.querySelector("#yourls-logo");
-  if (
-    legacyLogo instanceof HTMLImageElement &&
-    legacyLogo.src.trim().length > 0
-  ) {
-    return legacyLogo.src;
-  }
-
-  return new URL("../images/yourls-logo.svg", window.location.href).href;
+function resolveLoginPageHref() {
+  return new URL(ADMIN_INDEX_PATH, window.location.origin).href;
 }
 
-function resolveLoginPageHref() {
-  const pathname = window.location.pathname || "/admin/index.php";
-
-  return new URL(pathname, window.location.origin).href;
+function resolveBrandLogoHref() {
+  return new URL(BRAND_LOGO_PATH, window.location.origin).href;
 }
 
 export const RuiLogin = defineCustomElement(
@@ -80,9 +76,11 @@ export const RuiLogin = defineCustomElement(
       const { t } = useI18n("login");
       const { t: tBrand } = useI18n("brand");
 
-      const ready = ref(false);
-      const username = ref("");
-      const password = ref("");
+      const isReady = ref(false);
+      const credentials = reactive({
+        username: "",
+        password: "",
+      });
       const serverMessage = ref("");
       const brandLogoSrc = ref("");
       const loginPageHref = ref("");
@@ -95,19 +93,21 @@ export const RuiLogin = defineCustomElement(
       const usernameInputRef = ref(null);
       const passwordInputRef = ref(null);
 
-      const NON_ERROR_MESSAGES = computed(() =>
-        ["messageLogin", "messageLogout"].map((key) =>
-          normalizeMessage(t(key)),
-        ),
+      const nonErrorMessages = computed(() =>
+        NON_ERROR_MESSAGE_KEYS.map((key) => normalizeMessage(t(key))),
       );
 
-      const usernameFilled = computed(() => username.value.trim().length > 0);
-      const passwordFilled = computed(() => password.value.trim().length > 0);
+      const usernameFilled = computed(
+        () => credentials.username.trim().length > 0,
+      );
+      const passwordFilled = computed(
+        () => credentials.password.trim().length > 0,
+      );
 
       const hasServerError = computed(
         () =>
           serverMessage.value.length > 0 &&
-          !NON_ERROR_MESSAGES.value.includes(
+          !nonErrorMessages.value.includes(
             normalizeMessage(serverMessage.value),
           ),
       );
@@ -162,34 +162,23 @@ export const RuiLogin = defineCustomElement(
       );
 
       onMounted(async () => {
-        if (!(host instanceof HTMLElement)) {
-          throw new RuiInvariantError(
-            "Expected host element to be an HTMLElement.",
-            { code: "DOM_INVALID_TYPE" },
-          );
-        }
+        const hostElement = ensureHostElement(host);
 
-        const container = resolveLegacyLoginContainer(host);
+        const container = resolveLegacyLoginContainer(hostElement);
         const legacyData = readLegacyLoginData(container);
 
         formAction.value = legacyData.formAction;
         hiddenFields.value = legacyData.hiddenFields;
         serverMessage.value = legacyData.serverMessage;
-        brandLogoSrc.value = resolveBrandLogoSource();
+        brandLogoSrc.value = resolveBrandLogoHref();
         loginPageHref.value = resolveLoginPageHref();
 
         // Replace #login with our custom element host. Vue's custom
         // element runtime defers unmount across synchronous DOM moves,
         // so the component instance survives the relocation.
-        if (!container.parentNode) {
-          throw new RuiInvariantError(
-            "Expected container to have a parent node.",
-            { code: "DOM_MISSING" },
-          );
-        }
-        container.parentNode.replaceChild(host, container);
+        replaceElementWithHost(container, hostElement);
 
-        ready.value = true;
+        isReady.value = true;
         await nextTick();
         usernameInputRef.value?.focus();
       });
@@ -208,12 +197,8 @@ export const RuiLogin = defineCustomElement(
         capsLockOn.value = false;
       };
 
-      const togglePasswordVisibility = (event) => {
-        if (event?.target instanceof HTMLInputElement) {
-          showPassword.value = event.target.checked;
-        } else {
-          showPassword.value = !showPassword.value;
-        }
+      const togglePasswordVisibility = () => {
+        showPassword.value = !showPassword.value;
 
         nextTick(() => {
           passwordInputRef.value?.focus();
@@ -234,9 +219,8 @@ export const RuiLogin = defineCustomElement(
       };
 
       return {
-        ready,
-        username,
-        password,
+        isReady,
+        credentials,
         brandLogoSrc,
         loginPageHref,
         formAction,
@@ -268,7 +252,7 @@ export const RuiLogin = defineCustomElement(
       };
     },
     template: /* HTML */ `
-      <div v-if="ready" class="min-h-full bg-base-100 px-4 py-6 sm:py-10">
+      <div v-if="isReady" class="min-h-full bg-base-100 px-4 py-6 sm:py-10">
         <div class="mx-auto w-full max-w-xs space-y-5">
           <a
             :href="loginPageHref"
@@ -297,8 +281,8 @@ export const RuiLogin = defineCustomElement(
             @submit="handleSubmit"
           >
             <input
-              v-for="field in hiddenFields"
-              :key="field.name"
+              v-for="(field, index) in hiddenFields"
+              :key="field.name + '-' + index"
               type="hidden"
               :name="field.name"
               :value="field.value"
@@ -316,7 +300,7 @@ export const RuiLogin = defineCustomElement(
                 type="text"
                 autocomplete="username"
                 required
-                v-model="username"
+                v-model="credentials.username"
                 class="input w-full"
                 :class="{ 'input-error': usernameHasError }"
                 :aria-invalid="usernameHasError"
@@ -335,7 +319,7 @@ export const RuiLogin = defineCustomElement(
                   :type="passwordInputType"
                   autocomplete="current-password"
                   required
-                  v-model="password"
+                  v-model="credentials.password"
                   class="input join-item grow"
                   :class="{ 'input-error': passwordHasError }"
                   :aria-invalid="passwordHasError"

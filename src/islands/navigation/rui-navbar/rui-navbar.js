@@ -10,6 +10,7 @@ import {
 
 import { useI18n } from "../../composables/useI18n.js";
 import { useResponsiveFlags } from "../../composables/useResponsiveFlags.js";
+import { ensureHostElement, replaceElementWithHost } from "../../lib/dom.js";
 import { RuiInvariantError } from "../../lib/errors.js";
 
 const HEADER_SELECTOR = "#wrap > header[role='banner']";
@@ -173,14 +174,9 @@ export const RuiNavbar = defineCustomElement(
       );
 
       onMounted(() => {
-        if (!(host instanceof HTMLElement)) {
-          throw new RuiInvariantError(
-            "Expected host element to be an HTMLElement.",
-            { code: "DOM_INVALID_TYPE" },
-          );
-        }
+        const hostElement = ensureHostElement(host);
 
-        const legacyHeader = resolveLegacyHeader(host);
+        const legacyHeader = resolveLegacyHeader(hostElement);
         const legacyHeaderData = readLegacyHeaderData(legacyHeader);
 
         brandHref.value = legacyHeaderData.href;
@@ -210,13 +206,7 @@ export const RuiNavbar = defineCustomElement(
 
         // Replace the legacy banner element with this custom element host so
         // Vue fully owns the rendered navbar markup.
-        if (!legacyHeader.parentNode) {
-          throw new RuiInvariantError(
-            "Expected legacy header to have a parent node.",
-            { code: "DOM_MISSING" },
-          );
-        }
-        legacyHeader.parentNode.replaceChild(host, legacyHeader);
+        replaceElementWithHost(legacyHeader, hostElement);
 
         document.addEventListener("keydown", handleDocumentKeydown);
         ready.value = true;
