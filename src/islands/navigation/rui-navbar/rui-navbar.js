@@ -229,6 +229,7 @@ export const RuiNavbar = defineCustomElement(
 
       return {
         MOBILE_DRAWER_TOGGLE_ID,
+        isAuth,
         ready,
         brandHref,
         brandTitle,
@@ -246,7 +247,7 @@ export const RuiNavbar = defineCustomElement(
       };
     },
     template: /* HTML */ `
-      <template v-if="ready">
+      <template v-if="ready && isAuth">
         <div class="drawer drawer-end">
           <input
             :id="MOBILE_DRAWER_TOGGLE_ID"

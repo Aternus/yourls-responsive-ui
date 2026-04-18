@@ -54,6 +54,24 @@ function readLegacyLoginData(container) {
   };
 }
 
+function resolveBrandLogoSource() {
+  const legacyLogo = document.querySelector("#yourls-logo");
+  if (
+    legacyLogo instanceof HTMLImageElement &&
+    legacyLogo.src.trim().length > 0
+  ) {
+    return legacyLogo.src;
+  }
+
+  return new URL("../images/yourls-logo.svg", window.location.href).href;
+}
+
+function resolveLoginPageHref() {
+  const pathname = window.location.pathname || "/admin/index.php";
+
+  return new URL(pathname, window.location.origin).href;
+}
+
 export const RuiLogin = defineCustomElement(
   {
     name: "RuiLogin",
@@ -66,6 +84,8 @@ export const RuiLogin = defineCustomElement(
       const username = ref("");
       const password = ref("");
       const serverMessage = ref("");
+      const brandLogoSrc = ref("");
+      const loginPageHref = ref("");
       const didAttemptSubmit = ref(false);
       const showPassword = ref(false);
       const capsLockOn = ref(false);
@@ -90,6 +110,15 @@ export const RuiLogin = defineCustomElement(
           !NON_ERROR_MESSAGES.value.includes(
             normalizeMessage(serverMessage.value),
           ),
+      );
+      const alertRole = computed(() =>
+        hasServerError.value ? "alert" : "status",
+      );
+      const alertAriaLive = computed(() =>
+        hasServerError.value ? "assertive" : "polite",
+      );
+      const alertClass = computed(() =>
+        hasServerError.value ? "alert-error" : "alert-info",
       );
 
       const usernameHasError = computed(
@@ -146,6 +175,8 @@ export const RuiLogin = defineCustomElement(
         formAction.value = legacyData.formAction;
         hiddenFields.value = legacyData.hiddenFields;
         serverMessage.value = legacyData.serverMessage;
+        brandLogoSrc.value = resolveBrandLogoSource();
+        loginPageHref.value = resolveLoginPageHref();
 
         // Replace #login with our custom element host. Vue's custom
         // element runtime defers unmount across synchronous DOM moves,
@@ -177,8 +208,13 @@ export const RuiLogin = defineCustomElement(
         capsLockOn.value = false;
       };
 
-      const togglePasswordVisibility = () => {
-        showPassword.value = !showPassword.value;
+      const togglePasswordVisibility = (event) => {
+        if (event?.target instanceof HTMLInputElement) {
+          showPassword.value = event.target.checked;
+        } else {
+          showPassword.value = !showPassword.value;
+        }
+
         nextTick(() => {
           passwordInputRef.value?.focus();
         });
@@ -201,9 +237,14 @@ export const RuiLogin = defineCustomElement(
         ready,
         username,
         password,
+        brandLogoSrc,
+        loginPageHref,
         formAction,
         hiddenFields,
         hasServerError,
+        alertRole,
+        alertAriaLive,
+        alertClass,
         serverMessage,
         usernameHasError,
         passwordHasError,
@@ -227,123 +268,126 @@ export const RuiLogin = defineCustomElement(
       };
     },
     template: /* HTML */ `
-      <div v-if="ready" class="hero min-h-full items-start bg-base-200">
-        <div class="hero-content w-full">
-          <div class="card w-full max-w-sm bg-base-100 shadow-sm">
-            <div class="card-body gap-5">
-              <div class="space-y-3">
-                <h1
-                  class="card-title text-4xl font-black tracking-tight text-brand-500"
-                >
-                  {{ tBrand("name") }}
-                </h1>
-                <p class="text-base text-base-content/80 italic">
-                  {{ tBrand("tagline") }}
-                </p>
-              </div>
-
-              <div
-                v-if="serverMessage"
-                :id="alertId"
-                :role="hasServerError ? 'alert' : 'status'"
-                :aria-live="hasServerError ? 'assertive' : 'polite'"
-                class="alert alert-soft"
-                :class="hasServerError ? 'alert-error' : 'alert-info'"
+      <div v-if="ready" class="min-h-full bg-base-100 px-4 py-6 sm:py-10">
+        <div class="mx-auto w-full max-w-xs space-y-5">
+          <div class="flex items-center gap-6">
+            <a
+              :href="loginPageHref"
+              class="btn h-auto min-h-0 shrink-0 px-1 py-1 btn-ghost"
+              :aria-label="t('messageLogin')"
+              :title="t('messageLogin')"
+            >
+              <img
+                v-if="brandLogoSrc"
+                :src="brandLogoSrc"
+                :alt="tBrand('name')"
+                class="h-14 w-auto shrink-0"
+              />
+              <span
+                v-else
+                class="text-4xl font-semibold tracking-tight text-brand-500"
               >
-                <div class="flex flex-col gap-1 text-sm">
-                  <span>{{ serverMessage }}</span>
-                  <span v-if="hasServerError" class="text-error/90"
-                    >{{ t("errorRecovery") }}</span
-                  >
-                </div>
-              </div>
+                {{ tBrand("name") }}
+              </span>
+            </a>
+            <p class="text-sm text-base-content/50">{{ tBrand("tagline") }}</p>
+          </div>
 
-              <form
-                method="post"
-                :action="formAction"
-                class="space-y-4"
-                novalidate
-                @submit="handleSubmit"
-              >
-                <input
-                  v-for="field in hiddenFields"
-                  :key="field.name"
-                  type="hidden"
-                  :name="field.name"
-                  :value="field.value"
-                />
-                <fieldset class="fieldset">
-                  <legend class="sr-only fieldset-legend">
-                    {{ t("legend") }}
-                  </legend>
-                  <label for="username" class="label"
-                    >{{ t("usernameLabel") }}</label
-                  >
-                  <input
-                    ref="usernameInputRef"
-                    id="username"
-                    name="username"
-                    type="text"
-                    autocomplete="username"
-                    required
-                    v-model="username"
-                    class="input w-full"
-                    :class="{ 'input-error': usernameHasError }"
-                    :aria-invalid="usernameHasError"
-                    :aria-describedby="usernameDescribedBy"
-                    @input="handleCredentialInput"
-                  />
-                  <label for="password" class="label"
-                    >{{ t("passwordLabel") }}</label
-                  >
-                  <div class="join">
-                    <input
-                      ref="passwordInputRef"
-                      id="password"
-                      name="password"
-                      :type="passwordInputType"
-                      autocomplete="current-password"
-                      required
-                      v-model="password"
-                      class="input join-item"
-                      :class="{ 'input-error': passwordHasError }"
-                      :aria-invalid="passwordHasError"
-                      :aria-describedby="passwordDescribedBy"
-                      @input="handleCredentialInput"
-                      @keydown="updateCapsLockState"
-                      @keyup="updateCapsLockState"
-                      @blur="clearCapsLockState"
-                    />
-                    <button
-                      type="button"
-                      class="btn join-item text-base"
-                      :aria-label="passwordToggleLabel"
-                      :title="passwordToggleLabel"
-                      @click="togglePasswordVisibility"
-                    >
-                      <iconify-icon
-                        :icon="showPassword ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
-                      ></iconify-icon>
-                    </button>
-                  </div>
-                  <p
-                    v-if="capsLockOn"
-                    :id="capsLockHintId"
-                    class="mt-1 text-warning"
-                  >
-                    {{ t("capsLockWarning") }}
-                  </p>
-                </fieldset>
-                <button
-                  type="submit"
-                  name="submit"
-                  class="btn w-full btn-primary"
-                >
-                  {{ t("submitLabel") }}
-                </button>
-              </form>
+          <div
+            v-if="serverMessage"
+            :id="alertId"
+            :role="alertRole"
+            :aria-live="alertAriaLive"
+            class="alert alert-soft"
+            :class="alertClass"
+          >
+            <div class="flex flex-col gap-1 text-sm">
+              <span>{{ serverMessage }}</span>
             </div>
           </div>
+
+          <form
+            method="post"
+            :action="formAction"
+            class="space-y-4"
+            novalidate
+            @submit="handleSubmit"
+          >
+            <input
+              v-for="field in hiddenFields"
+              :key="field.name"
+              type="hidden"
+              :name="field.name"
+              :value="field.value"
+            />
+            <fieldset class="fieldset">
+              <legend class="sr-only fieldset-legend">{{ t("legend") }}</legend>
+
+              <label for="username" class="label"
+                >{{ t("usernameLabel") }}</label
+              >
+              <input
+                ref="usernameInputRef"
+                id="username"
+                name="username"
+                type="text"
+                autocomplete="username"
+                required
+                v-model="username"
+                class="input w-full"
+                :class="{ 'input-error': usernameHasError }"
+                :aria-invalid="usernameHasError"
+                :aria-describedby="usernameDescribedBy"
+                @input="handleCredentialInput"
+              />
+
+              <label for="password" class="label"
+                >{{ t("passwordLabel") }}</label
+              >
+              <input
+                ref="passwordInputRef"
+                id="password"
+                name="password"
+                :type="passwordInputType"
+                autocomplete="current-password"
+                required
+                v-model="password"
+                class="input w-full"
+                :class="{ 'input-error': passwordHasError }"
+                :aria-invalid="passwordHasError"
+                :aria-describedby="passwordDescribedBy"
+                @input="handleCredentialInput"
+                @keydown="updateCapsLockState"
+                @keyup="updateCapsLockState"
+                @blur="clearCapsLockState"
+              />
+              <div class="mt-1 flex gap-2 text-xs text-base-content/60">
+                <label>
+                  <input
+                    id="show-password-toggle"
+                    type="checkbox"
+                    :checked="showPassword"
+                    @change="togglePasswordVisibility"
+                    class="toggle toggle-xs"
+                  />
+                </label>
+                <label for="show-password-toggle">
+                  {{ passwordToggleLabel }}
+                </label>
+              </div>
+              <p
+                v-if="capsLockOn"
+                :id="capsLockHintId"
+                class="mt-1 text-warning"
+              >
+                {{ t("capsLockWarning") }}
+              </p>
+            </fieldset>
+
+            <button type="submit" name="submit" class="btn w-full btn-primary">
+              {{ t("submitLabel") }}
+            </button>
+          </form>
         </div>
       </div>
     `,

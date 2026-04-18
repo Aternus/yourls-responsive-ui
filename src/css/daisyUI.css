@@ -26,6 +26,7 @@
   --color-warning-content: var(--color-secondary-50);
   --color-error: var(--color-error-500);
   --color-error-content: var(--color-error-50);
+  --color-focus: var(--color-brand-500);
 }
 
 @plugin "daisyui/theme" {
@@ -53,6 +54,7 @@
   --color-warning-content: var(--color-secondary-50);
   --color-error: var(--color-error-500);
   --color-error-content: var(--color-error-50);
+  --color-focus: var(--color-brand-500);
 }
 
 @plugin "daisyui/theme" {
@@ -80,4 +82,57 @@
   --color-warning-content: var(--color-secondary-950);
   --color-error: var(--color-error-500);
   --color-error-content: var(--color-error-950);
+  --color-focus: var(--color-brand-400);
+}
+
+:root
+  .input:not(
+    .input-accent,
+    .input-error,
+    .input-info,
+    .input-neutral,
+    .input-primary,
+    .input-secondary,
+    .input-success,
+    .input-warning
+  ):is(:focus, :focus-within),
+:root
+  .select:not(
+    .select-accent,
+    .select-error,
+    .select-info,
+    .select-neutral,
+    .select-primary,
+    .select-secondary,
+    .select-success,
+    .select-warning
+  ):is(:focus, :focus-within),
+:root
+  .textarea:not(
+    .textarea-accent,
+    .textarea-error,
+    .textarea-info,
+    .textarea-neutral,
+    .textarea-primary,
+    .textarea-secondary,
+    .textarea-success,
+    .textarea-warning
+  ):is(:focus, :focus-within),
+:root
+  .file-input:not(
+    .file-input-accent,
+    .file-input-error,
+    .file-input-info,
+    .file-input-neutral,
+    .file-input-primary,
+    .file-input-secondary,
+    .file-input-success,
+    .file-input-warning
+  ):is(:focus, :focus-within) {
+  --input-color: var(--color-focus);
+  outline-color: var(--color-focus);
+}
+
+:root .btn:is(:focus-visible, :has(:focus-visible)) {
+  outline-color: var(--color-focus);
 }
