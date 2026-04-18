@@ -502,7 +502,6 @@ export const RuiSearch = defineCustomElement(
           >
             <iconify-icon
               :icon="filtersActive ? 'mdi:filter-variant' : 'mdi:filter-off'"
-              aria-hidden="true"
             ></iconify-icon>
           </button>
         </div>
@@ -593,10 +592,7 @@ export const RuiSearch = defineCustomElement(
                   title="Apply filters"
                   @click="submitFilters"
                 >
-                  <iconify-icon
-                    icon="mdi:check"
-                    aria-hidden="true"
-                  ></iconify-icon>
+                  <iconify-icon icon="mdi:check"></iconify-icon>
                 </button>
                 <button
                   type="button"
@@ -605,10 +601,7 @@ export const RuiSearch = defineCustomElement(
                   title="Clear filters"
                   @click="clearFilters"
                 >
-                  <iconify-icon
-                    icon="mdi:filter-off"
-                    aria-hidden="true"
-                  ></iconify-icon>
+                  <iconify-icon icon="mdi:filter-off"></iconify-icon>
                 </button>
                 <button
                   type="button"
@@ -617,10 +610,7 @@ export const RuiSearch = defineCustomElement(
                   title="Close"
                   @click="closeDrawer"
                 >
-                  <iconify-icon
-                    icon="mdi:close"
-                    aria-hidden="true"
-                  ></iconify-icon>
+                  <iconify-icon icon="mdi:close"></iconify-icon>
                 </button>
               </div>
             </div>

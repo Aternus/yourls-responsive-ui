@@ -13,6 +13,8 @@ body {
     "nav"
     "main";
   grid-template-rows: auto 1fr;
+
+  @apply overflow-auto;
 }
 
 #wrap > :is(header, rui-navbar) {
@@ -21,6 +23,8 @@ body {
 
 #wrap > main {
   grid-area: main;
+
+  @apply overflow-auto;
 }
 
 #footer {

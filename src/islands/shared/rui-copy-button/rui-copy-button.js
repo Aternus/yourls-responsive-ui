@@ -53,7 +53,7 @@ export const RuiCopyButton = defineCustomElement(
         :title="ariaLabel"
         @click="handleClick"
       >
-        <iconify-icon :icon="iconName" aria-hidden="true"></iconify-icon>
+        <iconify-icon :icon="iconName"></iconify-icon>
       </button>
     `,
   },

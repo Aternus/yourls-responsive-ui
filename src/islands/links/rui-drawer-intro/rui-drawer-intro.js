@@ -14,7 +14,6 @@ export const RuiDrawerIntro = defineCustomElement(
         <iconify-icon
           :icon="icon"
           class="rui-drawer__intro-icon"
-          aria-hidden="true"
         ></iconify-icon>
         <p class="rui-drawer__intro-title">{{ title }}</p>
         <p class="rui-drawer__intro-meta">{{ meta }}</p>

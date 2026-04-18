@@ -1,23 +1,29 @@
-import {
-  computed,
-  defineCustomElement,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-} from "vue";
+import { cva } from "class-variance-authority";
+import { defineCustomElement, onBeforeUnmount, onMounted, ref } from "vue";
 
-import { useMediaQuery } from "../../composables/useMediaQuery.js";
 import { useRafScheduler } from "../../composables/useRafScheduler.js";
+
+const scrollTopButtonVariants = cva(
+  "btn fixed right-4 bottom-4 z-250 btn-circle border-none text-xl shadow-md transition-all duration-200 ease-out btn-secondary",
+  {
+    variants: {
+      visible: {
+        false: "pointer-events-none translate-y-1.5 opacity-0",
+        true: "pointer-events-auto translate-y-0 opacity-100",
+      },
+    },
+  },
+);
 
 export const RuiScrollTop = defineCustomElement(
   {
     name: "RuiScrollTop",
     setup() {
-      const scrollY = ref(0);
-      const isMobile = useMediaQuery("(max-width: 767px)");
+      const isVisible = ref(false);
 
       const syncScrollPosition = () => {
-        scrollY.value = window.scrollY || window.pageYOffset || 0;
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        isVisible.value = scrollY > 220;
       };
 
       const scheduleSync = useRafScheduler(syncScrollPosition);
@@ -35,38 +41,29 @@ export const RuiScrollTop = defineCustomElement(
         window.addEventListener("scroll", scheduleSync, {
           passive: true,
         });
-        window.addEventListener("resize", scheduleSync, {
-          passive: true,
-        });
       });
 
       onBeforeUnmount(() => {
         window.removeEventListener("scroll", scheduleSync);
-        window.removeEventListener("resize", scheduleSync);
       });
-
-      const isVisible = computed(
-        () => isMobile.value === true && scrollY.value > 220,
-      );
 
       return {
         isVisible,
+        scrollTopButtonVariants,
         scrollToTop,
       };
     },
     template: /* HTML */ `
       <button
         type="button"
-        :class="{
-                    'rui-scroll-top__button': true,
-                    'is-visible': isVisible,
-                }"
-        :hidden="!isVisible"
+        :class="scrollTopButtonVariants({ visible: isVisible })"
+        :aria-hidden="String(!isVisible)"
+        :tabindex="isVisible ? 0 : -1"
         aria-label="Scroll to top"
         title="Scroll to top"
         @click="scrollToTop"
       >
-        <iconify-icon icon="mdi:arrow-up" aria-hidden="true"></iconify-icon>
+        <iconify-icon icon="mdi:arrow-up"></iconify-icon>
       </button>
     `,
   },

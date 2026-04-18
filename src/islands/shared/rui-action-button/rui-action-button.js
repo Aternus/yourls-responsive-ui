@@ -30,7 +30,7 @@ export const RuiActionButton = defineCustomElement(
         :title="label"
         @click="handleClick"
       >
-        <iconify-icon :icon="iconName" aria-hidden="true"></iconify-icon>
+        <iconify-icon :icon="iconName"></iconify-icon>
       </button>
     `,
   },

@@ -58,13 +58,21 @@ function responsive_head(): void {
             'available' => [ $system, $light, $dark ],
         ],
         'i18n'      => [
+            'brand' => [
+                'name'    => yourls__( 'YOURLS' ),
+                'tagline' => yourls__( 'Your Own URL Shortener' ),
+            ],
             'login' => [
-                'brand'         => yourls__( 'YOURLS' ),
-                'tagline'       => yourls__( 'Your Own URL Shortener' ),
-                'legend'       => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'legend'        => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'messageLogin'  => yourls__( 'Please log in' ),
+                'messageLogout' => yourls__( 'Logged out successfully' ),
+                'errorRecovery' => yourls__( 'Check your username and password, then try again.' ),
                 'usernameLabel' => yourls__( 'Username' ),
                 'passwordLabel' => yourls__( 'Password' ),
                 'submitLabel'   => yourls__( 'Log in' ),
+                'showPassword'  => yourls__( 'Show password' ),
+                'hidePassword'  => yourls__( 'Hide password' ),
+                'capsLockWarning' => yourls__( 'Caps Lock is on.' ),
             ],
         ],
     ];
@@ -107,12 +115,11 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
         return;
     }
 
-    echo '<rui-nav-controls></rui-nav-controls>';
     echo '<rui-scroll-top></rui-scroll-top>';
 
-    if ( in_array( $context, [ 'index', 'bookmark' ], true ) ) {
-        echo '<rui-search></rui-search>';
-    }
+//    if ( in_array( $context, [ 'index', 'bookmark' ], true ) ) {
+//        echo '<rui-search></rui-search>';
+//    }
 
     if ( $context === 'infos' ) {
         echo '<rui-infos-page></rui-infos-page>';
