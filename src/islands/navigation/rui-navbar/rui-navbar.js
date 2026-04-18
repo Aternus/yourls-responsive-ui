@@ -100,12 +100,13 @@ function readLegacyNavLinks(legacyNav, currentPathname) {
         })
         .filter((sublevelLink) => sublevelLink !== null);
 
+      const isParentCurrent = toRoute(anchor.href) === currentPathname;
+
       return {
         href: anchor.href,
         label,
-        isCurrent:
-          toRoute(anchor.href) === currentPathname ||
-          children.some((child) => child.isCurrent),
+        isParentCurrent,
+        isCurrent: isParentCurrent || children.some((child) => child.isCurrent),
         children,
       };
     })
@@ -278,6 +279,14 @@ export const RuiNavbar = defineCustomElement(
                           {{ item.label }}
                         </summary>
                         <ul class="space-y-1">
+                          <li>
+                            <a
+                              :href="item.href"
+                              class="text-nowrap"
+                              :class="{ 'menu-active': item.isParentCurrent }"
+                              >{{ item.label }}</a
+                            >
+                          </li>
                           <li v-for="child in item.children" :key="child.href">
                             <a
                               :href="child.href"
@@ -361,6 +370,14 @@ export const RuiNavbar = defineCustomElement(
                         {{ item.label }}
                       </summary>
                       <ul class="mt-1 space-y-1">
+                        <li>
+                          <a
+                            :href="item.href"
+                            class="text-nowrap"
+                            :class="{ 'menu-active': item.isParentCurrent }"
+                            >{{ item.label }}</a
+                          >
+                        </li>
                         <li v-for="child in item.children" :key="child.href">
                           <a
                             :href="child.href"
