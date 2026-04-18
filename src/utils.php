@@ -21,7 +21,7 @@ function responsive_sanitize_color_scheme( $color_scheme ): string {
 }
 
 function responsive_get_color_scheme(): string {
-    $color_scheme = yourls_get_option( 'responsive_color_scheme' );
+    $color_scheme = yourls_get_option( RESPONSIVE_OPTION_COLOR_SCHEME );
 
     if ( isset( $_POST['responsive_color_scheme'] ) ) {
         $color_scheme = $_POST['responsive_color_scheme'];
@@ -61,4 +61,12 @@ function responsive_get_asset_url(
     }
 
     return $asset_url;
+}
+
+function responsive_is_show_footer_text(): bool {
+    return (int) yourls_get_option( RESPONSIVE_OPTION_SHOW_FOOTER_TEXT, 1 ) === 1;
+}
+
+function responsive_is_show_help_link(): bool {
+    return (int) yourls_get_option( RESPONSIVE_OPTION_SHOW_HELP_LINK, 1 ) === 1;
 }

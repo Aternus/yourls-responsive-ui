@@ -1,5 +1,5 @@
 body {
-  @apply grid min-h-dvh;
+  @apply grid h-dvh;
   grid-template-areas:
     "content"
     "footer";
@@ -14,7 +14,7 @@ body {
     "main";
   grid-template-rows: auto 1fr;
 
-  @apply overflow-auto;
+  @apply overflow-hidden;
 }
 
 #wrap > :is(header, rui-navbar) {

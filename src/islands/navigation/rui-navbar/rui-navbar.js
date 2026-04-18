@@ -15,7 +15,7 @@ import { ensureHostElement, replaceElementWithHost } from "../../lib/dom.js";
 const HEADER_SELECTOR = "#wrap > header[role='banner']";
 const NAV_SELECTOR = "#wrap > nav[role='navigation']";
 
-const TOPLEVEL_NAV_ITEM_SELECTOR = "#admin_menu > li.admin_menu_toplevel";
+const TOPLEVEL_NAV_ITEM_SELECTOR = "#admin_menu > li";
 const SUBLEVEL_NAV_LINK_SELECTOR = "ul > li.admin_menu_sublevel > a[href]";
 const LOGOUT_LINK_SELECTOR = "#admin_menu_logout_link a[href]";
 const USERNAME_SELECTOR = "#admin_menu_logout_link strong";

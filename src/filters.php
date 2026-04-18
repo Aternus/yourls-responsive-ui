@@ -303,18 +303,26 @@ yourls_add_filter(
 );
 
 
-function responsive_help_link( string $html ): string {
-    return '';
+function responsive_help_link( string $html ): string|null {
+    if ( responsive_is_show_help_link() ) {
+        return $html;
+    }
+
+    return null;
 }
 
 yourls_add_filter( 'help_link', 'responsive_help_link' );
 
 
-function responsive_hide_powered_by( string $html ): string {
+function responsive_footer_text( string $html ): string {
+    if ( responsive_is_show_footer_text() ) {
+        return $html;
+    }
+
     return '';
 }
 
-yourls_add_filter( 'html_footer_text', 'responsive_hide_powered_by' );
+yourls_add_filter( 'html_footer_text', 'responsive_footer_text' );
 
 function responsive_logout_link( string $html ): string {
     $output = preg_replace(
