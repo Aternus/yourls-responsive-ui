@@ -1,14 +1,10 @@
 /**
  * @see https://prettier.io/docs/configuration
- * @type {import("prettier").Config & import('prettier-plugin-tailwindcss').PluginOptions}}
+ * @type {import("prettier").Config}
  */
 const config = {
   proseWrap: "always",
-  plugins: [
-    "@ianvs/prettier-plugin-sort-imports",
-    // prettier-plugin-tailwindcss must be loaded last
-    "prettier-plugin-tailwindcss",
-  ],
+  plugins: ["@ianvs/prettier-plugin-sort-imports"],
 
   importOrder: [
     "<BUILTIN_MODULES>",
@@ -22,9 +18,6 @@ const config = {
     "<TYPES>^[.]",
   ],
   importOrderTypeScriptVersion: "5.0.0",
-
-  tailwindStylesheet: "./src/css/app.css",
-  tailwindFunctions: ["cva"],
 };
 
 export default config;

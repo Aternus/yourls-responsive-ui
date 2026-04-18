@@ -22,6 +22,16 @@ You will need to use cURL to access `localhost`.
 
 Write code that is idiomatic to PHP, inspired by WordPress core.
 
+To execute PHP commands inside the container:
+
+```bash
+docker compose exec -w /var/www/html/user/plugins/yourls-responsive-ui web php <command>
+```
+
+The project root is mounted at `/var/www/html/user/plugins/yourls-responsive-ui`
+inside the `web` container. Always use this as the working directory when
+running `composer` or `pint` commands.
+
 ## Components
 
 HTML markup changes should be done via YOURLS hooks; ONLY IF it is not possible

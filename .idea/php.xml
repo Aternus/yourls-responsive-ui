@@ -2,10 +2,18 @@
 <project version="4">
   <component name="LaravelPint">
     <laravel_pint_settings>
-      <laravel_pint_by_interpreter asDefaultInterpreter="true" interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38">
+      <laravel_pint_by_interpreter interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38" tool_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/pint">
         <option name="timeout" value="30000" />
       </laravel_pint_by_interpreter>
+      <laravel_pint_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38" tool_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/pint">
+        <option name="timeout" value="30000" />
+      </laravel_pint_by_interpreter>
+      <LaravelPintConfiguration deletedFromTheList="true" />
     </laravel_pint_settings>
+  </component>
+  <component name="LaravelPintOptionsConfiguration">
+    <option name="pintJsonPath" value="$PROJECT_DIR$/pint.json" />
+    <option name="ruleset" value="defined in pint.json" />
   </component>
   <component name="MessDetector">
     <phpmd_settings>
@@ -55,7 +63,7 @@
             <configuration_option name="include_path" value=".:/usr/local/lib/php" />
           </configuration_options>
           <debuggers>
-            <debugger_info debugger="xdebug" debugger_version="3.5.0">
+            <debugger_info debugger="xdebug" debugger_version="3.5.1">
               <debug_extensions />
             </debugger_info>
           </debuggers>

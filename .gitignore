@@ -346,3 +346,7 @@ Temporary Items
 docker/web/ssl/
 release/
 *.env
+vendor/autoload.php
+vendor/bin/
+vendor/composer/
+vendor/laravel/

@@ -38,16 +38,8 @@ RUN install-php-extensions \
 RUN install-php-extensions \
     xdebug
 
-# create a cache folder for different tools
-RUN mkdir -p /var/www/.cache
-RUN chown -R www-data:www-data /var/www/.cache
-
-# install PHIVE
-RUN mkdir -p /var/www/.phive
-RUN chown -R www-data:www-data /var/www/.phive
-ENV PHIVE_HOME=/var/www/.phive
-ADD --chmod=0755 https://github.com/phar-io/phive/releases/download/0.16.0/phive-0.16.0.phar /usr/local/bin/phive
-ENV PATH="$PATH:/var/www/html/tools"
+# install COMPOSER
+RUN install-php-extensions @composer
 
 # PHP config
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"

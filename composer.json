@@ -1,0 +1,14 @@
+{
+    "name": "aternus/yourls-responsive-ui",
+    "description": "YOURLS Responsive UI",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kiril Reznik",
+            "email": "kiril@atern.us"
+        }
+    ],
+    "require-dev": {
+        "laravel/pint": "^1.20"
+    }
+}

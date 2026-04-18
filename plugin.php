@@ -1,4 +1,5 @@
 <?php
+
 /*
     Plugin Name: Responsive UI
     Plugin URI: https://github.com/Aternus/yourls-responsive-ui
@@ -8,10 +9,10 @@
     Author URI: https://atern.us/
 */
 
-if ( ! defined( 'YOURLS_ABSPATH' ) ) {
-    die();
+if (! defined('YOURLS_ABSPATH')) {
+    exit();
 }
 
-require_once __DIR__ . '/src/bridge.php';
+require_once __DIR__.'/src/bridge.php';
 
 responsive_bridge_install();

@@ -303,7 +303,7 @@ export const RuiNavbar = defineCustomElement(
 
           <div class="drawer-content">
             <div
-              class="navbar border-b border-base-300 bg-base-100 px-2 shadow-sm lg:px-4 lg:shadow-md"
+              class="px-2 border-b shadow-sm lg:px-4 lg:shadow-md navbar border-base-300 bg-base-100"
             >
               <div class="navbar-start">
                 <a :href="brandHref" :title="brandTitle" class="btn btn-ghost">
@@ -311,7 +311,7 @@ export const RuiNavbar = defineCustomElement(
                     v-if="logoSrc"
                     :src="logoSrc"
                     :alt="logoAlt"
-                    class="h-7 w-auto shrink-0"
+                    class="w-auto h-7 shrink-0"
                   />
                   <span v-else class="text-sm font-semibold text-base-content">
                     {{ brandTitle }}
@@ -319,8 +319,8 @@ export const RuiNavbar = defineCustomElement(
                 </a>
               </div>
 
-              <div v-if="hasNavLinks" class="navbar-center hidden lg:flex">
-                <ul class="menu menu-horizontal gap-2 rounded-box bg-base-200">
+              <div v-if="hasNavLinks" class="hidden lg:flex navbar-center">
+                <ul class="gap-2 menu menu-horizontal rounded-box bg-base-200">
                   <li v-for="item in navLinks" :key="item.href">
                     <template v-if="item.children.length > 0">
                       <details>
@@ -358,11 +358,11 @@ export const RuiNavbar = defineCustomElement(
                 </ul>
               </div>
 
-              <div v-if="hasMobileDrawer" class="navbar-end lg:hidden">
+              <div v-if="hasMobileDrawer" class="lg:hidden navbar-end">
                 <label
                   :for="MOBILE_DRAWER_TOGGLE_ID"
                   aria-label="Toggle navigation menu"
-                  class="btn text-2xl btn-ghost"
+                  class="text-2xl btn btn-ghost"
                 >
                   <iconify-icon
                     :icon="isMenuOpen ? 'mdi:close' : 'mdi:menu'"
@@ -372,7 +372,7 @@ export const RuiNavbar = defineCustomElement(
 
               <div
                 v-if="hasUserMenu"
-                class="navbar-end hidden lg:flex lg:gap-4"
+                class="hidden lg:flex lg:gap-4 navbar-end"
               >
                 <span v-if="username" class="badge badge-soft"
                   >{{ username }}</span
@@ -387,7 +387,7 @@ export const RuiNavbar = defineCustomElement(
             </div>
           </div>
 
-          <div v-if="hasMobileDrawer" class="drawer-side lg:hidden">
+          <div v-if="hasMobileDrawer" class="lg:hidden drawer-side">
             <label
               :for="MOBILE_DRAWER_TOGGLE_ID"
               class="drawer-overlay"
@@ -395,25 +395,25 @@ export const RuiNavbar = defineCustomElement(
             ></label>
 
             <aside
-              class="flex h-dvh max-w-sm min-w-xs flex-col gap-4 border-l border-base-300 bg-base-100 p-4 shadow-lg"
+              class="flex flex-col gap-4 p-4 max-w-sm border-l shadow-lg h-dvh min-w-xs border-base-300 bg-base-100"
             >
               <a :href="brandHref" :title="brandTitle" class="btn btn-ghost">
                 <img
                   v-if="logoSrc"
                   :src="logoSrc"
                   :alt="logoAlt"
-                  class="h-7 w-auto shrink-0"
+                  class="w-auto h-7 shrink-0"
                 />
                 <span v-else class="text-sm font-semibold text-base-content">
                   {{ brandTitle }}
                 </span>
               </a>
 
-              <div v-if="hasNavLinks" class="divider m-0"></div>
+              <div v-if="hasNavLinks" class="m-0 divider"></div>
 
               <ul
                 v-if="hasNavLinks"
-                class="menu w-full space-y-1 rounded-box bg-base-200"
+                class="space-y-1 w-full menu rounded-box bg-base-200"
               >
                 <li v-for="item in navLinks" :key="item.href">
                   <template v-if="item.children.length > 0">
@@ -451,7 +451,7 @@ export const RuiNavbar = defineCustomElement(
                 </li>
               </ul>
 
-              <div v-if="hasUserMenu" class="divider m-0 mt-auto"></div>
+              <div v-if="hasUserMenu" class="m-0 mt-auto divider"></div>
 
               <div v-if="hasUserMenu" class="space-y-4 border-base-300">
                 <p v-if="username" class="badge badge-soft">{{ username }}</p>

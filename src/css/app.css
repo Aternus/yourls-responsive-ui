@@ -4,6 +4,7 @@
 @import "./icons.css";
 @import "./daisyUI.css";
 @import "./layout.css";
+@import "./legacy.css";
 @import "./../islands/elements.css";
 
 @theme {
