@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ruleset name="YOURLS Responsive UI"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+  <description>YOURLS Responsive UI Coding Standards</description>
+
+  <file>./src</file>
+
+  <arg name="extensions" value="php"/>
+  <arg value="s"/>
+
+  <config name="testVersion" value="8.1-"/>
+
+  <rule ref="WordPress">
+    <exclude name="WordPress.Security"/>
+    <exclude name="WordPress.WP"/>
+    <exclude name="WordPress.Files.FileName"/>
+    <exclude name="WordPress.PHP.YodaConditions"/>
+    <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
+    <exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found"/>
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+    <exclude name="Squiz.Commenting.FileComment.Missing"/>
+    <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    <exclude name="Squiz.PHP.CommentedOutCode"/>
+    <exclude
+      name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+    <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <exclude name="Squiz.Commenting.FunctionComment.MissingParamTag"/>
+  </rule>
+  <rule ref="PHPCompatibility"/>
+
+  <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+  <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+    <properties>
+      <property name="spacing" value="1"/>
+      <property name="spacingBeforeFirst" value="0"/>
+      <property name="spacingAfterLast" value="0"/>
+    </properties>
+  </rule>
+</ruleset>

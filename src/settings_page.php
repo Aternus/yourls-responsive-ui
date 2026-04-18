@@ -1,53 +1,50 @@
 <?php
 
-function responsive_settings_update(): void
-{
-    $color_scheme = responsive_sanitize_color_scheme(
+function responsive_settings_update(): void {
+    $color_scheme     = responsive_sanitize_color_scheme(
         $_POST['responsive_color_scheme'] ?? '',
     );
-    $show_footer_text = isset($_POST['responsive_show_footer_text']) ? 1 : 0;
-    $show_help_link = isset($_POST['responsive_show_help_link']) ? 1 : 0;
+    $show_footer_text = isset( $_POST['responsive_show_footer_text'] ) ? 1 : 0;
+    $show_help_link   = isset( $_POST['responsive_show_help_link'] ) ? 1 : 0;
 
-    yourls_update_option(RESPONSIVE_OPTION_COLOR_SCHEME, $color_scheme);
+    yourls_update_option( RESPONSIVE_OPTION_COLOR_SCHEME, $color_scheme );
     yourls_update_option(
         RESPONSIVE_OPTION_SHOW_FOOTER_TEXT,
         $show_footer_text,
     );
-    yourls_update_option(RESPONSIVE_OPTION_SHOW_HELP_LINK, $show_help_link);
+    yourls_update_option( RESPONSIVE_OPTION_SHOW_HELP_LINK, $show_help_link );
 }
 
-function responsive_settings_handle_save(): void
-{
+function responsive_settings_handle_save(): void {
     if (
         ! (
-            isset($_POST['responsive_settings_submit']) &&
+            isset( $_POST['responsive_settings_submit'] ) &&
             $_POST['responsive_settings_submit'] === 'save'
         )
     ) {
         return;
     }
 
-    yourls_verify_nonce('responsive_settings');
+    yourls_verify_nonce( 'responsive_settings' );
     responsive_settings_update();
 }
 
-function responsive_settings_handler(): void
-{
-    $color_scheme = responsive_get_color_scheme();
+function responsive_settings_handler(): void {
+    $color_scheme     = responsive_get_color_scheme();
     $show_footer_text = responsive_is_show_footer_text();
-    $show_help_link = responsive_is_show_help_link();
+    $show_help_link   = responsive_is_show_help_link();
 
-    $nonce = yourls_create_nonce('responsive_settings');
+    $nonce = yourls_create_nonce( 'responsive_settings' );
 
     $system = RESPONSIVE_SCHEME_SYSTEM;
-    $dark = RESPONSIVE_SCHEME_DARK;
-    $light = RESPONSIVE_SCHEME_LIGHT;
+    $dark   = RESPONSIVE_SCHEME_DARK;
+    $light  = RESPONSIVE_SCHEME_LIGHT;
 
-    $system_selected = $color_scheme === $system ? 'selected' : '';
-    $dark_selected = $color_scheme === $dark ? 'selected' : '';
-    $light_selected = $color_scheme === $light ? 'selected' : '';
+    $system_selected          = $color_scheme === $system ? 'selected' : '';
+    $dark_selected            = $color_scheme === $dark ? 'selected' : '';
+    $light_selected           = $color_scheme === $light ? 'selected' : '';
     $show_footer_text_checked = $show_footer_text ? 'checked' : '';
-    $show_help_link_checked = $show_help_link ? 'checked' : '';
+    $show_help_link_checked   = $show_help_link ? 'checked' : '';
 
     echo <<<HTML
         <main>
@@ -77,11 +74,10 @@ function responsive_settings_handler(): void
         	<p><button type="submit" name="responsive_settings_submit" value="save" class="button">Save</button></p>
         	</form>
         </main>
-        HTML;
+HTML;
 }
 
-function responsive_settings(): void
-{
+function responsive_settings(): void {
     yourls_register_plugin_page(
         'responsive_settings',
         'Responsive UI Settings',
@@ -93,4 +89,4 @@ function responsive_settings(): void
     );
 }
 
-yourls_add_action('plugins_loaded', 'responsive_settings');
+yourls_add_action( 'plugins_loaded', 'responsive_settings' );

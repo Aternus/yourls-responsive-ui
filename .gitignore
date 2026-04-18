@@ -349,4 +349,10 @@ release/
 vendor/autoload.php
 vendor/bin/
 vendor/composer/
+vendor/dealerdirect/
 vendor/laravel/
+vendor/phpcompatibility/
+vendor/phpcsstandards/
+vendor/sirbrillig/
+vendor/squizlabs/
+vendor/wp-coding-standards/
