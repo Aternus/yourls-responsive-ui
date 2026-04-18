@@ -1,5 +1,5 @@
 ---
-name: daisy-ui-5
+name: daisy-ui
 description: 'Implement or revise frontend UI with Tailwind CSS and daisyUI (daisy-ui) when the user requests component, layout, or style changes.'
 alwaysApply: true
 applyTo: "**"
