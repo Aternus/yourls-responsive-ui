@@ -8,32 +8,22 @@ function responsive_head_meta(): void {
 
 yourls_add_action( 'html_head_meta', 'responsive_head_meta' );
 
-function responsive_detect_page_context(): string {
-    $page = basename( (string) ( $_SERVER['SCRIPT_NAME'] ?? '' ), '.php' );
+function responsive_extract_hook_context( $hook_args = [] ): string {
+    $context = is_array( $hook_args )
+        ? array_shift( $hook_args )
+        : $hook_args;
 
-    $context_map = [
-        'index'        => 'index',
-        'yourls-infos' => 'infos',
-        'plugins'      => 'plugins',
-        'tools'        => 'tools',
-        'yourls-login' => 'login',
-    ];
-
-    if ( isset( $context_map[ $page ] ) ) {
-        return $context_map[ $page ];
-    }
-
-    if ( defined( 'YOURLS_ADMIN' ) && YOURLS_ADMIN ) {
-        return 'index';
-    }
-
-    return '';
+    return is_string( $context ) ? trim( $context ) : '';
 }
 
-function responsive_head(): void {
+function responsive_detect_page_context( $hook_args = [] ): string {
+    return responsive_extract_hook_context( $hook_args );
+}
+
+function responsive_head( $hook_args = [] ): void {
     $scheme           = responsive_get_color_scheme();
     $scheme_css_value = responsive_get_color_scheme_css_value( $scheme );
-    $context          = responsive_detect_page_context();
+    $context          = responsive_detect_page_context( $hook_args );
 
     $url = RESPONSIVE_PLUGIN_URL;
     $css = responsive_get_asset_url( 'release/css/app.css' );
@@ -63,15 +53,14 @@ function responsive_head(): void {
                 'tagline' => yourls__( 'Your Own URL Shortener' ),
             ],
             'login' => [
-                'legend'        => yourls__( 'Enter your credentials to manage your short URLs.' ),
-                'messageLogin'  => yourls__( 'Please log in' ),
-                'messageLogout' => yourls__( 'Logged out successfully' ),
-                'errorRecovery' => yourls__( 'Check your username and password, then try again.' ),
-                'usernameLabel' => yourls__( 'Username' ),
-                'passwordLabel' => yourls__( 'Password' ),
-                'submitLabel'   => yourls__( 'Log in' ),
-                'showPassword'  => yourls__( 'Show password' ),
-                'hidePassword'  => yourls__( 'Hide password' ),
+                'legend'          => yourls__( 'Enter your credentials to manage your short URLs.' ),
+                'messageLogin'    => yourls__( 'Please log in' ),
+                'messageLogout'   => yourls__( 'Logged out successfully' ),
+                'usernameLabel'   => yourls__( 'Username' ),
+                'passwordLabel'   => yourls__( 'Password' ),
+                'submitLabel'     => yourls__( 'Log in' ),
+                'showPassword'    => yourls__( 'Show password' ),
+                'hidePassword'    => yourls__( 'Hide password' ),
                 'capsLockWarning' => yourls__( 'Caps Lock is on.' ),
             ],
         ],
@@ -106,10 +95,7 @@ function responsive_head(): void {
 yourls_add_action( 'html_head', 'responsive_head' );
 
 function responsive_custom_elements_root( $hook_args = [] ): void {
-    $context = is_array( $hook_args )
-        ? array_shift( $hook_args )
-        : $hook_args;
-    $context = is_string( $context ) ? $context : '';
+    $context = responsive_extract_hook_context( $hook_args );
 
     if ( ! defined( 'YOURLS_USER' ) ) {
         return;
@@ -142,4 +128,4 @@ function responsive_navbar(): void {
     echo '<rui-navbar></rui-navbar>';
 }
 
-yourls_add_action( 'pre_html_logo', 'responsive_navbar' );
+yourls_add_action( 'html_logo', 'responsive_navbar' );

@@ -1,3 +1,5 @@
+import { useResponsiveConfig } from "../composables/useResponsiveConfig.js";
+
 ///////////////////////////////////////////////////////////
 // Fetch JSON Helper for Admin AJAX
 ///////////////////////////////////////////////////////////
@@ -17,7 +19,7 @@ const MUTATION_ACTIONS = new Set(["add", "edit_save", "delete"]);
  * a { status: "fail", message } shape so callers always get a usable object.
  */
 export function apiRequest(params, options = {}) {
-  const ajaxURL = window.RESPONSIVEUI?.ajaxURL;
+  const { ajaxURL } = useResponsiveConfig();
   if (!ajaxURL) {
     return Promise.resolve({
       status: "fail",

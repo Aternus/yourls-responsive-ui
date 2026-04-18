@@ -9,16 +9,17 @@ import {
 } from "vue";
 
 import { useI18n } from "../../composables/useI18n.js";
-import { useResponsiveFlags } from "../../composables/useResponsiveFlags.js";
+import { useResponsiveConfig } from "../../composables/useResponsiveConfig.js";
 import { ensureHostElement, replaceElementWithHost } from "../../lib/dom.js";
-import { RuiInvariantError } from "../../lib/errors.js";
 
 const HEADER_SELECTOR = "#wrap > header[role='banner']";
 const NAV_SELECTOR = "#wrap > nav[role='navigation']";
+
 const TOPLEVEL_NAV_ITEM_SELECTOR = "#admin_menu > li.admin_menu_toplevel";
 const SUBLEVEL_NAV_LINK_SELECTOR = "ul > li.admin_menu_sublevel > a[href]";
 const LOGOUT_LINK_SELECTOR = "#admin_menu_logout_link a[href]";
 const USERNAME_SELECTOR = "#admin_menu_logout_link strong";
+
 const MOBILE_DRAWER_TOGGLE_ID = "rui-navbar-mobile-drawer-toggle";
 
 function toRoute(url) {
@@ -30,19 +31,9 @@ function toRoute(url) {
   }
 }
 
-function resolveLegacyHeader(host) {
-  const legacyHeader = host.nextElementSibling;
-  if (
-    !(legacyHeader instanceof HTMLElement) ||
-    !legacyHeader.matches(HEADER_SELECTOR)
-  ) {
-    throw new RuiInvariantError(
-      "Expected legacy header to be the next sibling before mount.",
-      { code: "DOM_MISSING" },
-    );
-  }
-
-  return legacyHeader;
+function resolveLegacyHeader() {
+  const legacyHeader = document.querySelector(HEADER_SELECTOR);
+  return legacyHeader instanceof HTMLElement ? legacyHeader : null;
 }
 
 function readLegacyHeaderData(legacyHeader) {
@@ -59,6 +50,11 @@ function readLegacyHeaderData(legacyHeader) {
     logoSrc: safeBrandLogo?.src ?? "",
     logoAlt: safeBrandLogo?.alt ?? "",
   };
+}
+
+function resolveLegacyNav() {
+  const legacyNav = document.querySelector(NAV_SELECTOR);
+  return legacyNav instanceof HTMLElement ? legacyNav : null;
 }
 
 function readLegacyNavLinks(legacyNav, currentPathname) {
@@ -127,15 +123,65 @@ function readLegacyUserData(legacyNav) {
   };
 }
 
+function getLegacyHeaderSnapshot() {
+  const legacyHeader = resolveLegacyHeader();
+  if (!legacyHeader) {
+    return {
+      legacyHeader: null,
+      data: {
+        href: "",
+        title: "",
+        logoSrc: "",
+        logoAlt: "",
+      },
+    };
+  }
+
+  return {
+    legacyHeader,
+    data: readLegacyHeaderData(legacyHeader),
+  };
+}
+
+function getLegacyNavSnapshot(currentPathname) {
+  const legacyNav = resolveLegacyNav();
+  if (!legacyNav) {
+    return {
+      legacyNav: null,
+      data: {
+        links: [],
+        username: "",
+        logoutHref: "",
+        logoutLabel: "",
+      },
+    };
+  }
+
+  const userData = readLegacyUserData(legacyNav);
+
+  return {
+    legacyNav,
+    data: {
+      links: readLegacyNavLinks(legacyNav, currentPathname),
+      username: userData.username,
+      logoutHref: userData.logoutHref,
+      logoutLabel: userData.logoutLabel,
+    },
+  };
+}
+
 export const RuiNavbar = defineCustomElement(
   {
     name: "RuiNavbar",
     setup() {
       const host = useHost();
       const { t } = useI18n("brand");
-      const { isAuth } = useResponsiveFlags();
+      const { context } = useResponsiveConfig();
 
-      const ready = ref(false);
+      const isReady = ref(false);
+      const isMenuOpen = ref(false);
+      const hasLegacyHeader = ref(false);
+
       const brandHref = ref("/admin/index.php");
       const brandTitle = ref(t("name"));
       const logoSrc = ref("");
@@ -145,14 +191,20 @@ export const RuiNavbar = defineCustomElement(
       const username = ref("");
       const logoutHref = ref("");
       const logoutLabel = ref("");
-      const isMenuOpen = ref(false);
+
+      const isLogin = context === "login";
 
       const hasNavLinks = computed(() => navLinks.value.length > 0);
       const hasUserMenu = computed(
         () => username.value.length > 0 || logoutHref.value.length > 0,
       );
-      const hasMobileMenu = computed(
+      const hasMobileDrawer = computed(
         () => hasNavLinks.value || hasUserMenu.value,
+      );
+      const shouldRenderNavbar = computed(
+        () =>
+          !isLogin &&
+          (hasLegacyHeader.value || hasNavLinks.value || hasUserMenu.value),
       );
 
       const closeMenu = () => {
@@ -175,41 +227,44 @@ export const RuiNavbar = defineCustomElement(
 
       onMounted(() => {
         const hostElement = ensureHostElement(host);
-
-        const legacyHeader = resolveLegacyHeader(hostElement);
-        const legacyHeaderData = readLegacyHeaderData(legacyHeader);
-
-        brandHref.value = legacyHeaderData.href;
-        brandTitle.value = legacyHeaderData.title;
-        logoSrc.value = legacyHeaderData.logoSrc;
-        logoAlt.value = legacyHeaderData.logoAlt;
-
-        if (isAuth) {
-          const legacyNav = document.querySelector(NAV_SELECTOR);
-          if (!(legacyNav instanceof HTMLElement)) {
-            throw new RuiInvariantError(
-              "Expected legacy navigation to exist for authenticated context.",
-              { code: "DOM_MISSING" },
-            );
-          }
-
-          navLinks.value = readLegacyNavLinks(
-            legacyNav,
-            `${window.location.pathname}${window.location.search}`,
-          );
-
-          const legacyUserData = readLegacyUserData(legacyNav);
-          username.value = legacyUserData.username;
-          logoutHref.value = legacyUserData.logoutHref;
-          logoutLabel.value = legacyUserData.logoutLabel;
+        if (isLogin) {
+          hostElement.remove();
+          isReady.value = true;
+          return;
         }
+
+        const { legacyHeader, data: legacyHeaderData } =
+          getLegacyHeaderSnapshot();
+        hasLegacyHeader.value = legacyHeader !== null;
+
+        if (legacyHeaderData.href) {
+          brandHref.value = legacyHeaderData.href;
+        }
+        if (legacyHeaderData.title) {
+          brandTitle.value = legacyHeaderData.title;
+        }
+        logoSrc.value = legacyHeaderData.logoSrc;
+        if (legacyHeaderData.logoAlt) {
+          logoAlt.value = legacyHeaderData.logoAlt;
+        }
+
+        const { legacyNav, data: legacyNavData } = getLegacyNavSnapshot(
+          `${window.location.pathname}${window.location.search}`,
+        );
+        navLinks.value = legacyNavData.links;
+        username.value = legacyNavData.username;
+        logoutHref.value = legacyNavData.logoutHref;
+        logoutLabel.value = legacyNavData.logoutLabel;
+        legacyNav?.remove();
 
         // Replace the legacy banner element with this custom element host so
         // Vue fully owns the rendered navbar markup.
-        replaceElementWithHost(legacyHeader, hostElement);
+        if (legacyHeader) {
+          replaceElementWithHost(legacyHeader, hostElement);
+        }
 
         document.addEventListener("keydown", handleDocumentKeydown);
-        ready.value = true;
+        isReady.value = true;
       });
 
       onBeforeUnmount(() => {
@@ -219,8 +274,8 @@ export const RuiNavbar = defineCustomElement(
 
       return {
         MOBILE_DRAWER_TOGGLE_ID,
-        isAuth,
-        ready,
+        isReady,
+        shouldRenderNavbar,
         brandHref,
         brandTitle,
         logoSrc,
@@ -231,13 +286,13 @@ export const RuiNavbar = defineCustomElement(
         logoutHref,
         logoutLabel,
         hasUserMenu,
+        hasMobileDrawer,
         isMenuOpen,
-        hasMobileMenu,
         closeMenu,
       };
     },
     template: /* HTML */ `
-      <template v-if="ready && isAuth">
+      <template v-if="isReady && shouldRenderNavbar">
         <div class="drawer drawer-end">
           <input
             :id="MOBILE_DRAWER_TOGGLE_ID"
@@ -258,6 +313,9 @@ export const RuiNavbar = defineCustomElement(
                     :alt="logoAlt"
                     class="h-7 w-auto shrink-0"
                   />
+                  <span v-else class="text-sm font-semibold text-base-content">
+                    {{ brandTitle }}
+                  </span>
                 </a>
               </div>
 
@@ -300,10 +358,7 @@ export const RuiNavbar = defineCustomElement(
                 </ul>
               </div>
 
-              <div
-                v-if="hasNavLinks && hasUserMenu"
-                class="navbar-end lg:hidden"
-              >
+              <div v-if="hasMobileDrawer" class="navbar-end lg:hidden">
                 <label
                   :for="MOBILE_DRAWER_TOGGLE_ID"
                   aria-label="Toggle navigation menu"
@@ -316,7 +371,7 @@ export const RuiNavbar = defineCustomElement(
               </div>
 
               <div
-                v-if="hasNavLinks && hasUserMenu"
+                v-if="hasUserMenu"
                 class="navbar-end hidden lg:flex lg:gap-4"
               >
                 <span v-if="username" class="badge badge-soft"
@@ -332,7 +387,7 @@ export const RuiNavbar = defineCustomElement(
             </div>
           </div>
 
-          <div v-if="hasNavLinks && hasUserMenu" class="drawer-side lg:hidden">
+          <div v-if="hasMobileDrawer" class="drawer-side lg:hidden">
             <label
               :for="MOBILE_DRAWER_TOGGLE_ID"
               class="drawer-overlay"
@@ -349,11 +404,17 @@ export const RuiNavbar = defineCustomElement(
                   :alt="logoAlt"
                   class="h-7 w-auto shrink-0"
                 />
+                <span v-else class="text-sm font-semibold text-base-content">
+                  {{ brandTitle }}
+                </span>
               </a>
 
-              <div class="divider m-0"></div>
+              <div v-if="hasNavLinks" class="divider m-0"></div>
 
-              <ul class="menu w-full space-y-1 rounded-box bg-base-200">
+              <ul
+                v-if="hasNavLinks"
+                class="menu w-full space-y-1 rounded-box bg-base-200"
+              >
                 <li v-for="item in navLinks" :key="item.href">
                   <template v-if="item.children.length > 0">
                     <details>
@@ -390,9 +451,9 @@ export const RuiNavbar = defineCustomElement(
                 </li>
               </ul>
 
-              <div class="divider m-0 mt-auto"></div>
+              <div v-if="hasUserMenu" class="divider m-0 mt-auto"></div>
 
-              <div class="space-y-4 border-base-300">
+              <div v-if="hasUserMenu" class="space-y-4 border-base-300">
                 <p v-if="username" class="badge badge-soft">{{ username }}</p>
                 <a
                   v-if="logoutHref"
