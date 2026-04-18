@@ -270,28 +270,13 @@ export const RuiLogin = defineCustomElement(
     template: /* HTML */ `
       <div v-if="ready" class="min-h-full bg-base-100 px-4 py-6 sm:py-10">
         <div class="mx-auto w-full max-w-xs space-y-5">
-          <div class="flex items-center gap-6">
-            <a
-              :href="loginPageHref"
-              class="btn h-auto min-h-0 shrink-0 px-1 py-1 btn-ghost"
-              :aria-label="t('messageLogin')"
-              :title="t('messageLogin')"
-            >
-              <img
-                v-if="brandLogoSrc"
-                :src="brandLogoSrc"
-                :alt="tBrand('name')"
-                class="h-14 w-auto shrink-0"
-              />
-              <span
-                v-else
-                class="text-4xl font-semibold tracking-tight text-brand-500"
-              >
-                {{ tBrand("name") }}
-              </span>
-            </a>
-            <p class="text-sm text-base-content/50">{{ tBrand("tagline") }}</p>
-          </div>
+          <a
+            :href="loginPageHref"
+            class="btn h-auto px-0 btn-ghost"
+            :aria-label="t('messageLogin')"
+          >
+            <img :src="brandLogoSrc" :alt="tBrand('name')" class="h-14" />
+          </a>
 
           <div
             v-if="serverMessage"
@@ -301,9 +286,7 @@ export const RuiLogin = defineCustomElement(
             class="alert alert-soft"
             :class="alertClass"
           >
-            <div class="flex flex-col gap-1 text-sm">
-              <span>{{ serverMessage }}</span>
-            </div>
+            <p class="text-sm">{{ serverMessage }}</p>
           </div>
 
           <form
@@ -372,7 +355,7 @@ export const RuiLogin = defineCustomElement(
                   @click="togglePasswordVisibility"
                 >
                   <span
-                    class="swap swap-flip"
+                    class="swap"
                     :class="{ 'swap-active': showPassword }"
                     aria-hidden="true"
                   >
