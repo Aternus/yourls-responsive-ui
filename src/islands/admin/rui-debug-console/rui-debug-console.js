@@ -1,11 +1,9 @@
 import {
   defineCustomElement,
-  onBeforeUnmount,
   onMounted,
-  ref,
   shallowRef,
   useHost,
-  watch,
+  useTemplateRef,
 } from "vue";
 
 import { useI18n } from "../../composables/useI18n.js";
@@ -23,24 +21,10 @@ export const RuiDebugConsole = defineCustomElement(
     setup() {
       const host = useHost();
       const { t } = useI18n("debug");
-      const isOpen = ref(false);
+      const dialogRef = useTemplateRef("dialogRef");
       const debugText = shallowRef("");
 
-      const handleKeydown = (event) => {
-        if (event.key === "Escape") {
-          isOpen.value = false;
-        }
-      };
-
-      watch(isOpen, (open) => {
-        if (open) {
-          window.addEventListener("keydown", handleKeydown);
-        } else {
-          window.removeEventListener("keydown", handleKeydown);
-        }
-      });
-
-      onMounted(() => {
+      onMounted(async () => {
         const hostElement = ensureHostElement(host);
         const container = findLegacyDebugContainer();
 
@@ -59,16 +43,14 @@ export const RuiDebugConsole = defineCustomElement(
         container.remove();
       });
 
-      onBeforeUnmount(() => {
-        window.removeEventListener("keydown", handleKeydown);
-      });
-
       const toggle = () => {
-        isOpen.value = !isOpen.value;
+        const dialog = dialogRef.value;
+        if (!dialog) return;
+
+        dialog.open ? dialog.close() : dialog.showModal();
       };
 
       return {
-        isOpen,
         debugText,
         toggle,
         t,
@@ -76,19 +58,26 @@ export const RuiDebugConsole = defineCustomElement(
     },
     template: /* HTML */ `
       <template v-if="debugText">
-        <div
-          v-if="isOpen"
-          class="mockup-code fixed right-5 bottom-15 left-5 z-4 flex max-h-[calc(100dvh-(var(--spacing)*21))] flex-col px-5 shadow-sm before:mb-5 before:-ml-5 before:shrink-0 md:max-h-[50dvh]"
-        >
-          <pre
-            class="shrink grow overflow-auto p-0 before:m-0"
-          ><code>{{ debugText }}</code></pre>
-        </div>
+        <dialog ref="dialogRef" class="modal modal-bottom">
+          <div
+            class="modal-box mx-auto flex max-h-[50dvh] flex-col p-0 lg:max-w-[80dvw]"
+          >
+            <div
+              class="mockup-code flex grow flex-col overflow-hidden rounded-b-none px-5 before:mb-5 before:-ml-5 before:shrink-0"
+            >
+              <pre
+                class="shrink grow overflow-auto p-0 before:m-0"
+              ><code>{{ debugText }}</code></pre>
+            </div>
+          </div>
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
 
         <button
           type="button"
           class="btn fixed right-5 bottom-5 z-5 btn-square text-xl btn-sm"
-          :class="{'btn-neutral': isOpen}"
           @click="toggle"
           :title="t('title')"
         >
