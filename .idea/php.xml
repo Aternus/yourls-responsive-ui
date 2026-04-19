@@ -26,23 +26,13 @@
   <component name="PhpCodeSniffer">
     <phpcs_settings>
       <phpcs_by_interpreter interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38" beautifier_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/phpcbf" standards="Modernize;MySource;NormalizedArrays;PEAR;PHPCSUtils;PHPCompatibility;PSR1;PSR12;PSR2;Squiz;Universal;WordPress;WordPress-Core;WordPress-Docs;WordPress-Extra;Zend" tool_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/phpcs" timeout="30000" />
-      <phpcs_by_interpreter asDefaultInterpreter="true" deletedFromTheList="true" interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38" tool_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/phpcs" timeout="30000" />
-      <PhpCSConfiguration deletedFromTheList="true" />
+      <phpcs_by_interpreter asDefaultInterpreter="true" interpreter_id="90b6446b-47be-4aa4-a1ed-0faabd853e38" beautifier_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/phpcbf" standards="Modernize;MySource;NormalizedArrays;PEAR;PHPCSUtils;PHPCompatibility;PSR1;PSR12;PSR2;Squiz;Universal;WordPress;WordPress-Core;WordPress-Docs;WordPress-Extra;Zend" tool_path="/var/www/html/user/plugins/yourls-responsive-ui/vendor/bin/phpcs" timeout="30000" />
     </phpcs_settings>
   </component>
   <component name="PhpIncludePathManager">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/YOURLS/admin" />
       <path value="$PROJECT_DIR$/vendor/YOURLS/includes" />
-      <path value="$PROJECT_DIR$/vendor/YOURLS/tests" />
-      <path value="$PROJECT_DIR$/vendor/YOURLS/user" />
-      <path value="$PROJECT_DIR$/vendor/composer" />
-      <path value="$PROJECT_DIR$/vendor/dealerdirect/phpcodesniffer-composer-installer" />
-      <path value="$PROJECT_DIR$/vendor/phpcompatibility/php-compatibility" />
-      <path value="$PROJECT_DIR$/vendor/phpcsstandards/phpcsextra" />
-      <path value="$PROJECT_DIR$/vendor/phpcsstandards/phpcsutils" />
-      <path value="$PROJECT_DIR$/vendor/squizlabs/php_codesniffer" />
-      <path value="$PROJECT_DIR$/vendor/wp-coding-standards/wpcs" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -126,6 +116,16 @@
         </phpinfo>
       </interpreter>
     </phpInfoCache>
+  </component>
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="localhost" id="6599cd2b-7b23-40b1-8cf1-e0084dcae9ad" name="localhost" port="443" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/html/user/plugins/yourls-responsive-ui" />
+          <mapping local-root="$PROJECT_DIR$/vendor/YOURLS" remote-root="/var/www/html" />
+        </path_mappings>
+      </server>
+    </servers>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />

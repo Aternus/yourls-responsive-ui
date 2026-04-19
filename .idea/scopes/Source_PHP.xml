@@ -1,3 +1,3 @@
 <component name="DependencyValidationManager">
-  <scope name="Source PHP" pattern="file[yourls-responsive-ui]:src//*" />
+  <scope name="Source PHP" pattern="file[yourls-responsive-ui]:src//*||file[yourls-responsive-ui]:plugin.php||file[yourls-responsive-ui]:bootstrap.php||file[yourls-responsive-ui]:uninstall.php" />
 </component>

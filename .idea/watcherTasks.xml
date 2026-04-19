@@ -18,14 +18,14 @@
       <option name="runOnExternalChanges" value="false" />
       <option name="scopeName" value="Source PHP" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="" />
+      <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
     </TaskOptions>
     <TaskOptions isEnabled="true">
       <option name="arguments" value="rustywind --output-css-file release/css/app.css --write $FilePath$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
-      <option name="exitCodeBehavior" value="NEVER" />
+      <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="php" />
       <option name="immediateSync" value="false" />
       <option name="name" value="Rustywind" />
@@ -38,7 +38,7 @@
       <option name="runOnExternalChanges" value="false" />
       <option name="scopeName" value="Source PHP" />
       <option name="trackOnlyRoot" value="false" />
-      <option name="workingDir" value="" />
+      <option name="workingDir" value="$ProjectFileDir$" />
       <envs />
     </TaskOptions>
   </component>
