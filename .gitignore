@@ -343,16 +343,8 @@ Temporary Items
 .apdisk
 
 # Aternus
-docker/web/ssl/
-release/
+/docker/web/ssl/
+/release/
 *.env
-vendor/autoload.php
-vendor/bin/
-vendor/composer/
-vendor/dealerdirect/
-vendor/laravel/
-vendor/phpcompatibility/
-vendor/phpcsstandards/
-vendor/sirbrillig/
-vendor/squizlabs/
-vendor/wp-coding-standards/
+/vendor/*
+!/vendor/YOURLS/
