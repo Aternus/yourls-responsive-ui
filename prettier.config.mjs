@@ -1,6 +1,8 @@
 /**
  * @see https://prettier.io/docs/configuration
- * @type {import("prettier").Config & import('prettier-plugin-tailwindcss').PluginOptions}}
+ * @type {import("prettier").Config
+ *  & import("@ianvs/prettier-plugin-sort-imports").PluginConfig
+ *  & import("prettier-plugin-tailwindcss").PluginOptions}
  */
 const config = {
   proseWrap: "always",
