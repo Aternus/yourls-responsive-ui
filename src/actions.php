@@ -108,6 +108,8 @@ yourls_add_action( 'html_head', 'rui_head' );
 function rui_custom_elements_root( $hook_args = [] ): void {
     $context = rui_extract_hook_context( $hook_args );
 
+    echo '<rui-debug-console></rui-debug-console>';
+
     if ( ! defined( 'YOURLS_USER' ) ) {
         return;
     }

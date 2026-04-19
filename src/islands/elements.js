@@ -1,3 +1,4 @@
+import { RuiDebugConsole } from "./admin/rui-debug-console/rui-debug-console.js";
 import { RuiInfosPage } from "./admin/rui-infos-page/rui-infos-page.js";
 import { RuiLogin } from "./admin/rui-login/rui-login.js";
 import { RuiPluginActions } from "./admin/rui-plugin-actions/rui-plugin-actions.js";
@@ -48,6 +49,7 @@ export function registerAllElements() {
   define("rui-scroll-top", RuiScrollTop);
 
   // Admin
+  define("rui-debug-console", RuiDebugConsole);
   define("rui-plugin-actions", RuiPluginActions);
   define("rui-infos-page", RuiInfosPage);
   define("rui-login", RuiLogin);

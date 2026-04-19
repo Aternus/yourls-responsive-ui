@@ -1,0 +1,5 @@
+@layer components {
+  #footer + div[style*="text-align:left"] {
+    display: none;
+  }
+}
