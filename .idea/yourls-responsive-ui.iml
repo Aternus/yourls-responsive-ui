@@ -17,7 +17,6 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/dealerdirect" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpcompatibility" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/phpcsstandards" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/squizlabs" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/wp-coding-standards" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/tests" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/vendor" />

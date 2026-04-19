@@ -33,6 +33,7 @@
     <include_path>
       <path value="$PROJECT_DIR$/vendor/YOURLS/admin" />
       <path value="$PROJECT_DIR$/vendor/YOURLS/includes" />
+      <path value="$PROJECT_DIR$/vendor/squizlabs/php_codesniffer/src" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

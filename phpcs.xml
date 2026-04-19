@@ -37,6 +37,8 @@
 
   <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+  <rule
+    ref="./phpcs/YOURLSResponsiveUI/Sniffs/WhiteSpace/ConsecutiveBlankLinesSniff.php"/>
 
   <rule ref="Squiz.WhiteSpace.FunctionSpacing">
     <properties>
