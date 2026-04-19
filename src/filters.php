@@ -320,6 +320,8 @@ yourls_add_filter( 'help_link', 'rui_help_link' );
 
 function rui_footer_text( string $html ): string {
     if ( rui_is_show_footer_text() ) {
+        $html = preg_replace( '/<a\b/', '<a class="link"', $html ) ?? $html;
+
         return '<span class="flex place-content-center gap-1 border-t border-base-300 bg-base-200 px-5 py-3 text-xs text-base-content/60 shadow-sm">' .
                 $html .
                 '</span>';
