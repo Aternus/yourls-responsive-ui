@@ -41,6 +41,25 @@
       <PhpCSConfiguration deletedFromTheList="true" />
     </phpcs_settings>
   </component>
+  <component name="PhpIncludePathManager">
+    <include_path>
+      <path value="$PROJECT_DIR$/vendor/YOURLS/.github" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/admin" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/css" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/images" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/includes" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/js" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/tests" />
+      <path value="$PROJECT_DIR$/vendor/YOURLS/user" />
+      <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/dealerdirect/phpcodesniffer-composer-installer" />
+      <path value="$PROJECT_DIR$/vendor/phpcompatibility/php-compatibility" />
+      <path value="$PROJECT_DIR$/vendor/phpcsstandards/phpcsextra" />
+      <path value="$PROJECT_DIR$/vendor/phpcsstandards/phpcsutils" />
+      <path value="$PROJECT_DIR$/vendor/squizlabs/php_codesniffer" />
+      <path value="$PROJECT_DIR$/vendor/wp-coding-standards/wpcs" />
+    </include_path>
+  </component>
   <component name="PhpInterpreters">
     <interpreters>
       <interpreter id="90b6446b-47be-4aa4-a1ed-0faabd853e38" name="web" home="docker-compose://DATA" auto="false" debugger_id="php.debugger.XDebug">
@@ -123,7 +142,9 @@
       </interpreter>
     </phpInfoCache>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
+    <option name="suggestChangeDefaultLanguageLevel" value="false" />
+  </component>
   <component name="PhpRuntimeConfiguration">
     <extensions>
       <extension name="Ev" enabled="false" />

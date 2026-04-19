@@ -6,6 +6,21 @@
       <excludeFolder url="file://$MODULE_DIR$/.claude" />
       <excludeFolder url="file://$MODULE_DIR$/_bmad" />
       <excludeFolder url="file://$MODULE_DIR$/release" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/.github" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/admin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/css" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/images" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/includes" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/js" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/tests" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/YOURLS/user" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dealerdirect/phpcodesniffer-composer-installer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpcompatibility/php-compatibility" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpcsstandards/phpcsextra" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpcsstandards/phpcsutils" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/squizlabs/php_codesniffer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/wp-coding-standards/wpcs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
