@@ -8,7 +8,7 @@ if ( yourls_is_GO() ) {
     return;
 }
 
-define( 'RESPONSIVE_PLUGIN_URL', yourls_plugin_url( __DIR__ ) );
+define( 'RUI_PLUGIN_URL', yourls_plugin_url( __DIR__ ) );
 
 require_once __DIR__ . '/src/constants.php';
 require_once __DIR__ . '/src/utils.php';

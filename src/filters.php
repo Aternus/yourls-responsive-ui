@@ -3,10 +3,10 @@
 // HTML Attributes.
 //
 
-function responsive_output_color_scheme( string $html ): string {
-    $scheme = responsive_get_color_scheme();
+function rui_output_color_scheme( string $html ): string {
+    $scheme = rui_get_color_scheme();
 
-    if ( $scheme !== RESPONSIVE_SCHEME_SYSTEM ) {
+    if ( $scheme !== RUI_SCHEME_SYSTEM ) {
         return $html .
                 ' style="color-scheme: ' . $scheme . ';"' .
                 ' data-theme="' . $scheme . '"';
@@ -17,10 +17,10 @@ function responsive_output_color_scheme( string $html ): string {
 
 yourls_add_filter(
     'html_language_attributes',
-    'responsive_output_color_scheme',
+    'rui_output_color_scheme',
 );
 
-function responsive_filter_form_select_attributes(
+function rui_filter_form_select_attributes(
     string $html,
     string $name,
     array $options = [],
@@ -55,7 +55,7 @@ function responsive_filter_form_select_attributes(
 
 yourls_add_filter(
     'html_select',
-    'responsive_filter_form_select_attributes',
+    'rui_filter_form_select_attributes',
     10,
     5,
 );
@@ -64,7 +64,7 @@ yourls_add_filter(
 // Table Rows.
 //
 
-function responsive_infos_full_long_string(
+function rui_infos_full_long_string(
     string $newstring,
     string $string,
     int $length = 60,
@@ -79,12 +79,12 @@ function responsive_infos_full_long_string(
 
 yourls_add_filter(
     'trim_long_string',
-    'responsive_infos_full_long_string',
+    'rui_infos_full_long_string',
     10,
     4,
 );
 
-function responsive_iconify_icon( string $icon, string $class = '' ): string {
+function rui_iconify_icon( string $icon, string $class = '' ): string {
     $class = trim( $class );
 
     $attributes = ' icon="' . yourls_esc_attr( $icon ) . '" aria-hidden="true"';
@@ -96,7 +96,7 @@ function responsive_iconify_icon( string $icon, string $class = '' ): string {
     return '<iconify-icon' . $attributes . '></iconify-icon>';
 }
 
-function responsive_table_row_action_array(
+function rui_table_row_action_array(
     array $actions,
     string $keyword,
 ): array {
@@ -119,7 +119,7 @@ function responsive_table_row_action_array(
             $label = strip_tags( html_entity_decode( (string) $action['anchor'] ) );
         }
 
-        $icon = responsive_iconify_icon(
+        $icon = rui_iconify_icon(
             $icons[ $key ],
             'rui-links-table__action-icon',
         );
@@ -138,12 +138,12 @@ function responsive_table_row_action_array(
 
 yourls_add_filter(
     'table_add_row_action_array',
-    'responsive_table_row_action_array',
+    'rui_table_row_action_array',
     10,
     2,
 );
 
-function responsive_action_links_add_data_attributes(
+function rui_action_links_add_data_attributes(
     string $action_links,
     string $keyword,
 ): string {
@@ -175,12 +175,12 @@ function responsive_action_links_add_data_attributes(
 
 yourls_add_filter(
     'action_links',
-    'responsive_action_links_add_data_attributes',
+    'rui_action_links_add_data_attributes',
     10,
     2,
 );
 
-function responsive_table_row_cell_array(
+function rui_table_row_cell_array(
     array $cells,
     string $keyword,
     string $url,
@@ -196,7 +196,7 @@ function responsive_table_row_cell_array(
             '<span class="rui-link-row">' .
             '<a class="rui-links-table__shorturl-link rui-url-value" href="%shorturl%" target="_blank" rel="noopener noreferrer">' .
             '<span class="rui-link-row__text">%keyword_html%</span>' .
-            responsive_iconify_icon( 'mdi:open-in-new', 'rui-link-row__icon' ) .
+            rui_iconify_icon( 'mdi:open-in-new', 'rui-link-row__icon' ) .
             '</a>' .
             '<rui-copy-button copy-text="%shorturl%" copy-label="Copy short URL"></rui-copy-button>' .
             '</span>';
@@ -216,7 +216,7 @@ function responsive_table_row_cell_array(
             '<small class="rui-links-table__destination-raw">%warning%<span class="rui-link-row">' .
             '<a class="rui-links-table__destination-link rui-url-value" href="%long_url%" target="_blank" rel="noopener noreferrer">' .
             '<span class="rui-link-row__text">%long_url_html%</span>' .
-            responsive_iconify_icon( 'mdi:open-in-new', 'rui-link-row__icon' ) .
+            rui_iconify_icon( 'mdi:open-in-new', 'rui-link-row__icon' ) .
             '</a>' .
             '<rui-copy-button copy-text="%long_url%" copy-label="Copy destination URL"></rui-copy-button>' .
             '</span></small>' .
@@ -232,12 +232,12 @@ function responsive_table_row_cell_array(
 
 yourls_add_filter(
     'table_add_row_cell_array',
-    'responsive_table_row_cell_array',
+    'rui_table_row_cell_array',
     10,
     7,
 );
 
-function responsive_extract_row_number_from_id( string $id ): int {
+function rui_extract_row_number_from_id( string $id ): int {
     $digits = preg_replace( '/\D+/', '', $id );
 
     if ( ! is_string( $digits ) || $digits === '' ) {
@@ -252,7 +252,7 @@ function responsive_extract_row_number_from_id( string $id ): int {
     return $row_number;
 }
 
-function responsive_edit_link_add_row_html(
+function rui_edit_link_add_row_html(
     array $response,
     string $url,
     string $keyword,
@@ -267,7 +267,7 @@ function responsive_edit_link_add_row_html(
 
     $row_id = 1;
     if ( isset( $_REQUEST['id'] ) && is_scalar( $_REQUEST['id'] ) ) {
-        $row_id = responsive_extract_row_number_from_id(
+        $row_id = rui_extract_row_number_from_id(
             (string) $_REQUEST['id'],
         );
     }
@@ -302,24 +302,24 @@ function responsive_edit_link_add_row_html(
     return $response;
 }
 
-yourls_add_filter( 'edit_link', 'responsive_edit_link_add_row_html', 10, 7 );
+yourls_add_filter( 'edit_link', 'rui_edit_link_add_row_html', 10, 7 );
 
 //
 // UI Text.
 //
 
-function responsive_help_link( string $html ): ?string {
-    if ( responsive_is_show_help_link() ) {
+function rui_help_link( string $html ): ?string {
+    if ( rui_is_show_help_link() ) {
         return $html;
     }
 
     return null;
 }
 
-yourls_add_filter( 'help_link', 'responsive_help_link' );
+yourls_add_filter( 'help_link', 'rui_help_link' );
 
-function responsive_footer_text( string $html ): string {
-    if ( responsive_is_show_footer_text() ) {
+function rui_footer_text( string $html ): string {
+    if ( rui_is_show_footer_text() ) {
         return '<span class="flex place-content-center gap-1 border-t border-base-300 bg-base-200 px-5 py-3 text-xs text-base-content/60 shadow-sm">' .
                 $html .
                 '</span>';
@@ -328,9 +328,9 @@ function responsive_footer_text( string $html ): string {
     return '';
 }
 
-yourls_add_filter( 'html_footer_text', 'responsive_footer_text' );
+yourls_add_filter( 'html_footer_text', 'rui_footer_text' );
 
-function responsive_logout_link( string $html ): string {
+function rui_logout_link( string $html ): string {
     $output = preg_replace(
         '/(.*?)\((.*?)\)/',
         '<span>$1</span><span>$2</span>',
@@ -340,9 +340,9 @@ function responsive_logout_link( string $html ): string {
     return is_string( $output ) ? $output : $html;
 }
 
-yourls_add_filter( 'logout_link', 'responsive_logout_link' );
+yourls_add_filter( 'logout_link', 'rui_logout_link' );
 
-function responsive_translate_labels(
+function rui_translate_labels(
     string $translation,
     string $text,
     string $domain = 'default',
@@ -354,13 +354,13 @@ function responsive_translate_labels(
     };
 }
 
-yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );
+yourls_add_filter( 'translate', 'rui_translate_labels', 10, 3 );
 
 //
 // Shunt: Add-New Form.
 //
 
-function responsive_shunt_html_addnew( $false ): string {
+function rui_shunt_html_addnew( $false ): string {
     if ( ! defined( 'YOURLS_USER' ) ) {
         return '';
     }
@@ -410,4 +410,4 @@ function responsive_shunt_html_addnew( $false ): string {
     return '';
 }
 
-yourls_add_filter( 'shunt_html_addnew', 'responsive_shunt_html_addnew' );
+yourls_add_filter( 'shunt_html_addnew', 'rui_shunt_html_addnew' );

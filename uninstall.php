@@ -5,4 +5,4 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
 
 require_once __DIR__ . '/src/bridge.php';
 
-responsive_bridge_remove();
+rui_bridge_remove();

@@ -1,8 +1,5 @@
 export function useResponsiveConfig() {
-  const config =
-    window.RESPONSIVEUI && typeof window.RESPONSIVEUI === "object"
-      ? window.RESPONSIVEUI
-      : {};
+  const config = window.RUI && typeof window.RUI === "object" ? window.RUI : {};
 
   return {
     ...config,

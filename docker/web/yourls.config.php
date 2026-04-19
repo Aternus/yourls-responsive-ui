@@ -69,7 +69,7 @@ define('YOURLS_URL_CONVERT', 36);
 
 /** Debug mode to output some internal information
  ** Default is false for live site. Enable when coding or before submitting a new issue */
-define('YOURLS_DEBUG', false);
+define('YOURLS_DEBUG', true);
 
 /**
  * Reserved keywords (so that generated URLs won't match them)

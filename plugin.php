@@ -14,4 +14,4 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
 
 require_once __DIR__ . '/src/bridge.php';
 
-responsive_bridge_install();
+rui_bridge_install();

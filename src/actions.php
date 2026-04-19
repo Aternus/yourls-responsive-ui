@@ -3,43 +3,43 @@
 // Head.
 //
 
-function responsive_head_meta(): void {
+function rui_head_meta(): void {
     echo <<<'HEAD_META'
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         HEAD_META;
 }
 
-yourls_add_action( 'html_head_meta', 'responsive_head_meta' );
+yourls_add_action( 'html_head_meta', 'rui_head_meta' );
 
-function responsive_extract_hook_context( $hook_args = [] ): string {
+function rui_extract_hook_context( $hook_args = [] ): string {
     $context = is_array( $hook_args ) ? array_shift( $hook_args ) : $hook_args;
 
     return is_string( $context ) ? trim( $context ) : '';
 }
 
-function responsive_detect_page_context( $hook_args = [] ): string {
-    return responsive_extract_hook_context( $hook_args );
+function rui_detect_page_context( $hook_args = [] ): string {
+    return rui_extract_hook_context( $hook_args );
 }
 
-function responsive_head( $hook_args = [] ): void {
-    $scheme           = responsive_get_color_scheme();
-    $scheme_css_value = responsive_get_color_scheme_css_value( $scheme );
-    $context          = responsive_detect_page_context( $hook_args );
+function rui_head( $hook_args = [] ): void {
+    $scheme           = rui_get_color_scheme();
+    $scheme_css_value = rui_get_color_scheme_css_value( $scheme );
+    $context          = rui_detect_page_context( $hook_args );
 
-    $url = RESPONSIVE_PLUGIN_URL;
-    $css = responsive_get_asset_url( 'release/css/app.css' );
-    $js  = responsive_get_asset_url( 'release/js/app.js', 'src/js/app.js' );
+    $url = RUI_PLUGIN_URL;
+    $css = rui_get_asset_url( 'release/css/app.css' );
+    $js  = rui_get_asset_url( 'release/js/app.js', 'src/js/app.js' );
 
-    $system   = RESPONSIVE_SCHEME_SYSTEM;
-    $light    = RESPONSIVE_SCHEME_LIGHT;
-    $dark     = RESPONSIVE_SCHEME_DARK;
+    $system   = RUI_SCHEME_SYSTEM;
+    $light    = RUI_SCHEME_LIGHT;
+    $dark     = RUI_SCHEME_DARK;
     $ajax_url = yourls_admin_url( 'admin-ajax.php' );
 
     $config_flags = [
         'authenticated' => defined( 'YOURLS_USER' ),
     ];
 
-    $responsive_ui_config = [
+    $rui_config = [
         'pluginURL' => $url,
         'ajaxURL'   => $ajax_url,
         'context'   => $context,
@@ -68,23 +68,23 @@ function responsive_head( $hook_args = [] ): void {
             ],
         ],
     ];
-    $responsive_ui_json   = json_encode(
-        $responsive_ui_config,
+    $rui_json   = json_encode(
+        $rui_config,
         JSON_HEX_TAG |
         JSON_HEX_AMP |
         JSON_HEX_APOS |
         JSON_HEX_QUOT |
         JSON_INVALID_UTF8_SUBSTITUTE,
     );
-    if ( $responsive_ui_json === false ) {
-        $responsive_ui_json = '{}';
+    if ( $rui_json === false ) {
+        $rui_json = '{}';
     }
 
     echo <<<HEAD
         <meta name="color-scheme" content="$scheme_css_value">
         <link rel="stylesheet" href="$css">
         <script>
-        window.RESPONSIVEUI = $responsive_ui_json;
+        window.RUI = $rui_json;
         </script>
         <script type="importmap">
         {
@@ -99,14 +99,14 @@ function responsive_head( $hook_args = [] ): void {
         HEAD;
 }
 
-yourls_add_action( 'html_head', 'responsive_head' );
+yourls_add_action( 'html_head', 'rui_head' );
 
 //
 // Custom Elements.
 //
 
-function responsive_custom_elements_root( $hook_args = [] ): void {
-    $context = responsive_extract_hook_context( $hook_args );
+function rui_custom_elements_root( $hook_args = [] ): void {
+    $context = rui_extract_hook_context( $hook_args );
 
     if ( ! defined( 'YOURLS_USER' ) ) {
         return;
@@ -125,16 +125,16 @@ function responsive_custom_elements_root( $hook_args = [] ): void {
     }
 }
 
-yourls_add_action( 'html_footer', 'responsive_custom_elements_root', 10, 1 );
+yourls_add_action( 'html_footer', 'rui_custom_elements_root', 10, 1 );
 
-function responsive_login(): void {
+function rui_login(): void {
     echo '<rui-login></rui-login>';
 }
 
-yourls_add_action( 'login_form_end', 'responsive_login' );
+yourls_add_action( 'login_form_end', 'rui_login' );
 
-function responsive_navbar(): void {
+function rui_navbar(): void {
     echo '<rui-navbar></rui-navbar>';
 }
 
-yourls_add_action( 'html_logo', 'responsive_navbar' );
+yourls_add_action( 'html_logo', 'rui_navbar' );
