@@ -84,10 +84,12 @@ export const RuiDebugConsole = defineCustomElement(
 
         <button
           type="button"
-          class="btn fixed right-5 bottom-5 z-5 btn-sm btn-info"
+          class="btn fixed right-5 bottom-5 z-5 btn-square text-xl btn-sm"
+          :class="{'btn-neutral': isOpen}"
           @click="toggle"
+          title="Debug Console"
         >
-          Debug Console
+          <iconify-icon icon="mdi:console"></iconify-icon>
         </button>
       </template>
     `,
