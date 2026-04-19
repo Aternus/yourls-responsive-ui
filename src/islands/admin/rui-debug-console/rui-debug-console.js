@@ -8,6 +8,7 @@ import {
   watch,
 } from "vue";
 
+import { useI18n } from "../../composables/useI18n.js";
 import { ensureHostElement } from "../../lib/dom.js";
 
 const LEGACY_DEBUG_SELECTOR = '#footer + div[style*="text-align:left"]';
@@ -21,6 +22,7 @@ export const RuiDebugConsole = defineCustomElement(
     name: "RuiDebugConsole",
     setup() {
       const host = useHost();
+      const { t } = useI18n("debug");
       const isOpen = ref(false);
       const debugText = shallowRef("");
 
@@ -69,6 +71,7 @@ export const RuiDebugConsole = defineCustomElement(
         isOpen,
         debugText,
         toggle,
+        t,
       };
     },
     template: /* HTML */ `
@@ -87,7 +90,7 @@ export const RuiDebugConsole = defineCustomElement(
           class="btn fixed right-5 bottom-5 z-5 btn-square text-xl btn-sm"
           :class="{'btn-neutral': isOpen}"
           @click="toggle"
-          title="Debug Console"
+          :title="t('title')"
         >
           <iconify-icon icon="mdi:console"></iconify-icon>
         </button>

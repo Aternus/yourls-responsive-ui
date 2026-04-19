@@ -53,6 +53,9 @@ function rui_head( $hook_args = [] ): void {
                 'name'    => yourls__( 'YOURLS' ),
                 'tagline' => yourls__( 'Your Own URL Shortener' ),
             ],
+            'debug' => [
+                'title' => yourls__( 'Debug Console' ),
+            ],
             'login' => [
                 'legend'          => yourls__(
                     'Enter your credentials to manage your short URLs.',
