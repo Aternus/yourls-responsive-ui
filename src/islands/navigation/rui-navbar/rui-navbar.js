@@ -21,11 +21,21 @@ const LOGOUT_LINK_SELECTOR = "#admin_menu_logout_link a[href]";
 const USERNAME_SELECTOR = "#admin_menu_logout_link strong";
 
 const MOBILE_DRAWER_TOGGLE_ID = "rui-navbar-mobile-drawer-toggle";
+const INDEX_FILENAME = "/index.php";
+
+function normalizeRoute(pathname, search = "") {
+  if (pathname.endsWith(INDEX_FILENAME)) {
+    const directoryPath = pathname.slice(0, -INDEX_FILENAME.length);
+    return `${directoryPath === "" ? "/" : `${directoryPath}/`}${search}`;
+  }
+
+  return `${pathname}${search}`;
+}
 
 function toRoute(url) {
   try {
     const parsed = new URL(url, window.location.href);
-    return `${parsed.pathname}${parsed.search}`;
+    return normalizeRoute(parsed.pathname, parsed.search);
   } catch {
     return "";
   }
@@ -249,7 +259,7 @@ export const RuiNavbar = defineCustomElement(
         }
 
         const { legacyNav, data: legacyNavData } = getLegacyNavSnapshot(
-          `${window.location.pathname}${window.location.search}`,
+          normalizeRoute(window.location.pathname, window.location.search),
         );
         navLinks.value = legacyNavData.links;
         username.value = legacyNavData.username;
