@@ -1,12 +1,10 @@
 <?php
-/** /////////////////////////////////////////////////////////
- * Output Sanitizer.
- *
- * @package YOURLS_Responsive_UI
- * ///////////////////////////////////////////////////////// */
+//
+// Helpers.
+//
 
-/** Script paths to strip (core JS, excluding jQuery).
- ************************************************/
+// Strip paths (core JS, excluding jQuery).
+
 function responsive_get_strip_script_paths(): array {
     return [
         '/js/common.js',
@@ -21,8 +19,8 @@ function responsive_get_strip_script_paths(): array {
     ];
 }
 
-/** Style paths to strip (core CSS).
- ************************************************/
+// Strip paths (core CSS).
+
 function responsive_get_strip_style_paths(): array {
     return [
         '/css/style.css',
@@ -33,8 +31,8 @@ function responsive_get_strip_style_paths(): array {
     ];
 }
 
-/** URL helpers.
- ************************************************/
+// URL helpers.
+
 function responsive_url_path( string $url ): string {
     $parts = parse_url( $url );
 
@@ -63,7 +61,8 @@ function responsive_url_host( string $url ): string {
     return strtolower( $parts['host'] );
 }
 
-/**=== Match helpers. ===**/
+// Match helpers.
+
 function responsive_should_strip_script_src(
     string $src,
     array $script_paths,
@@ -90,8 +89,12 @@ function responsive_should_strip_style_href(
     return $path !== '' && in_array( $path, $style_paths, true );
 }
 
-/** Tag stripping.
- ************************************************/
+//
+// Stripping.
+//
+
+// External tags.
+
 function responsive_strip_script_src_tags(
     string $html,
     array $script_paths,
@@ -134,8 +137,8 @@ function responsive_strip_style_href_tags(
     return is_string( $updated ) ? $updated : $html;
 }
 
-/** Inline script block stripping.
- ************************************************/
+// Inline script blocks.
+
 function responsive_strip_inline_script_blocks_matching(
     string $html,
     callable $matcher,
@@ -158,8 +161,8 @@ function responsive_strip_inline_script_blocks_matching(
     return is_string( $updated ) ? $updated : $html;
 }
 
-/** Context detection.
- ************************************************/
+// Context.
+
 function responsive_detect_body_context( string $html ): string {
     if (
         ! preg_match(
@@ -202,8 +205,8 @@ function responsive_detect_body_context( string $html ): string {
     return '';
 }
 
-/** Context-specific inline strippers.
- ************************************************/
+// Context-specific inline.
+
 function responsive_strip_inline_bookmark( string $html ): string {
     return responsive_strip_inline_script_blocks_matching(
         $html,
@@ -292,9 +295,8 @@ function responsive_strip_inline_plugins( string $html ): string {
     );
 }
 
-/** /////////////////////////////////////////////////////////
- * Main Sanitizer Callback.
- * ///////////////////////////////////////////////////////// */
+// Sanitizer callback.
+
 function responsive_sanitize_html_output( string $html ): string {
     // Fail open: no </head> means not a full HTML page.
     if ( ! str_contains( strtolower( $html ), '</head>' ) ) {
@@ -327,9 +329,10 @@ function responsive_sanitize_html_output( string $html ): string {
     return $output;
 }
 
-/** /////////////////////////////////////////////////////////
- * Hook Registration.
- * ///////////////////////////////////////////////////////// */
+//
+// Hook Registration.
+//
+
 function responsive_begin_output_sanitizer( $context = '', $title = '' ): void {
     if (
         isset( $GLOBALS['responsive_output_sanitizer_active'] ) ||

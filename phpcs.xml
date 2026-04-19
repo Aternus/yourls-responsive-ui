@@ -24,7 +24,9 @@
     <exclude name="WordPress.WhiteSpace.PrecisionAlignment.Found"/>
     <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
     <exclude name="Squiz.Commenting.FileComment.Missing"/>
+    <exclude name="Squiz.Commenting.FileComment.WrongStyle"/>
     <exclude name="Squiz.Commenting.FunctionComment.Missing"/>
+    <exclude name="Squiz.Commenting.FunctionComment.WrongStyle"/>
     <exclude name="Squiz.PHP.CommentedOutCode"/>
     <exclude
       name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
