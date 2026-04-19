@@ -1,4 +1,7 @@
 <?php
+//
+// Head.
+//
 
 function responsive_head_meta(): void {
     echo <<<'HEAD_META'
@@ -97,6 +100,10 @@ function responsive_head( $hook_args = [] ): void {
 }
 
 yourls_add_action( 'html_head', 'responsive_head' );
+
+//
+// Custom Elements.
+//
 
 function responsive_custom_elements_root( $hook_args = [] ): void {
     $context = responsive_extract_hook_context( $hook_args );

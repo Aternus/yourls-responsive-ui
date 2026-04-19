@@ -1,4 +1,7 @@
 <?php
+//
+// HTML Attributes.
+//
 
 function responsive_output_color_scheme( string $html ): string {
     $scheme = responsive_get_color_scheme();
@@ -56,6 +59,10 @@ yourls_add_filter(
     10,
     5,
 );
+
+//
+// Table Rows.
+//
 
 function responsive_infos_full_long_string(
     string $newstring,
@@ -297,6 +304,10 @@ function responsive_edit_link_add_row_html(
 
 yourls_add_filter( 'edit_link', 'responsive_edit_link_add_row_html', 10, 7 );
 
+//
+// UI Text.
+//
+
 function responsive_help_link( string $html ): ?string {
     if ( responsive_is_show_help_link() ) {
         return $html;
@@ -345,9 +356,10 @@ function responsive_translate_labels(
 
 yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );
 
-/** /////////////////////////////////////////////////////////
- * Shunt: Add-New Form.
- * ///////////////////////////////////////////////////////// */
+//
+// Shunt: Add-New Form.
+//
+
 function responsive_shunt_html_addnew( $false ): string {
     if ( ! defined( 'YOURLS_USER' ) ) {
         return '';

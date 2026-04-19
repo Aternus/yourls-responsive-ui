@@ -3,7 +3,7 @@ if ( ! defined( 'YOURLS_ABSPATH' ) ) {
     exit();
 }
 
-// Short URL redirects have no HTML output for us to touch - skip
+// Short URL redirects have no HTML output for us to touch.
 if ( yourls_is_GO() ) {
     return;
 }
