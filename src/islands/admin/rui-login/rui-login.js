@@ -252,11 +252,11 @@ export const RuiLogin = defineCustomElement(
       };
     },
     template: /* HTML */ `
-      <div v-if="isReady" class="py-6 px-4 min-h-full sm:py-10 bg-base-100">
-        <div class="mx-auto space-y-5 w-full max-w-xs">
+      <div v-if="isReady" class="min-h-full bg-base-100 px-4 py-6 sm:py-10">
+        <div class="mx-auto w-full max-w-xs space-y-5">
           <a
             :href="loginPageHref"
-            class="px-0 h-auto btn btn-ghost"
+            class="btn h-auto px-0 btn-ghost"
             :aria-label="t('messageLogin')"
           >
             <img :src="brandLogoSrc" :alt="tBrand('name')" class="h-14" />
@@ -301,7 +301,7 @@ export const RuiLogin = defineCustomElement(
                 autocomplete="username"
                 required
                 v-model="credentials.username"
-                class="w-full input"
+                class="input w-full"
                 :class="{ 'input-error': usernameHasError }"
                 :aria-invalid="usernameHasError"
                 :aria-describedby="usernameDescribedBy"
@@ -311,7 +311,7 @@ export const RuiLogin = defineCustomElement(
               <label for="password" class="label"
                 >{{ t("passwordLabel") }}</label
               >
-              <div class="w-full join">
+              <div class="join w-full">
                 <input
                   ref="passwordInputRef"
                   id="password"
@@ -363,7 +363,7 @@ export const RuiLogin = defineCustomElement(
               </p>
             </fieldset>
 
-            <button type="submit" name="submit" class="w-full btn btn-primary">
+            <button type="submit" name="submit" class="btn w-full btn-primary">
               {{ t("submitLabel") }}
             </button>
           </form>

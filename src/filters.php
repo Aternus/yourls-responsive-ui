@@ -320,7 +320,7 @@ yourls_add_filter( 'help_link', 'responsive_help_link' );
 
 function responsive_footer_text( string $html ): string {
     if ( responsive_is_show_footer_text() ) {
-        return '<span class="flex gap-1 place-content-center py-3 px-5 text-xs border-t shadow-sm border-base-300 bg-base-200 text-base-content/60">' .
+        return '<span class="flex place-content-center gap-1 border-t border-base-300 bg-base-200 px-5 py-3 text-xs text-base-content/60 shadow-sm">' .
                 $html .
                 '</span>';
     }

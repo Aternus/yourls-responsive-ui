@@ -10,8 +10,8 @@
     "test:e2e": "playwright test",
     "format:php": "docker compose exec -w /var/www/html/user/plugins/yourls-responsive-ui web ./vendor/bin/phpcbf",
     "format:php:check": "docker compose exec -w /var/www/html/user/plugins/yourls-responsive-ui web ./vendor/bin/phpcs",
-    "format:tailwind": "rustywind --write src/",
-    "format:tailwind:check": "rustywind --check-formatted src/",
+    "format:tailwind": "rustywind --output-css-file release/css/app.css --write src/",
+    "format:tailwind:check": "rustywind --output-css-file release/css/app.css --check-formatted src/",
     "format": "prettier --write 'src/**/*.{js,css,scss}' && npm run format:php && npm run format:tailwind",
     "format:check": "prettier --check 'src/**/*.{js,css,scss}' && npm run format:php:check && npm run format:tailwind:check"
   },
@@ -32,6 +32,7 @@
     "daisyui": "5.5.19",
     "playwright": "^1.58.2",
     "prettier": "3.8.1",
+    "prettier-plugin-tailwindcss": "0.7.2",
     "rustywind": "0.24.3",
     "tailwindcss": "4.2.2",
     "vue": "3.5.32"
