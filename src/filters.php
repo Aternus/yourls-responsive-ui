@@ -80,7 +80,7 @@ yourls_add_filter(
 function responsive_iconify_icon( string $icon, string $class = '' ): string {
     $class = trim( $class );
 
-    $attributes = ' icon="' . yourls_esc_attr( $icon ) . '"' . ' aria-hidden="true"';
+    $attributes = ' icon="' . yourls_esc_attr( $icon ) . '" aria-hidden="true"';
 
     if ( $class !== '' ) {
         $attributes .= ' class="' . yourls_esc_attr( $class ) . '"';
@@ -345,10 +345,9 @@ function responsive_translate_labels(
 
 yourls_add_filter( 'translate', 'responsive_translate_labels', 10, 3 );
 
-// /////////////////////////////////////////////////////////
-// Shunt: Add-New Form
-// /////////////////////////////////////////////////////////
-
+/** /////////////////////////////////////////////////////////
+ * Shunt: Add-New Form.
+ * ///////////////////////////////////////////////////////// */
 function responsive_shunt_html_addnew( $false ): string {
     if ( ! defined( 'YOURLS_USER' ) ) {
         return '';

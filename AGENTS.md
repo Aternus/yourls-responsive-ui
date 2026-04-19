@@ -30,7 +30,17 @@ docker compose exec -w /var/www/html/user/plugins/yourls-responsive-ui web php <
 
 The project root is mounted at `/var/www/html/user/plugins/yourls-responsive-ui`
 inside the `web` container. Always use this as the working directory when
-running `composer` or `pint` commands.
+running `composer` or `phpcs` commands.
+
+Use the following PHP comments style:
+
+```php
+//
+// Section.
+//
+
+// Sub-section.
+```
 
 ## Components
 
@@ -59,18 +69,11 @@ Use Material Design Icons.
 Use the following CSS comments style:
 
 ```css
-/**********************************************************
-    Heading 1
-**********************************************************/
+/*------------------------------------------------------------------------------
+  Section
+------------------------------------------------------------------------------*/
 
-/* Heading 2
-************************************************/
-
-/**=== Heading 3 ===**/
-
-/** Heading 4 **/
-
-/* */
+/* Sub-section */
 ```
 
 ## UX / UI
